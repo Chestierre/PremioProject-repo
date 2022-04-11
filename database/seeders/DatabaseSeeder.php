@@ -19,10 +19,15 @@ class DatabaseSeeder extends Seeder
         User::create([
             'username' => 'Chester',
             'password' => Hash::make('premiotest'),
-            'is_permission' => '1'
+            'userrole' => 'Super Admin'
+        ]);
+
+        User::create([
+            'username' => 'Dondon',
+            'password' => Hash::make('desmarkpremio'),
+            'userrole' => 'Admin'
         ]
         
-
         );
         // \App\Models\User::factory(10)->create();
     }

@@ -52,7 +52,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:5', 'confirmed'],
-            'is_permission' => ['required'],
+            'userrole' => ['required', 'string', 'max:20'],
         ]);
     }
 
@@ -64,13 +64,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-         if ($data['is_permission']=="Admin") $temp = 2;
-        else if ($data['is_permission']=="Customer") $temp = 3; 
+/*          if ($data['is_permission']=="Admin") $temp = 2;
+        else if ($data['is_permission']=="Customer") $temp = 3; */ 
 
         return User::create([
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
-            'is_permission' => $temp,
+            //'is_permission' => $temp,
+            'userrole' => $data['userrole'],
         ]);
     }
 }

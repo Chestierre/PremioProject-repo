@@ -12,13 +12,14 @@
                         @csrf
                         
                         <div class="row mb-3">
-                            <label for="is_permission" class="col-md-4 col-form-label text-md-end">{{ __('User Type') }}</label>
+                            <label for="userrole" class="col-md-4 col-form-label text-md-end">{{ __('User Type') }}</label>
 
                             <div class="col-md-6">
                             
 
-                                <select name="is_permission" class="form-control">
+                                <select name="userrole" class="form-control">
                                     <option>{{ "Admin"}}</option>  
+                                    <option>{{ "Collector" }}</option>
                                     <option>{{ "Customer"}}</option>
                                 </select>
 
