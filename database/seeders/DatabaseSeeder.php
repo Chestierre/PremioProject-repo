@@ -14,6 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        App\User::create([
+            'name' => 'Chester',
+            'password' => Illuminate\Support\Facades\Hash::make('premiotest'),
+            'is_permission' => '1'
+        ]
+        
+
+        )
         // \App\Models\User::factory(10)->create();
     }
 }
