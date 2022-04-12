@@ -30,7 +30,15 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-
+    
+    protected function redirectTo()
+    {
+        if (auth()->user()->userrole == 'Customer') {
+             return '/customerinfo';
+        }
+        //return '/customerinfo';
+        return '/home'; 
+    }
     /**
      * Create a new controller instance.
      *
@@ -66,7 +74,7 @@ class RegisterController extends Controller
     {
 /*          if ($data['is_permission']=="Admin") $temp = 2;
         else if ($data['is_permission']=="Customer") $temp = 3; */ 
-
+        //dd(auth()->user()->userrole);
         return User::create([
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
