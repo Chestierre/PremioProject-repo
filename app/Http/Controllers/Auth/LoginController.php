@@ -27,7 +27,21 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-
+    protected function redirectTo()
+    {
+        if (auth()->user()->userrole == 'Super Admin' || auth()->user()->userrole == 'Admin') {
+             return route('admin.user.index');
+        }
+        if (auth()->user()->userrole == 'Collector') {
+            return '/home'; 
+        }
+        //dd(auth()->user()->customer == null);
+        //if (auth()->user()->customer == null){
+        //    return route('customer.CustomerRequestDetails');
+        // }
+        return  route('customer.customer.index');
+        
+    }
     /**
      * Create a new controller instance.
      *

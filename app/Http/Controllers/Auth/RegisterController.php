@@ -34,10 +34,12 @@ class RegisterController extends Controller
     protected function redirectTo()
     {
         if (auth()->user()->userrole == 'Customer') {
-             return '/customerinfo';
+             return route('customer.CustomerRequestDetails');
         }
-        //return '/customerinfo';
-        return '/home'; 
+        else{
+            return '/home'; 
+        }
+        
     }
     /**
      * Create a new controller instance.
@@ -71,15 +73,12 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
     protected function create(array $data)
-    {
-/*          if ($data['is_permission']=="Admin") $temp = 2;
-        else if ($data['is_permission']=="Customer") $temp = 3; */ 
-        //dd(auth()->user()->userrole);
+    {  
         return User::create([
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
-            //'is_permission' => $temp,
             'userrole' => $data['userrole'],
         ]);
     }
+    
 }

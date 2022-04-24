@@ -20,5 +20,30 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//Route::get('/customerinfo', [App\Http\Controllers\CustomerInfoController::class, 'index'])->name('customerinfo');
+
 Route::view('/customerinfo', 'customerinfo')->name('customerinfo');
+
+Route::group(['middleware' => 'auth'],function(){
+    Route::group([
+        'prefix' => 'admin',
+        'middleware' => 'is_admin',
+        'as' => 'admin.'
+    ], function () {
+        Route::resource('user', App\Http\Controllers\Admin\UserController::class);
+    });
+
+    Route::group([
+        'prefix' => 'customer',
+        
+        'as' => 'customer.'
+    ], function () {
+        Route::resource('customer', App\Http\Controllers\Customer\CustomerController::class, ['except' => ['store']]) -> middleware(['ensurecustomerdetails']);
+        Route::resource('customer', App\Http\Controllers\Customer\CustomerController::class, ['only' => ['store']]);
+        Route::get('/CustomerDetails', function () {return view('CustomerRequestDetails');})->name('CustomerRequestDetails');;    
+    });
+    
+    
+
+});
+
+
