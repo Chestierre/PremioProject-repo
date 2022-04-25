@@ -60,7 +60,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('admin.user.edit', compact('user')); 
     }
 
     /**
@@ -71,8 +71,13 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
-    {
-        //
+    {   
+        //dd($request);
+        $user -> update([
+            'username' => $request->username
+        ]);
+
+        return redirect()->route('admin.user.index');
     }
 
     /**
@@ -83,6 +88,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('admin.user.index');        
     }
 }

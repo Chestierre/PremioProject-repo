@@ -38,6 +38,8 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //dd($request);
+        
+
         Customer::create([
             'firstname' => $request->input('firstname'),
             'lastname' => $request->input('lastname'),
