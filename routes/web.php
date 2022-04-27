@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,18 +24,21 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::view('/customerinfo', 'customerinfo')->name('customerinfo');
 
+            
+
 Route::group(['middleware' => 'auth'],function(){
     Route::group([
         'prefix' => 'admin',
         'middleware' => 'is_admin',
         'as' => 'admin.'
     ], function () {
-        Route::resource('user', App\Http\Controllers\Admin\UserController::class);
+        Route::get('/user/password/{user}/edit', [UserController::class, 'password_edit'])->name('password_edit');
+        Route::post('/user/password_update', [UserController::class, 'password_update'])->name('password_update');
+        Route::resource('user', UserController::class);
     });
-
+    
     Route::group([
         'prefix' => 'customer',
-        
         'as' => 'customer.'
     ], function () {
         Route::resource('customer', App\Http\Controllers\Customer\CustomerController::class, ['except' => ['store']]) -> middleware(['ensurecustomerdetails']);

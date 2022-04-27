@@ -14,20 +14,32 @@
                             {{ session('status') }}
                         </div>
                     @endif
+
+
                     
                     {{ __('User Edit') }}
+                    {{-- {{dd($user);}} --}}
+                    <form method="GET" action="{{ route('admin.password_edit', $user) }}">
+                    {{-- <a href="{{ route('admin.password_edit' ) $user}}"> --}}
+                        <button type="submit" class="btn btn-primary" >Edit Password</button>
+                    </form>
+                    {{-- </a> --}}
+
                     <form method="POST" action="{{ route('admin.user.update', $user)}}">
                         @method('PUT')
                         @csrf
                         Username:
                         <br />
                         <input type="text" class="form-control" name="username" value ="{{ $user->username }}" />
-                        
+                        <br />
+
+
+
                         @if ( $user->userrole == 'Customer' && !$user->customer == null )
                         First Name:
                         <br />
-                            {{ $user->customer->firstname }}
                             <input type="text" class="form-control" name="firstname" value ="{{ $user->customer->firstname }}" />
+                        
                         @endif
                             
                         <br /><br />

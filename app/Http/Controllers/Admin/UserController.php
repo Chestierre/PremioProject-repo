@@ -16,7 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
+        //$user = User::all()->with('customer');
+        $user = User::with('customer')->get();
         return view('admin.user.index', compact('user'));
     }
 
@@ -60,6 +61,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        //dd($user);
         return view('admin.user.edit', compact('user')); 
     }
 
@@ -73,6 +75,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {   
         //dd($request);
+        //dd($user);
         $user -> update([
             'username' => $request->username
         ]);
@@ -88,7 +91,29 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($user->userrole == 'Customer' && !$user->customer == null){
+            $user->customer->delete();
+        }
+        
         $user->delete();
         return redirect()->route('admin.user.index');        
+    }
+    public function password_edit(User $user)
+    {
+        //dd('aa'); 
+        //dd($request->all());
+        //dd($user);
+        return view('admin.user.password_edit', compact('user')); 
+    }
+
+
+    public function password_update(Request $request, User $user)
+    {   
+        dd($request);
+        $user -> update([
+            'password' => $request->password
+        ]);
+
+        return redirect()->route('admin.user.index');
     }
 }
