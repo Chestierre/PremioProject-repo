@@ -63,6 +63,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         //dd($user);
+        $this->authorize('edit', $user);
+
         return view('admin.user.edit', compact('user')); 
     }
 
@@ -77,6 +79,8 @@ class UserController extends Controller
     {   
         //dd($request);
         //dd($user);
+        $this->authorize('edit', $user);
+
         $user -> update([
             'username' => $request->username
         ]);
@@ -92,6 +96,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorize('edit', $user);
+
         if ($user->userrole == 'Customer' && !$user->customer == null){
             $user->customer->delete();
         }
@@ -104,12 +110,15 @@ class UserController extends Controller
         //dd('aa'); 
         //dd($request->all());
         //dd($user);
+        $this->authorize('edit', $user);
         return view('admin.user.password_edit', compact('user')); 
     }
 
 
     public function password_update(Request $request, User $user)
     {   
+        $this->authorize('edit', $user);
+
         $request->validate([
             'password' => 'required|string|min:5|confirmed'
         ]);
