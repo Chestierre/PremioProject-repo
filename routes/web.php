@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth'],function(){
         'as' => 'admin.'
     ], function () {
         Route::get('/user/password/{user}/edit', [UserController::class, 'password_edit'])->name('password_edit');
-        Route::post('/user/password_update', [UserController::class, 'password_update'])->name('password_update');
+        Route::put('/user/password/{user}', [UserController::class, 'password_update'])->name('password_update');
         Route::resource('user', UserController::class);
     });
     

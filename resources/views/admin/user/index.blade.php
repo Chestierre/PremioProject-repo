@@ -36,6 +36,9 @@
                                 <td>
                                     {{ $user->userrole }}
                                 </td>
+
+                                
+
                                 <td>
                                     <form method="GET" action="{{ route('admin.user.edit', $user) }}">
                                         <button type="submit" class="btn btn-primary" >Edit</button>
@@ -49,6 +52,8 @@
                                         <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">Delete</button>
                                     </form>
                                 </td>
+
+
                             </tr>
                         @endforeach   
                         </tbody>

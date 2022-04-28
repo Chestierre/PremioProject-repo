@@ -20,13 +20,21 @@
                         @method('PUT')
                         @csrf
                         <br />
-                        {{ $user->username }}   
+                           
                         Password1:
                                              
-                            <input id="password" type="password" name="password" autocomplete="new-password" value ="{{ $user->password }}">
+                            <input id="password" type="password" name="password"  class="form-control @error('password') is-invalid @enderror" autocomplete="new-password" value ="{{ $user->password }}">
 
-                        Confirm Password:
-                        
+                            @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+
+                        <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+
+
                         <br /><br />
                         <button type="submit" class="btn btn-primary"> Save </button>
                     </form>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -109,9 +110,14 @@ class UserController extends Controller
 
     public function password_update(Request $request, User $user)
     {   
-        dd($request);
+        $request->validate([
+            'password' => 'required|string|min:5|confirmed'
+        ]);
+
+
+        //dd($request);
         $user -> update([
-            'password' => $request->password
+            'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('admin.user.index');
