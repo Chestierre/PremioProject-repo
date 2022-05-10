@@ -1,5 +1,5 @@
-@extends('layouts.app')
-
+@extends('layouts.adminlayout')
+{{-- @extends('layouts.app') --}}
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -17,7 +17,7 @@
                             <div class="col-md-6">
                             
 
-                                <select name="userrole" class="form-control">
+                                <select name="userrole" class="form-select form-control">
                                     <option>{{ "Admin"}}</option>  
                                     <option>{{ "Collector" }}</option>
                                     <option>{{ "Customer"}}</option>

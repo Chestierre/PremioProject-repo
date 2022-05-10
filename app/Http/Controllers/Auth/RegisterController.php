@@ -29,15 +29,16 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
-    
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/';
+
     protected function redirectTo()
     {
         if (auth()->user()->userrole == 'Customer') {
              return route('customer.CustomerRequestDetails');
         }
         else{
-            return '/home'; 
+            return '/'; 
         }
         
     }
@@ -48,7 +49,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('is_admin');
     }
 
     /**
