@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use App\Models\Brand;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -26,22 +26,27 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/';
     protected function redirectTo()
     {
+        
         if (auth()->user()->userrole == 'Super Admin' || auth()->user()->userrole == 'Admin') {
              return route('admin.user.index');
         }
         if (auth()->user()->userrole == 'Collector') {
-            return '/home'; 
+            return route('collector.collector.index'); 
         }
-        //dd(auth()->user()->customer == null);
-        //if (auth()->user()->customer == null){
-        //    return route('customer.CustomerRequestDetails');
+        // $brand = Brand::all();
+        // $customer = Customer::with('user')->get();
+        // //dd(auth()->user()->customer == null);
+        // if (auth()->user()->customer == null){
+        //     return route('customer.CustomerRequestDetails');
         // }
         return  route('customer.customer.index');
-        
+        // return view('/home', compact('customer','brand'));
+        //return '/'; 
     }
+
     /**
      * Create a new controller instance.
      *
@@ -55,4 +60,10 @@ class LoginController extends Controller
     {
         return 'username';
     }
+
+    public function showLoginForm()
+  {
+      $brand = Brand::all();
+      return view('auth/login', compact('brand'));
+  }
 }

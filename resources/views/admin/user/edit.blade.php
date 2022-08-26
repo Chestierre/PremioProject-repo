@@ -33,17 +33,16 @@
                         <input type="text" class="form-control" name="username" value ="{{ $user->username }}" />
                         <br />
 
-
-
                         @if ( $user->userrole == 'Customer' && !$user->customer == null )
-                        First Name:
-                        <br />
-                            <input type="text" class="form-control" name="firstname" value ="{{ $user->customer->firstname }}" />
+                            First Name:
+                            <br />
+                                <input type="text" class="form-control" name="firstname" value ="{{ $user->customer->firstname }}" />
                         
                         @endif
                             
                         <br /><br />
                         <button type="submit" class="btn btn-primary"> Save </button>
+                        <a href = {{ route('admin.user.index') }} type="button" class="btn btn-success"> Go Back </a>
                     </form>
                 </div>
             </div>

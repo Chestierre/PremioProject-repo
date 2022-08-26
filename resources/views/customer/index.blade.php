@@ -43,16 +43,16 @@
                         @foreach ($customer as $customer)
                             <tr>
                                 <td>
-                                    {{ $customer->firstname }}
+                                    {{ $customer->FillOutDate }}
                                 </td>
                                 <td>
-                                    {{ $customer->lastname }}
+                                    {{ $customer->FirstName }}
                                 </td>
                                 <td>
-                                    {{ $customer->mobile_number }}
+                                    {{ $customer->MiddleName }}
                                 </td>
                                 <td>
-                                    {{ $customer->email_address }}
+                                    {{ $customer->LastName }}
                                 </td>
                                 <td>
                                     {{ $customer->user->username }}

@@ -23,7 +23,7 @@
                            
                         Password1:
                                              
-                            <input id="password" type="password" name="password"  class="form-control @error('password') is-invalid @enderror" autocomplete="new-password" value ="{{ $user->password }}">
+                            <input id="password" type="password" name="password"  class="form-control @error('password') is-invalid @enderror" autocomplete="new-password" >
 
                             @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -31,12 +31,13 @@
                             </span>
                             @enderror
 
-                        <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+                        <label for="password-confirm" class="col-form-label text-md-end">{{ __('Confirm Password') }}</label>
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
 
 
                         <br /><br />
                         <button type="submit" class="btn btn-primary"> Save </button>
+                        <a href = {{ route('admin.user.edit', $user) }} type="button" class="btn btn-success"> Go Back </a>
                     </form>
                 </div>
             </div>
