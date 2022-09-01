@@ -164,7 +164,7 @@ class UnitController extends Controller
         Unitimage::create([
             'unit_id' => $unit->id,
             'image' => $imagePaths,
-            'caption' => $request->caption,
+            'ImageVariation' => $request->caption,
         ]);
 
         return redirect()->route('admin.unit.edit', $unit);

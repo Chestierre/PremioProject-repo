@@ -42,7 +42,8 @@ class OrderController extends Controller
         //   $unit = Unit::find($request->unit_id)->load('brand');
         //   dd($unit->brand->brandname);
         
-          $unit = Unit::find($request->unit_id)->load('brand');
+          //$unit = Unit::find($request->unit_id)->load('brand');
+          $unit = Unit::with('brand')->find($request->unit_id);
         //   dd($unit->brand->brandname);
           //$brandname = $unit->brand->brandname;
 
@@ -489,6 +490,7 @@ class OrderController extends Controller
     }
     public function show(order $order)
     {
+        //dd($order);
         return view('admin.order.view', compact('order'));
     }
     public function edit(order $order)
@@ -557,8 +559,12 @@ class OrderController extends Controller
 
     public function queryPrice($id)
     {
-        $where = array('id' => $id);
-        $unit  = Unit::where($where)->first()->load('brand');
+        //$where = array('id' => $id);
+        //$unit  = Unit::where($where)->first()->load('brand');
+        //$unit = Unit::with('brand')->find($request->unit_id);
+        //$unit = Unit::with('brand')->where($where);
+        //$unit = Unit::with('brand')->where($id)->first();
+        $unit = Unit::with('brand')->find($id);
         //dd($unit);
          //$unit = Unit::all();
         // return Response::json($unit);

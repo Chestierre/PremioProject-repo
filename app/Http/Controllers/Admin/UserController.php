@@ -21,6 +21,8 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
+        $this->authorize('superadmin', User::class);
+
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:5|confirmed',
@@ -31,12 +33,24 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'userrole' => $request->userrole,
         ]);
-        // if ($temp->userrole == 'Customer') {
-        //     return redirect()->route('customer.CustomerRequestDetails');
-        // }
-        // else{
         return redirect()->route('admin.user.index'); 
-        // }
+
+    }
+
+    public function adminstore(Request $request){
+
+        
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|min:5|confirmed',
+            'userrole' => 'required|string|max:20'
+        ]);
+        User::create([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'userrole' => $request->userrole,
+        ]);
+        return redirect()->route('admin.user.index'); 
     }
 
     public function show(User $user)
@@ -44,22 +58,26 @@ class UserController extends Controller
     }
     public function edit(User $user)
     {
-        dd($user);
+        //dd($user);
         $this->authorize('edit', $user);
 
         return view('admin.user.edit', compact('user')); 
     }
     public function update(Request $request, User $user)
     {   
-        //dd($request);
-        // dd($user);
         $this->authorize('edit', $user);
+
+        $request->validate([
+            'editusername' => 'required|string|max:255|unique:users',
+            'editpassword' => 'required|string|min:5',
+            'userrole' => 'required|string|max:20'
+        ]);
+
 
         $user -> update([
             'username' => $request->username
         ]);
 
-        
         return redirect()->route('admin.user.index');
     }
     public function destroy(User $user)
@@ -124,4 +142,20 @@ class UserController extends Controller
         }
         
     }
+
+    public function getuser($id)
+    {
+        //$where = array('id' => $id);
+        //$unit  = Unit::where($where)->first()->load('brand');
+        //$unit = Unit::with('brand')->find($request->unit_id);
+        //$unit = Unit::with('brand')->where($where);
+        //$unit = Unit::with('brand')->where($id)->first();
+        //$unit = Unit::with('brand')->find($id);
+        $user = User::find($id);
+        //dd($unit);
+         //$unit = Unit::all();
+        // return Response::json($unit);
+        return response()->json($user);
+    }
+
 }

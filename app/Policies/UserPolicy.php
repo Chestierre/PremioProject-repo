@@ -40,7 +40,13 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+            //return (($user->userrole == 'Super Admin'));
+            //return true;
+    }
+    public function superadmin(User $user)
+    {
+            return (($user->userrole == 'Super Admin'));
+            // return true;
     }
     public function edit(User $user, User $model)
     {

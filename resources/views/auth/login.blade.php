@@ -40,12 +40,19 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-6 offset-md-4 d-flex">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
                                         {{ __('Remember Me') }}
+                                    </label>
+                                </div>
+                                <div class="form-check mx-4">
+                                    <input class="form-check-input" type="checkbox" name="showpassword" id="showpassword" {{ old('showpassword') ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="showpassword">
+                                        {{ __('Show Password') }}
                                     </label>
                                 </div>
                             </div>
@@ -70,4 +77,20 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        if($('#showpassword').is(':checked',true))  
+         {
+            $('#password').attr('type',$('#showpassword').prop('checked')==true?"text":"password"); 
+         }
+
+        $('#showpassword').on('change', function(){
+            $('#password').attr('type',$('#showpassword').prop('checked')==true?"text":"password"); 
+        });
+    });
+</script>
+
 @endsection

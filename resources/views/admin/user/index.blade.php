@@ -1,6 +1,7 @@
 @extends('layouts.adminlayout')
 
 @section('content')
+
 <div class="container">
     <div class="table-responsive">
         <div class="table-wrapper">
@@ -16,13 +17,22 @@
                                 @csrf 
                                 <div class="d-flex">
                                 <input type="text" type="search" name="search_name" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">                            
-                                  <select name="user_type" class="btn btn-secondary dropdown-toggle" type="button">
-                                        <option>All</option>
-                                        <option>Super Admin</option>
-                                        <option>Admin</option>
-                                        <option>Collector</option>
-                                        <option>Customer</option>
-                                   </select>
+
+                                @can('superadmin', App\Models\User::class)
+                                <select name="user_type" class="btn btn-secondary dropdown-toggle" type="button">
+                                    <option>All</option>
+                                    <option>Super Admin</option>
+                                    <option>Admin</option>
+                                    <option>Collector</option>
+                                    <option>Customer</option>
+                                </select>
+                                @else
+                                <select name="user_type" class="btn btn-secondary dropdown-toggle" type="button">
+                                    <option>All</option>
+                                    <option>Collector</option>
+                                    <option>Customer</option>
+                                </select>
+                                @endcan
                                    <button type="submit" class="btn btn-outline-primary my-sm-0">search</button>
                             </div>
                             </form>
@@ -36,13 +46,13 @@
                         <th width="50px"><input type="checkbox" id="master"></th>
                         <th>User</th>
                         <th>Role</th>
-                        <th>Name</th>
                         <th>View</th>
                         <th>Actions</th>
                     <tr>
                     </thead>
                     <tbody>
                     @foreach ($user as $count => $user)
+                        @if (Auth::user()->userrole == 'Super Admin' || !( $user->userrole == 'Admin' || $user->userrole == 'Super Admin'))
                         <tr>
                             <td>
                                 @can('edit', $user)
@@ -51,14 +61,15 @@
                             </td>
                             <td class = "py-3">{{ $user->username }}</td>
                             <td>{{ $user->userrole }}</td>
+
                             <td>
-                            @if($user->userrole == "Customer" && !$user->customer == null)
-                            {{ $user->customer->firstname }} {{ $user->customer->lastname }}
-                            @endif
-                            <td>
-                                @if($user->userrole == "Customer" && !$user->customer == null)
+                                @if($user->customer()->exists())
                                 <form method="GET" action="{{ route('admin.user.edit', $user) }}">
-                                    <button type="submit" class="btn btn-warning" ><i class="fa-solid fa-eye"></i> View</button>
+                                    <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
+                                </form>
+                                @elseif ($user->userrole == "Customer")
+                                <form method="GET" action="{{ route('admin.user.edit', $user) }}">
+                                    <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
                                 </form>
                                 @endif
                             </td>                            
@@ -66,7 +77,8 @@
                             @can('edit', $user)
                                 <div class='d-flex'>
                                 <form method="GET" action="{{ route('admin.user.edit', $user) }}">
-                                    <button type="submit" class="btn btn-primary" ><i class="fa-solid fa-pen"></i> Edit</button>
+                                    <a href="#" class="btn btn-primary col-sm mx-2" data-toggle="modal" data-target="#editUserModal"> <span><i class="fa-solid fa-pen"></i> Edit</span></a>
+                                    {{-- <button type="submit" class="btn btn-primary mx-2" ><i class="fa-solid fa-pen"></i> Edit</button> --}}
                                 </form>
                                 
                                 <button type="button" class="btn btn-danger" onclick="loadDeleteModal({{ $user->id }}, `{{ $user->username }}`)">
@@ -75,15 +87,15 @@
                             </div>
                             @endcan
                             @cannot('edit', $user)
-                                @if($user->userrole == "Super Admin")
+                                @can('superadmin', App\Models\User::class)
                                     Can't Change Super Admin
                                 @else
                                     Super Admin Authorization Needed
-                                @endif        
+                                @endcan        
                             @endcannot
                             </td>
                         </tr>
-
+                        @endif
                     @endforeach   
                     </tbody>
                 </table> 
@@ -96,6 +108,9 @@
         <button  style="display:none;" class="btn btn-danger delete_all p-2" data-url="{{ url('admin/userDeleteAll') }}">Delete All Selected</button>
     </div>   
 </div>
+
+
+
 
 {{-- modal delete on-click --}}
 <div class="modal fade" id="deleteCategory"  tabindex="-1" role="dialog" aria-labelledby="deleteCategory" aria-hidden="true">
@@ -128,29 +143,43 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createUserModalLabel">Create User</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close modal-dismiss" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        <form method="POST" action="{{ route('admin.user.store') }}">
+            
+        @can('superadmin', App\Models\User::class)
+        <form method="POST" action="{{ route('admin.user.store') }}">    
+        @else
+        <form method="POST" action="{{ route('admin.user.adminstore') }}">    
+        @endcan
+        
             @csrf
+            
             <div class="row mb-3">
                 <label for="userrole" class="col-md-4 col-form-label text-md-end">{{ __('User Type') }}</label>
                 <div class="col-md-6">
-
+                    @can('superadmin', App\Models\User::class)
                     <select name="userrole" class="form-select form-control">
-                        <option>{{ "Admin"}}</option>  
-                        <option>{{ "Collector" }}</option>
-                        <option>{{ "Customer"}}</option>
+                        <option {{ old('userrole') ==  'Admin' ? 'selected' : ''}}>{{ "Admin"}}</option>  
+                        <option {{ old('userrole') ==  'Collector' ? 'selected' : ''}}>{{ "Collector" }}</option>
+                        <option {{ old('userrole') ==  'Customer' ? 'selected' : ''}}>{{ "Customer"}}</option>
                     </select>
+                    @else
+                    <select name="userrole" class="form-select form-control"> 
+                        <option {{ old('userrole') ==  'Collector' ? 'selected' : ''}}>{{ "Collector" }}</option>
+                        <option {{ old('userrole') ==  'Customer' ? 'selected' : ''}}>{{ "Customer"}}</option>
+                    </select>
+
+                    @endcan
 
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="username" class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
                 <div class="col-md-6">
-                  <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" autocomplete="username" autofocus>
+                  <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" autocomplete="username">
 
                     @error('username')
                         <span class="invalid-feedback" role="alert">
@@ -181,7 +210,7 @@
             </div>
         
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary modal-dismiss" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
             </div>
             </form>
@@ -191,10 +220,89 @@
     </div>
 </div>
 
+{{-- modal edit --}}
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+          <button type="button" class="close modal-dismiss" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form method="POST" action="{{ route('admin.user.store') }}">
+            @csrf 
+            <div class="row mb-3">
+                <label for="editusername" class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
+                <div class="col-md-6">
+                  <input id="editusername" type="text" class="form-control @error('editusername') is-invalid @enderror" name="editusername" value="{{ old('editusername') }}" autocomplete="username" >
+                    @error('editusername')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="editpassword" class="col-md-4 col-form-label text-md-end">{{ __('New Password') }}</label>
+                <div class="col-md-6">
+                  <input id="editpassword" type="password" class="form-control @error('editpassword') is-invalid @enderror" name="editpassword" value="{{ old('editpassword') }}" >
+                    @error('editpassword')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="userrole" class="col-md-4 col-form-label text-md-end">{{ __('User Type') }}</label>
+                <div class="col-md-6">
+                    @can('superadmin', App\Models\User::class)
+                    <select name="userrole" class="form-select form-control">
+                        <option>{{ "Admin"}}</option>  
+                        <option>{{ "Collector" }}</option>
+                        <option>{{ "Customer"}}</option>
+                    </select>
+                    @else
+                    <select name="userrole" class="form-select form-control"> 
+                        <option>{{ "Collector" }}</option>
+                        <option>{{ "Customer"}}</option>
+                    </select>
+
+                    @endcan
+
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary modal-dismiss" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+@endsection
+
+
+@section('scripts')
+
 
   {{-- Scripts - checkbox --}}
-<script type="text/javascript">
+  <script type="text/javascript">
     $(document).ready(function () {
+
+        // validation modal
+        @if ($errors->has('password') || $errors->has('username'))
+            $('#createUserModal').modal('show');
+        @endif
+        $('.modal-dismiss').on('click', function(){
+            $('#createUserModal').modal('hide');
+        })
+
 
         $('#master').on('click', function(e) {
          if($(this).is(':checked',true))  
@@ -328,4 +436,3 @@
 
 </script>
 @endsection
-

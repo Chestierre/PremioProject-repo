@@ -38,8 +38,7 @@
                         <th>Customer</th>
                         <th>Unit</th>
                         <th>Balance</th>
-                        <th>Transaction Data</th>
-                        <th>IsInstallment</th>
+                        <th>Transaction Date</th>
                         <th>collector</th>
                         <th>Actions</th>
                     </tr>
@@ -54,7 +53,6 @@
                             <td>{{$order->unit->modelname}}</td>
                             <td>&#8369 {{number_format($order->balance)}}</td>
                             <td>{{$order->created_at}}</td>
-                            <td>{{$order->IsInstallment}}</td>
                             @if (!$order->user == NULL)
                                 <td>{{$order->user->username}}</td>
                             @else
@@ -412,11 +410,11 @@
                 default:
                     rate = Number($('#input_brandratesix').val());
             }
-            balance = Math.ceil(((unitprice-payment)*rate));
+            balance = Math.ceil(((unitprice - payment) * rate));
             //console.log(balance);
-            totalPerMontly = (((unitprice-payment)*rate)/months)+200; 
+            totalPerMontly = (((unitprice - payment)* rate) / months)+200; 
             totalPerMontlyciel = Math.ceil(totalPerMontly);
-            totalPerMonthlyMod = totalPerMontlyciel%10;
+            totalPerMonthlyMod = totalPerMontlyciel % 10;
             if (totalPerMonthlyMod > 5){
                 // console.log('more than 5:' + (totalPerMontlyciel +(10 - totalPerMonthlyMod)));
                 overalltotal = (totalPerMontlyciel +(10 - totalPerMonthlyMod));

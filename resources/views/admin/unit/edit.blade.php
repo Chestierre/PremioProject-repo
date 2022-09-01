@@ -79,7 +79,7 @@
                                 
                                 <td>{{$unitimage->id}}</td>
                                 <td><img src="/storage/{{ $unitimage->image }}" class="card-img-top w-25 h-25" alt="..."></td>
-                                <td>{{$unitimage->caption}}</td>
+                                <td>{{$unitimage->ImageVariation}}</td>
                                 <td><button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash-can"></i> Delete</button></td>                                    
                                 
                             </tr>

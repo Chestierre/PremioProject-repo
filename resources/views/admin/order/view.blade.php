@@ -16,22 +16,25 @@
     <table class="table">
         <thead class="table-dark">
             <tr>
-                <th>Data Updated</th>
+                <th>Date Updated</th>
+                <th>Current Month</th>
                 <th>Balance</th>
                 <th>Payment</th>
-                <th>Months Lapsed</th>
+                <th>Payment Need to be paid</th>
             </tr>
         </thead>
         <tbody>
-            {{-- @foreach ( as ) --}}
+            
+            @foreach ($order as $order) 
                 <tr>
+                    <td>{{$order->id}}</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
                 
-            {{-- @endforeach --}}
+             @endforeach
         </tbody>
     </table>
 </div>
