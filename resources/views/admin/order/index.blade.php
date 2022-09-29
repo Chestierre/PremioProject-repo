@@ -205,6 +205,8 @@
 </div>
 
 
+
+
  {{-- Scripts - checkbox --}}
  <script type="text/javascript">
     
@@ -225,7 +227,7 @@
             calculatePrice(payment, months);
         });
 
-        $('input#downpayment').on('keydown', function(e){
+        $('input#downpayment').on('keydown change', function(e){
             months = $('select#monthsinstallment').val();
             payment = $('input#downpayment').val();
             calculatePrice(payment, months);

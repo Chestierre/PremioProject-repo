@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('customer_co_makers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
             $table->string('Name');
             $table->integer('Age')->nullable();
             $table->string('Sex')->nullable();
@@ -41,6 +40,10 @@ return new class extends Migration
             $table->string('Signature')->nullable();
             $table->timestamps();
 
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
             $table->index('customer_id');
         });
     }

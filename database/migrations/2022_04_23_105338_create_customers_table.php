@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+   
             
             $table->date('FillOutDate')->nullable();
             $table->string('FirstName');
@@ -57,11 +57,14 @@ return new class extends Migration
             $table->integer('Salary');
             $table->string('UnitToBeUsedFor');
             $table->string('ModeOfPayment')->nullable();
-            $table->string('ApplicantSketch')->nullable();
-            $table->string('ApplicantSignature')->nullable();
+            $table->string('ApplicantSketch')->nullable(); //not nullable
+            $table->string('ApplicantSignature')->nullable(); //not nullable
             $table->timestamps();
 
-
+            $table->foreignId('user_id')
+                    ->constrained()
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
             $table->index('user_id');
         });
 

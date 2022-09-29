@@ -25,9 +25,29 @@
                     <div class="panel-title">Credit Application Form</div>
                 </div>  
                 <div class="panel-body" >
+                    
+                    
+                    
+                    @isset($user)
+                    <form method="POST" enctype="multipart/form-data" action="{{ route('admin.admincustomer.storeCustomer', $user->id)}}">
+                        {{-- {{$user->id}} --}}
+                    @endisset
+                    @empty($user)
                     <form method="POST" enctype="multipart/form-data" action="{{ route('customer.customer.store')}}">
+                    {{-- <form method="POST" enctype="multipart/form-data" action="{{ route('admin.admincustomer.store', $id)}}"> --}}
+                        {{-- {{$id}} --}}
+                    @endempty
+                    
                         @csrf
-                        {{$errors}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         
                             <div id="div_id_FillOutDate" class="form-group required">
                                 <label for="id_FillOutDate" class="control-label col-md-4  requiredField"> Fill out date<span class="asteriskField">*</span> </label>
@@ -188,8 +208,8 @@
                             <div id="div_id_PlaceIssue" class="form-group required">
                                 <label for="id_PlaceIssuse" class="control-label col-md-4  requiredField"> Place Issued<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8">
-                                    <input class="input-md  textinput textInput form-control  @error('PlaceIssuse') is-invalid @enderror" id="id_PlaceIssuse" maxlength="30" name="PlaceIssuse" value="{{ old('PlaceIssuse') }}" placeholder="Enter the Place Issued" style="margin-bottom: 10px" type="text" />
-                                    @error('PlaceIssuse')
+                                    <input class="input-md  textinput textInput form-control  @error('PlaceIssue') is-invalid @enderror" id="PlaceIssue" maxlength="30" name="PlaceIssue" value="{{ old('PlaceIssuse') }}" placeholder="Enter the Place Issued" style="margin-bottom: 10px" type="text" />
+                                    @error('PlaceIssue')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -395,7 +415,7 @@
                                 <div id="div_id_SpouseAge" class="form-group required">
                                     <label for="id_SpouseAge" class="control-label col-md-4  requiredField" style="color: red"> Spouse's Age<span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md SpouseAge input form-control @error('SpouseAge') is-invalid @enderror" id="id_SpouseAge" name="SpouseAge" value="{{ old('SpouseAge') }}" placeholder="Enter Spouse's Age" style="margin-bottom: 10px" type="text" />
+                                        <input class="input-md SpouseAge input form-control @error('SpouseAge') is-invalid @enderror" id="id_SpouseAge" name="SpouseAge" value="{{ old('SpouseAge') }}" placeholder="Enter Spouse's Age" style="margin-bottom: 10px" type="number" />
                                         @error('SpouseAge')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -419,7 +439,7 @@
                                 <div id="div_id_SpouseMobileNumber" class="form-group required">
                                     <label for="id_SpouseMobileNumber" class="control-label col-md-4  requiredField" style="color: red">Mobile Number <span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md SpouseMobileNumber input form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" value="{{ old('SpouseMobileNumber') }}" placeholder="Enter Spouse's Mobile Number" style="margin-bottom: 10px" type="text" />
+                                        <input class="input-md SpouseMobileNumber input form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" value="{{ old('SpouseMobileNumber') }}" placeholder="Enter Spouse's Mobile Number" style="margin-bottom: 10px" type="number" />
                                         @error('SpouseMobileNumber')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -479,7 +499,7 @@
                                 <div id="div_id_SpouseWorkTelNum" class="form-group required">
                                     <label for="id_SpouseWorkTelNum" class="control-label col-md-4  requiredField" style="color: red">Work Telephone <span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md SpouseWorkTelNum input form-control @error('SpouseWorkTelNum') is-invalid @enderror" id="id_SpouseWorkTelNum" name="SpouseWorkTelNum" value="{{ old('SpouseWorkTelNum') }}" placeholder="Enter Spouse's Work Telephone" style="margin-bottom: 10px" type="text" />
+                                        <input class="input-md SpouseWorkTelNum input form-control @error('SpouseWorkTelNum') is-invalid @enderror" id="id_SpouseWorkTelNum" name="SpouseWorkTelNum" value="{{ old('SpouseWorkTelNum') }}" placeholder="Enter Spouse's Work Telephone" style="margin-bottom: 10px" type="number" />
                                         @error('SpouseWorkTelNum')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -505,7 +525,7 @@
                                 <div id="div_id_SpouseSalary" class="form-group required">
                                     <label for="id_SpouseSalary" class="control-label col-md-4  requiredField" style="color: red">Spouse's Salary <span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md SpouseSalary input form-control @error('SpouseSalary') is-invalid @enderror" id="id_SpouseSalary" name="SpouseSalary" value="{{ old('SpouseSalary') }}" placeholder="Enter Spouse'sSpouse's  Salary" style="margin-bottom: 10px" type="text" />
+                                        <input class="input-md SpouseSalary input form-control @error('SpouseSalary') is-invalid @enderror" id="id_SpouseSalary" name="SpouseSalary" value="{{ old('SpouseSalary') }}" placeholder="Enter Spouse'sSpouse's  Salary" style="margin-bottom: 10px" type="number" />
                                         @error('SpouseSalary')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -545,7 +565,7 @@
                              <div id="div_id_DependentAge1" class="form-group required">
                                 <label for="id_DependentAge1" style="color: red" class="control-label col-md-4  requiredField">1st Dependent Age<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md DependentAge1 input form-control @error('DependentAge1') is-invalid @enderror" id="id_DependentAge1" name="DependentAge1" value="{{ old('DependentAge1') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md DependentAge1 input form-control @error('DependentAge1') is-invalid @enderror" id="id_DependentAge1" name="DependentAge1" value="{{ old('DependentAge1') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="number" />
                                      @error('DependentAge1')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -597,7 +617,7 @@
                              <div id="div_id_DependentAge2" class="form-group required">
                                 <label for="id_DependentAge2" style="color: red" class="control-label col-md-4  requiredField">2nd Dependent Age<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md DependentAge2 input form-control @error('DependentAge2') is-invalid @enderror" id="id_DependentAge2" name="DependentAge2" value="{{ old('DependentAge2') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md DependentAge2 input form-control @error('DependentAge2') is-invalid @enderror" id="id_DependentAge2" name="DependentAge2" value="{{ old('DependentAge2') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="number" />
                                      @error('DependentAge2')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -648,7 +668,7 @@
                              <div id="div_id_DependentAge3" class="form-group required">
                                 <label for="id_DependentAge3" style="color: red" class="control-label col-md-4  requiredField">3rd Dependent Age<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md DependentAge3 input form-control @error('DependentAge3') is-invalid @enderror" id="id_DependentAge3" name="DependentAge3" value="{{ old('DependentAge3') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md DependentAge3 input form-control @error('DependentAge3') is-invalid @enderror" id="id_DependentAge3" name="DependentAge3" value="{{ old('DependentAge3') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="number" />
                                      @error('DependentAge3')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -698,7 +718,7 @@
                                 <div id="div_id_DependentAge4" class="form-group required">
                                    <label for="id_DependentAge4" style="color: red" class="control-label col-md-4  requiredField">4th Dependent Age<span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md DependentAge4 input form-control @error('DependentAge4') is-invalid @enderror" id="id_DependentAge4" name="DependentAge4" value="{{ old('DependentAge4') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="text" />
+                                        <input class="input-md DependentAge4 input form-control @error('DependentAge4') is-invalid @enderror" id="id_DependentAge4" name="DependentAge4" value="{{ old('DependentAge4') }}" placeholder="Enter Dependent Age" style="margin-bottom: 10px" type="number" />
                                         @error('DependentAge4')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -771,7 +791,7 @@
                             <div id="div_id_ParentNumber" class="form-group required">
                                 <label for="id_ParentNumber" class="control-label col-md-4  requiredField"> Parent's Number<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8">
-                                    <input class="input-md ParentNumberinput form-control @error('ParentNumber') is-invalid @enderror" id="id_ParentNumber" name="ParentNumber" value="{{ old('ParentNumber') }}" placeholder="Enter Parent's Tel/Mobile No." style="margin-bottom: 10px" type="text" />
+                                    <input class="input-md ParentNumberinput form-control @error('ParentNumber') is-invalid @enderror" id="id_ParentNumber" name="ParentNumber" value="{{ old('ParentNumber') }}" placeholder="Enter Parent's Tel/Mobile No." style="margin-bottom: 10px" type="number" />
                                     @error('ParentNumber')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -836,7 +856,7 @@
                                 <div id="div_id_ItemLoadAmount1" class="form-group required">
                                     <label for="id_ItemLoadAmount1" class="control-label col-md-4  requiredField">Item/Loan Amount<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md ItemLoadAmount1 input form-control @error('ItemLoadAmount1') is-invalid @enderror" id="id_ItemLoadAmount1" name="ItemLoadAmount1" value="{{ old('ItemLoadAmount1') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md ItemLoadAmount1 input form-control @error('ItemLoadAmount1') is-invalid @enderror" id="id_ItemLoadAmount1" name="ItemLoadAmount1" value="{{ old('ItemLoadAmount1') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="number" />
                                          @error('ItemLoadAmount1')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -873,7 +893,7 @@
                                 <div id="div_id_CreditBalance1" class="form-group required">
                                     <label for="id_CreditBalance1" class="control-label col-md-4  requiredField">Balance<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md CreditBalance1 input form-control @error('CreditBalance1') is-invalid @enderror" id="id_CreditBalance1" name="CreditBalance1" value="{{ old('CreditBalance1') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md CreditBalance1 input form-control @error('CreditBalance1') is-invalid @enderror" id="id_CreditBalance1" name="CreditBalance1" value="{{ old('CreditBalance1') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="number" />
                                          @error('CreditBalance1')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -899,7 +919,7 @@
                                 <div id="div_id_ItemLoadAmount2" class="form-group required">
                                     <label for="id_ItemLoadAmount2"  class="control-label col-md-4  requiredField">Item/Loan Amount<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md ItemLoadAmount2 input form-control @error('ItemLoadAmount2') is-invalid @enderror" id="id_ItemLoadAmount2" name="ItemLoadAmount2" value="{{ old('ItemLoadAmount2') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md ItemLoadAmount2 input form-control @error('ItemLoadAmount2') is-invalid @enderror" id="id_ItemLoadAmount2" name="ItemLoadAmount2" value="{{ old('ItemLoadAmount2') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="number" />
                                          @error('ItemLoadAmount2')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -936,7 +956,7 @@
                                 <div id="div_id_CreditBalance2" class="form-group required">
                                     <label for="id_CreditBalance2"  class="control-label col-md-4  requiredField">Balance<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md CreditBalance2 input form-control @error('CreditBalance2') is-invalid @enderror" id="id_CreditBalance2" name="CreditBalance2" value="{{ old('CreditBalance2') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md CreditBalance2 input form-control @error('CreditBalance2') is-invalid @enderror" id="id_CreditBalance2" name="CreditBalance2" value="{{ old('CreditBalance2') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="number" />
                                          @error('CreditBalance2')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -962,7 +982,7 @@
                                 <div id="div_id_ItemLoadAmount3" class="form-group required">
                                     <label for="id_ItemLoadAmount3"  class="control-label col-md-4  requiredField">Item/Loan Amount<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md ItemLoadAmount3 input form-control @error('ItemLoadAmount3') is-invalid @enderror" id="id_ItemLoadAmount3" name="ItemLoadAmount3" value="{{ old('ItemLoadAmount3') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md ItemLoadAmount3 input form-control @error('ItemLoadAmount3') is-invalid @enderror" id="id_ItemLoadAmount3" name="ItemLoadAmount3" value="{{ old('ItemLoadAmount3') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="number" />
                                          @error('ItemLoadAmount3')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -999,7 +1019,7 @@
                                 <div id="div_id_CreditBalance3" class="form-group required">
                                     <label for="id_CreditBalance3"  class="control-label col-md-4  requiredField">Balance<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md CreditBalance3 input form-control @error('CreditBalance3') is-invalid @enderror" id="id_CreditBalance3" name="CreditBalance3" value="{{ old('CreditBalance3') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md CreditBalance3 input form-control @error('CreditBalance3') is-invalid @enderror" id="id_CreditBalance3" name="CreditBalance3" value="{{ old('CreditBalance3') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="number" />
                                          @error('CreditBalance3')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1025,7 +1045,7 @@
                                 <div id="div_id_ItemLoadAmount4" class="form-group required">
                                     <label for="id_ItemLoadAmount4" class="control-label col-md-4  requiredField">Item/Loan Amount<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md ItemLoadAmount4 input form-control @error('ItemLoadAmount4') is-invalid @enderror" id="id_ItemLoadAmount4" name="ItemLoadAmount4" value="{{ old('ItemLoadAmount4') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md ItemLoadAmount4 input form-control @error('ItemLoadAmount4') is-invalid @enderror" id="id_ItemLoadAmount4" name="ItemLoadAmount4" value="{{ old('ItemLoadAmount4') }}" placeholder="Enter Item/Loan Amount" style="margin-bottom: 10px" type="number" />
                                          @error('ItemLoadAmount4')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1062,7 +1082,7 @@
                                 <div id="div_id_CreditBalance4" class="form-group required">
                                     <label for="id_CreditBalance4" class="control-label col-md-4  requiredField">Balance<span class="asteriskField">*</span> </label>
                                      <div class="controls col-md-8">
-                                         <input class="input-md CreditBalance4 input form-control @error('CreditBalance4') is-invalid @enderror" id="id_CreditBalance4" name="CreditBalance4" value="{{ old('CreditBalance4') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="text" />
+                                         <input class="input-md CreditBalance4 input form-control @error('CreditBalance4') is-invalid @enderror" id="id_CreditBalance4" name="CreditBalance4" value="{{ old('CreditBalance4') }}" placeholder="Enter Balance" style="margin-bottom: 10px" type="number" />
                                          @error('CreditBalance4')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1099,7 +1119,7 @@
                             <div id="div_id_PersonalReferenceNumber1" class="form-group required">
                                 <label for="id_PersonalReferenceNumber1" class="control-label col-md-4  requiredField">Telephone 1<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md PersonalReferenceNumber1 input form-control @error('PersonalReferenceNumber1') is-invalid @enderror" id="id_PersonalReferenceNumber1" name="PersonalReferenceNumber1" value="{{ old('PersonalReferenceNumber1') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md PersonalReferenceNumber1 input form-control @error('PersonalReferenceNumber1') is-invalid @enderror" id="id_PersonalReferenceNumber1" name="PersonalReferenceNumber1" value="{{ old('PersonalReferenceNumber1') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="number" />
                                      @error('PersonalReferenceNumber1')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1147,7 +1167,7 @@
                             <div id="div_id_PersonalReferenceNumber2" class="form-group required">
                                 <label for="id_PersonalReferenceNumber2" class="control-label col-md-4  requiredField">Telephone 2<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md PersonalReferenceNumber2 input form-control @error('PersonalReferenceNumber2') is-invalid @enderror" id="id_PersonalReferenceNumber2" name="PersonalReferenceNumber2" value="{{ old('PersonalReferenceNumber2') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md PersonalReferenceNumber2 input form-control @error('PersonalReferenceNumber2') is-invalid @enderror" id="id_PersonalReferenceNumber2" name="PersonalReferenceNumber2" value="{{ old('PersonalReferenceNumber2') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="number" />
                                      @error('PersonalReferenceNumber2')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1195,7 +1215,7 @@
                             <div id="div_id_PersonalReferenceNumber3" class="form-group required">
                                 <label for="id_PersonalReferenceNumber3" class="control-label col-md-4  requiredField">Telephone 3<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md PersonalReferenceNumber3 input form-control @error('PersonalReferenceNumber3') is-invalid @enderror" id="id_PersonalReferenceNumber3" name="PersonalReferenceNumber3" value="{{ old('PersonalReferenceNumber3') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md PersonalReferenceNumber3 input form-control @error('PersonalReferenceNumber3') is-invalid @enderror" id="id_PersonalReferenceNumber3" name="PersonalReferenceNumber3" value="{{ old('PersonalReferenceNumber3') }}" placeholder="Enter Personal Reference:Telephone" style="margin-bottom: 10px" type="number" />
                                      @error('PersonalReferenceNumber3')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1337,7 +1357,7 @@
                             <div id="div_id_CoMakerAge" class="form-group required">
                                 <label for="id_CoMakerAge" class="control-label col-md-4  requiredField">Co-Maker Age<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakerAge input form-control @error('CoMakerAge') is-invalid @enderror" id="id_CoMakerAge" name="CoMakerAge" value="{{ old('CoMakerAge') }}" placeholder="Enter Co-Maker's Age" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md CoMakerAge input form-control @error('CoMakerAge') is-invalid @enderror" id="id_CoMakerAge" name="CoMakerAge" value="{{ old('CoMakerAge') }}" placeholder="Enter Co-Maker's Age" style="margin-bottom: 10px" type="number" max="100"/>
                                      @error('CoMakerAge')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1375,7 +1395,7 @@
                             <div id="div_id_CoMakeTelNumber" class="form-group required">
                                 <label for="id_CoMakeTelNumber" class="control-label col-md-4  requiredField">Co-Maker Tel. No.<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakeTelNumber input form-control @error('CoMakeTelNumber') is-invalid @enderror" id="id_CoMakeTelNumber" name="CoMakeTelNumber" value="{{ old('CoMakeTelNumber') }}" placeholder="Enter Co-Maker's Telephone Number" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md CoMakeTelNumber input form-control @error('CoMakeTelNumber') is-invalid @enderror" id="id_CoMakeTelNumber" name="CoMakeTelNumber" value="{{ old('CoMakeTelNumber') }}" placeholder="Enter Co-Maker's Telephone Number" style="margin-bottom: 10px" type="number" />
                                      @error('CoMakeTelNumber')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1456,7 +1476,7 @@
                             <div id="div_id_CoMakerTin" class="form-group required">
                                 <label for="id_CoMakerTin" class="control-label col-md-4  requiredField">Co-Maker TIN<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakerTin input form-control @error('CoMakerTin') is-invalid @enderror" id="id_CoMakerTin" name="CoMakerTin" value="{{ old('CoMakerTin') }}" placeholder="Enter Co-Maker's Tax Identification Number" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md CoMakerTin input form-control @error('CoMakerTin') is-invalid @enderror" id="id_CoMakerTin" name="CoMakerTin" value="{{ old('CoMakerTin') }}" placeholder="Enter Co-Maker's Tax Identification Number" style="margin-bottom: 10px" type="number" />
                                      @error('CoMakerTin')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1468,7 +1488,7 @@
                             <div id="div_id_CoMakerMobileNo" class="form-group required">
                                 <label for="id_CoMakerMobileNo" class="control-label col-md-4  requiredField">Mobile Number<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakerMobileNo input form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ old('CoMakerMobileNo') }}" placeholder="Enter Co-Maker's Mobile Number" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md CoMakerMobileNo input form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ old('CoMakerMobileNo') }}" placeholder="Enter Co-Maker's Mobile Number" style="margin-bottom: 10px" type="number" />
                                      @error('CoMakerMobileNo')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1517,7 +1537,7 @@
                             <div id="div_id_CoMakerTelNo" class="form-group required">
                                 <label for="id_CoMakerTelNo" class="control-label col-md-4  requiredField">Co-Maker Tel. No.<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakerTelNo input form-control @error('CoMakerTelNo') is-invalid @enderror" id="id_CoMakerTelNo" name="CoMakerTelNo" value="{{ old('CoMakerTelNo') }}" placeholder="Enter Co-Maker's Telephone Number" style="margin-bottom: 10px" type="text" />
+                                     <input class="input-md CoMakerTelNo input form-control @error('CoMakerTelNo') is-invalid @enderror" id="id_CoMakerTelNo" name="CoMakerTelNo" value="{{ old('CoMakerTelNo') }}" placeholder="Enter Co-Maker's Telephone Number" style="margin-bottom: 10px" type="number" />
                                      @error('CoMakerTelNo')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1653,6 +1673,10 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>
+                                    @isset($user)
+                                    <a href={{ route('admin.user.index') }} type="button" class="btn btn-success mx-2"> Go Back </a>
+                                        {{-- {{$user->id}} --}}
+                                    @endisset
                             
                     </form>
                 </div>

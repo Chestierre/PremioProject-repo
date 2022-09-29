@@ -55,6 +55,9 @@ class Customer extends Model
     public function spouse(){
         return $this->hasOne(CustomerSpouse::class);
     }
+    public function parent(){
+        return $this->hasOne(CustomerParent::class);
+    }
     public function address(){
         return $this->hasOne(CustomerAddress::class);
     }

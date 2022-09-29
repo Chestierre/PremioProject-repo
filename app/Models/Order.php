@@ -61,7 +61,7 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
     public function orderhistory(){
-        return $this->hasOne(OrderHistory::class);
+        return $this->hasMany(OrderHistory::class);
     }
     public function ordertransactiondetails(){
         return $this->hasOne(OrderTransactionDetails::class);

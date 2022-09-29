@@ -14,5 +14,9 @@ class CustomerParent extends Model
         'Mother',
         'Addresss',
         'MobileNumber',
+        'customer_id'
     ];
+    public function customer(){
+        return $this->belongsTo(Customer::class);
+    }
 }

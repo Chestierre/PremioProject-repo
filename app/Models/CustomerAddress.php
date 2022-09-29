@@ -15,7 +15,8 @@ class CustomerAddress extends Model
         'HouseStatus',	
         'HouseProvidedBy',	
         'LotStatus',	
-        'LotProvidedBy'
+        'LotProvidedBy',
+        'customer_id'
     ];
     
     public function customer(){

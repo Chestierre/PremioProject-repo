@@ -15,14 +15,17 @@ return new class extends Migration
     {
         Schema::create('customer_parents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
 
-            $table->string('Father');
-            $table->string('Mother');
-            $table->string('Addresss');
-            $table->integer('MobileNumber');
+            $table->string('Father')->nullable();
+            $table->string('Mother')->nullable();
+            $table->string('Addresss')->nullable();
+            $table->integer('MobileNumber')->nullable();
 
             $table->timestamps();
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
 
             $table->index('customer_id');
         });

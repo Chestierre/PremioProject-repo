@@ -31,7 +31,8 @@ class CustomerCoMaker extends Model
         'CreditReference2',
         'CreditReference3',
         'Sketch',
-        'Signature'
+        'Signature',
+        'customer_id'
     ];
 
     public function customer(){

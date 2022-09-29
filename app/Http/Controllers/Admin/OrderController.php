@@ -25,9 +25,9 @@ class OrderController extends Controller
     public function create()
     {
     }
+    
     public function store(Request $request)
     {
-
 
          $request->validate([
              'customer_id' => 'required',
@@ -38,16 +38,7 @@ class OrderController extends Controller
              'balance' => 'required|integer'
 
           ]);
-
-        //   $unit = Unit::find($request->unit_id)->load('brand');
-        //   dd($unit->brand->brandname);
-        
-          //$unit = Unit::find($request->unit_id)->load('brand');
           $unit = Unit::with('brand')->find($request->unit_id);
-        //   dd($unit->brand->brandname);
-          //$brandname = $unit->brand->brandname;
-
-          //dd($unit->brand->brandname);
           switch($request->monthsinstallment){
                 case 12:
                     $order = Order::create([
@@ -86,6 +77,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -144,6 +136,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -214,6 +207,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -296,6 +290,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -390,6 +385,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -461,6 +457,7 @@ class OrderController extends Controller
                         'balance' => $order->balance,
                         'currentmonth' => '0',
                         'payment' => '0',
+                        'monthspaid' => '0',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -470,27 +467,12 @@ class OrderController extends Controller
                         'monthsix' => $order->monthsix,
                     ]);
 
-          }
-
-        //  $unit = Unit::find($request->unit_id);
-
-        //  $order = Order::create([
-        //     'customer_id' => $request->customer_id,
-        //     'unit_id' => $request->unit_id,
-        //     'IsInstallment' => $request->IsInstallment,
-        //     'monthly_amount' => $request->monthly_amount,
-        //     'months_payment' => $request->months_payment,
-        //     'user_id' => $request->user_id,
-        //     'initial_price' => $unit->price,
-        //     'balance' => $unit->price
-        //  ]);
-
-         
+          }       
           return redirect()->route('admin.order.index');
     }
     public function show(order $order)
     {
-        //dd($order);
+        $order->load('orderhistory','ordertransactiondetails', 'ordercustomerinformation');
         return view('admin.order.view', compact('order'));
     }
     public function edit(order $order)
@@ -500,7 +482,6 @@ class OrderController extends Controller
     }
     public function update(Request $request, order $order)
     {
-        // dd($request->all());
         $request->validate([
             'deductbalance' => 'nullable|integer',
             'user_id' => 'nullable',
@@ -545,10 +526,9 @@ class OrderController extends Controller
         return response()->json(['success'=>"Promo Deleted successfully."]);
     }
 
-
     public function pdfOrderHistory(Order $order)
     {
-        //dd($order);
+        $order->load('orderhistory','ordertransactiondetails');
         //$pdf = Pdf::loadView('admin.order.view', compact('order'));
         $pdf = Pdf::loadView('admin.order.pdfOrder', compact('order'));
         
@@ -556,19 +536,609 @@ class OrderController extends Controller
         // $pdf = Pdf::loadView('FillOutform');
         return $pdf->download('orders.pdf');
     }
+    
+    public function pdfOrderHistoryByDate(Order $order, Request $request)
+    {
+        // dd($request->all());
+        // $order->load('orderhistory','ordertransactiondetails');
+        $order->load('orderhistory','ordertransactiondetails');
+        if($request->methodtype == "ByMonth"){
+            //dd('byMonth');
+            $orders = $order->orderhistory()
+                    ->where('date_updated', '>=', $request->dateafter)
+                    ->get();
+        }elseif($request->methodtype == "ByDate"){
+            $orders = $order->orderhistory()
+                            ->whereBetween('date_updated', [$request->datebefore, $request->dateafter])
+                            ->get();
+        }
+        $flag = array("dateafter" => $request->dateafter, "methodtype" => $request->methodtype, "datebefore" => $request->datebefore);
+        $pdf = Pdf::loadView('admin.order.pdfOrder', compact('orders', 'flag'));
+        
+        return $pdf->download('orders.pdf');
+    }
 
     public function queryPrice($id)
     {
-        //$where = array('id' => $id);
-        //$unit  = Unit::where($where)->first()->load('brand');
-        //$unit = Unit::with('brand')->find($request->unit_id);
-        //$unit = Unit::with('brand')->where($where);
-        //$unit = Unit::with('brand')->where($id)->first();
         $unit = Unit::with('brand')->find($id);
-        //dd($unit);
-         //$unit = Unit::all();
-        // return Response::json($unit);
         return response()->json($unit);
     }
     
+    public function pay(Request $request, Order $order){
+  
+        $request->validate([
+            'payment' => 'required|int',
+         ]);
+
+        $totalmonths = $order->ordertransactiondetails->monthsinstallment;
+        $mo_current = $order->currentmonth;
+        $mo_paid  = $order->monthspaid;
+        $payment = $request->payment;
+        $r_penalty = 1.04;
+        $monthlypayment = $order->ordertransactiondetails->monthlypayment;
+        switch($totalmonths){
+            case '36':
+                $balance_array = array(
+                    $order->monthone,
+                    $order->monthtwo,
+                    $order->monththree,
+                    $order->monthfour,
+                    $order->monthfive,
+                    $order->monthsix,
+                    $order->monthseven,
+                    $order->montheight,
+                    $order->monthnine,
+                    $order->monthten,
+                    $order->montheleven,
+                    $order->monthtwelve,
+                    $order->monththirteen,
+                    $order->monthfourteen,
+                    $order->monthfifteen,
+                    $order->monthsixteen,
+                    $order->monthseventeen,
+                    $order->montheigthteen,
+                    $order->monthnineteen,
+                    $order->monthtwenty,
+                    $order->monthtwentyone,
+                    $order->monthtwentytwo,
+                    $order->monthtwentythree,
+                    $order->monthtwentyfour,
+                    $order->monthtwentyfive,
+                    $order->monthtwentysix,
+                    $order->monthtwentyseven,
+                    $order->monthtwentyeight,
+                    $order->monthtwentynine,
+                    $order->monththirthy,
+                    $order->monththirthyone,
+                    $order->monththirthytwo,
+                    $order->monththirthythree,
+                    $order->monththirthyfour,
+                    $order->monththirthyfive,
+                    $order->monththirthysix
+            );
+                break;
+            case '30':
+                $balance_array = array(
+                    $order->monthone,
+                    $order->monthtwo,
+                    $order->monththree,
+                    $order->monthfour,
+                    $order->monthfive,
+                    $order->monthsix,
+                    $order->monthseven,
+                    $order->montheight,
+                    $order->monthnine,
+                    $order->monthten,
+                    $order->montheleven,
+                    $order->monthtwelve,
+                    $order->monththirteen,
+                    $order->monthfourteen,
+                    $order->monthfifteen,
+                    $order->monthsixteen,
+                    $order->monthseventeen,
+                    $order->montheigthteen,
+                    $order->monthnineteen,
+                    $order->monthtwenty,
+                    $order->monthtwentyone,
+                    $order->monthtwentytwo,
+                    $order->monthtwentythree,
+                    $order->monthtwentyfour,
+                    $order->monthtwentyfive,
+                    $order->monthtwentysix,
+                    $order->monthtwentyseven,
+                    $order->monthtwentyeight,
+                    $order->monthtwentynine,
+                    $order->monththirthy
+            );
+                break;
+            case '24':
+                $balance_array = array(
+                    $order->monthone,
+                    $order->monthtwo,
+                    $order->monththree,
+                    $order->monthfour,
+                    $order->monthfive,
+                    $order->monthsix,
+                    $order->monthseven,
+                    $order->montheight,
+                    $order->monthnine,
+                    $order->monthten,
+                    $order->montheleven,
+                    $order->monthtwelve,
+                    $order->monththirteen,
+                    $order->monthfourteen,
+                    $order->monthfifteen,
+                    $order->monthsixteen,
+                    $order->monthseventeen,
+                    $order->montheigthteen,
+                    $order->monthnineteen,
+                    $order->monthtwenty,
+                    $order->monthtwentyone,
+                    $order->monthtwentytwo,
+                    $order->monthtwentythree,
+                    $order->monthtwentyfour
+            );
+                break;
+            case '18':
+                $balance_array = array(
+                    $order->monthone,
+                    $order->monthtwo,
+                    $order->monththree,
+                    $order->monthfour,
+                    $order->monthfive,
+                    $order->monthsix,
+                    $order->monthseven,
+                    $order->montheight,
+                    $order->monthnine,
+                    $order->monthten,
+                    $order->montheleven,
+                    $order->monthtwelve,
+                    $order->monththirteen,
+                    $order->monthfourteen,
+                    $order->monthfifteen,
+                    $order->monthsixteen,
+                    $order->monthseventeen,
+                    $order->montheigthteen
+            );
+                break;
+            case '12':
+                $balance_array = array(
+                    $order->monthone,
+                    $order->monthtwo,
+                    $order->monththree,
+                    $order->monthfour,
+                    $order->monthfive,
+                    $order->monthsix,
+                    $order->monthseven,
+                    $order->montheight,
+                    $order->monthnine,
+                    $order->monthten,
+                    $order->montheleven,
+                    $order->monthtwelve
+  
+            );
+                break;
+            default:
+            $balance_array = array(
+                $order->monthone,
+                $order->monthtwo,
+                $order->monththree,
+                $order->monthfour,
+                $order->monthfive,
+                $order->monthsix,
+                $order->monthseven,
+                $order->montheight,
+                $order->monthnine,
+                $order->monthten,
+                $order->montheleven,
+                $order->monthtwelve
+        );
+        }
+        // check if paid
+        if ($balance_array[$mo_paid] < 1){
+            return redirect()->route('admin.order.show',$order); 
+        }
+
+        if($mo_paid >= $mo_current)
+        {
+            $balance_array[$mo_paid] -= $payment;
+            $balance_array[$mo_paid] -= 200;
+            while ($balance_array[$mo_paid] < 0) {
+                $balance_array[$mo_paid+1] += $balance_array[$mo_paid];
+                $balance_array[$mo_paid] = 0;
+                $mo_paid += 1;
+            }
+            if ($balance_array[$mo_paid] == 0){
+                $mo_paid += 1;
+            }
+        }
+        else
+        {
+            $balance_array[$mo_paid] -= $payment;
+            
+            while ($balance_array[$mo_paid] < 0) {
+                $balance_array[$mo_paid+1] += $balance_array[$mo_paid];
+                $balance_array[$mo_paid] = 0;
+                $mo_paid += 1;
+            }
+            if ($balance_array[$mo_paid] == 0){
+                $mo_paid += 1;
+            } 
+
+            if($mo_current - $mo_paid >= 2 && $mo_current<=$totalmonths){
+            for ($i=$mo_paid; $i<$mo_current; $i++)
+            {
+                $balance_array[$i] *= $r_penalty;
+            }}
+            elseif($mo_current - $mo_paid >= 2 && $mo_current>$totalmonths){
+            for ($i=$mo_paid; $i<$totalmonths; $i++)
+            {
+                $balance_array[$i] *= $r_penalty;
+            }
+
+            }
+        }
+        
+        $mo_current += 1;
+        $balance = array_sum($balance_array);
+        
+
+        switch($totalmonths){
+            case '36':
+                $order -> update([
+                    'balance' => $balance,
+                    'currentmonth' => $mo_current,
+                    'monthspaid' => $mo_paid,
+        
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23],
+                    'monthtwentyfive' => $balance_array[24],
+                    'monthtwentysix' => $balance_array[25],
+                    'monthtwentyseven' => $balance_array[26],
+                    'monthtwentyeight' => $balance_array[27],
+                    'monthtwentynine' => $balance_array[28],
+                    'monththirthy' => $balance_array[29],
+                    'monththirthyone' => $balance_array[30],
+                    'monththirthytwo' => $balance_array[31],
+                    'monththirthythree' => $balance_array[32],
+                    'monththirthyfour' => $balance_array[33],
+                    'monththirthyfive' => $balance_array[34],
+                    'monththirthysix' => $balance_array[35]
+                ]);
+                OrderHistory::create([
+                    'order_id' => $order->id,
+                    'balance' =>$balance ,
+                    'currentmonth' => $mo_current,
+                    'payment' => $payment,
+                    'monthspaid' => $mo_paid,
+        
+                    'date_updated' => $order->updated_at,
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23],
+                    'monthtwentyfive' => $balance_array[24],
+                    'monthtwentysix' => $balance_array[25],
+                    'monthtwentyseven' => $balance_array[26],
+                    'monthtwentyeight' => $balance_array[27],
+                    'monthtwentynine' => $balance_array[28],
+                    'monththirthy' => $balance_array[29],
+                    'monththirthyone' => $balance_array[30],
+                    'monththirthytwo' => $balance_array[31],
+                    'monththirthythree' => $balance_array[32],
+                    'monththirthyfour' => $balance_array[33],
+                    'monththirthyfive' => $balance_array[34],
+                    'monththirthysix' => $balance_array[35]
+                ]);
+                break;
+            case '30':
+                $order -> update([
+                    'balance' => $balance,
+                    'currentmonth' => $mo_current,
+                    'monthspaid' => $mo_paid,
+        
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23],
+                    'monthtwentyfive' => $balance_array[24],
+                    'monthtwentysix' => $balance_array[25],
+                    'monthtwentyseven' => $balance_array[26],
+                    'monthtwentyeight' => $balance_array[27],
+                    'monthtwentynine' => $balance_array[28],
+                    'monththirthy' => $balance_array[29]
+                ]);
+                OrderHistory::create([
+                    'order_id' => $order->id,
+                    'balance' =>$balance ,
+                    'currentmonth' => $mo_current,
+                    'payment' => $payment,
+                    'monthspaid' => $mo_paid,
+        
+                    'date_updated' => $order->updated_at,
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23],
+                    'monthtwentyfive' => $balance_array[24],
+                    'monthtwentysix' => $balance_array[25],
+                    'monthtwentyseven' => $balance_array[26],
+                    'monthtwentyeight' => $balance_array[27],
+                    'monthtwentynine' => $balance_array[28],
+                    'monththirthy' => $balance_array[29]
+                ]);
+                break;
+            case '24':
+                $order -> update([
+                    'balance' => $balance,
+                    'currentmonth' => $mo_current,
+                    'monthspaid' => $mo_paid,
+        
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23]
+                ]);
+                OrderHistory::create([
+                    'order_id' => $order->id,
+                    'balance' =>$balance ,
+                    'currentmonth' => $mo_current,
+                    'payment' => $payment,
+                    'monthspaid' => $mo_paid,
+        
+                    'date_updated' => $order->updated_at,
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17],
+                    'monthnineteen' => $balance_array[18],
+                    'monthtwenty' => $balance_array[19],
+                    'monthtwentyone' => $balance_array[20],
+                    'monthtwentytwo' => $balance_array[21],
+                    'monthtwentythree' => $balance_array[22],
+                    'monthtwentyfour' => $balance_array[23]
+                ]);
+                break;
+            case '18':
+                $order -> update([
+                    'balance' => $balance,
+                    'currentmonth' => $mo_current,
+                    'monthspaid' => $mo_paid,
+        
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17]
+                ]);
+                OrderHistory::create([
+                    'order_id' => $order->id,
+                    'balance' =>$balance ,
+                    'currentmonth' => $mo_current,
+                    'payment' => $payment,
+                    'monthspaid' => $mo_paid,
+        
+                    'date_updated' => $order->updated_at,
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11],
+                    'monththirteen' => $balance_array[12],
+                    'monthfourteen' => $balance_array[13],
+                    'monthfifteen' => $balance_array[14],
+                    'monthsixteen' => $balance_array[15],
+                    'monthseventeen' => $balance_array[16],
+                    'montheigthteen' => $balance_array[17]
+                ]);
+                break;
+            case '12':
+                $order -> update([
+                    'balance' => $balance,
+                    'currentmonth' => $mo_current,
+                    'monthspaid' => $mo_paid,
+        
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11]
+                ]);
+                OrderHistory::create([
+                    'order_id' => $order->id,
+                    'balance' =>$balance ,
+                    'currentmonth' => $mo_current,
+                    'payment' => $payment,
+                    'monthspaid' => $mo_paid,
+        
+                    'date_updated' => $order->updated_at,
+                    'monthone' =>  $balance_array[0],
+                    'monthtwo' => $balance_array[1],
+                    'monththree' => $balance_array[2],
+                    'monthfour' => $balance_array[3],
+                    'monthfive' => $balance_array[4],
+                    'monthsix' => $balance_array[5],
+                    'monthseven' => $balance_array[6],
+                    'montheight' => $balance_array[7],
+                    'monthnine' => $balance_array[8],
+                    'monthten' => $balance_array[9],
+                    'montheleven' => $balance_array[10],
+                    'monthtwelve' => $balance_array[11]
+                ]);
+                break;
+            default:
+            $order -> update([
+                'balance' => $balance,
+                'currentmonth' => $mo_current,
+                'monthspaid' => $mo_paid,
+    
+                'monthone' =>  $balance_array[0],
+                'monthtwo' => $balance_array[1],
+                'monththree' => $balance_array[2],
+                'monthfour' => $balance_array[3],
+                'monthfive' => $balance_array[4],
+                'monthsix' => $balance_array[5]
+            ]);
+            OrderHistory::create([
+                'order_id' => $order->id,
+                'balance' =>$balance ,
+                'currentmonth' => $mo_current,
+                'payment' => $payment,
+                'monthspaid' => $mo_paid,
+    
+                'date_updated' => $order->updated_at,
+                'monthone' =>  $balance_array[0],
+                'monthtwo' => $balance_array[1],
+                'monththree' => $balance_array[2],
+                'monthfour' => $balance_array[3],
+                'monthfive' => $balance_array[4],
+                'monthsix' => $balance_array[5]
+            ]);
+        }
+        return redirect()->route('admin.order.show',$order); 
+
+    }
 }

@@ -15,13 +15,16 @@ return new class extends Migration
     {
         Schema::create('customer_credit_references', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
             $table->string('StoreBank');
             $table->integer('ItemLoadAmount');
             $table->string('Term');
             $table->date('CreditDate');
             $table->integer('CreditBalance');
             $table->timestamps();
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
 
             $table->index('customer_id');
         });

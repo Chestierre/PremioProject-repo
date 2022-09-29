@@ -12,7 +12,8 @@ class CustomerDependent extends Model
         'Name',
         'Age',
         'GradeOcc',
-        'SchoolComp'
+        'SchoolComp',
+        'customer_id'
     ];
 
     public function customer(){

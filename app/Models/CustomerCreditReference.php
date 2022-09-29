@@ -14,6 +14,7 @@ class CustomerCreditReference extends Model
         'Term',
         'CreditDate',
         'CreditBalance',
+        'customer_id'
     ];
 
     public function customer(){

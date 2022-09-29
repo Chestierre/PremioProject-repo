@@ -15,15 +15,21 @@ return new class extends Migration
     {
         Schema::create('customer_addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
             $table->string('PresentAddress');
             $table->string('LengthOfStay');
             $table->string('HouseStatus');
             $table->string('HouseProvidedBy')->nullable();
             $table->string('LotStatus');
             $table->string('LotProvidedBy')->nullable();
-
             $table->timestamps();
+
+
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
+
+
             $table->index('customer_id');
         });
     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('balance');
             $table->integer('currentmonth');
+            $table->integer('monthspaid');
             $table->integer('payment');
             $table->date('date_updated');
             $table->integer('monthone');
@@ -60,6 +61,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('order_id')
                         ->constrained()
+                        ->onUpdate('cascade')
                         ->onDelete('cascade');
 
             $table->index('order_id');

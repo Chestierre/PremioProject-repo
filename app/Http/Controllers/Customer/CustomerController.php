@@ -101,7 +101,7 @@ class CustomerController extends Controller
             // 'DependentSchoolComp4' => 'nullable|string',
             // 'Father' => 'nullable|string',
             // 'Mother' => 'nullable|string',
-            // 'ParentAddresss' => 'required|string',
+            // 'ParentAddresss' => 'nullable|string',
             // 'ParentNumber' => 'nullable|integer',
             'SourceIncome' => 'required|string',	
             'ProvidedBy' => 'nullable|string',

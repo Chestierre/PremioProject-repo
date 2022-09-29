@@ -21,7 +21,8 @@ class CustomerSpouse extends Model
         'WorkTelNum',
         'DateEmployed',
         'Salary',
-        'SpouseSignature'
+        'SpouseSignature',
+        'customer_id'
     ];
     public function customer(){
         return $this->belongsTo(Customer::class);

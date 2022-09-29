@@ -13,7 +13,8 @@ class CustomerPersonalReference extends Model
         'PersonalReferenceName',	
         'PersonalReferenceRelationship',	
         'PersonalReferenceNumber',
-        'PersonalReferenceAddress'
+        'PersonalReferenceAddress',
+        'customer_id'
     ];
 
     public function customer(){

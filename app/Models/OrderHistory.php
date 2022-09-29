@@ -15,6 +15,7 @@ class OrderHistory extends Model
         'currentmonth',
         'payment',
         'date_updated',
+        'monthspaid',
         
 
         'monthone',

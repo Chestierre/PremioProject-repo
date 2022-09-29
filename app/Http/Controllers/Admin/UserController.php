@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -55,6 +56,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        dd("show");
     }
     public function edit(User $user)
     {
@@ -65,20 +67,34 @@ class UserController extends Controller
     }
     public function update(Request $request, User $user)
     {   
-        $this->authorize('edit', $user);
 
-        $request->validate([
-            'editusername' => 'required|string|max:255|unique:users',
-            'editpassword' => 'required|string|min:5',
-            'userrole' => 'required|string|max:20'
+        $validator = \Validator::make($request->all(), [
+            'editusername' => ['required', 'string', 'max:255', 'min:5', Rule::unique('users','username')->ignore($user->id)],
+            'editpassword' => 'string|min:5|nullable',
+            'userrole' => 'required|string|max:20',
         ]);
 
+        if ($validator->fails())
+        {
+            return response()->json(['errors'=>$validator->errors()]);
+        }
 
-        $user -> update([
-            'username' => $request->username
-        ]);
+        if ($request->editpassword == ""){
+            $user -> update([
+                'username' => $request->editusername,
+                'userrole' => $request->userrole,
+            ]);
+        }else{
+            $user -> update([
+                'username' => $request->editusername,
+                'userrole' => $request->userrole,
+                'password' => Hash::make($request->editpassword),
+            ]);
+        }
 
-        return redirect()->route('admin.user.index');
+        return response()->json($request);
+
+        // return redirect()->route('admin.user.index');
     }
     public function destroy(User $user)
     {
@@ -145,17 +161,18 @@ class UserController extends Controller
 
     public function getuser($id)
     {
-        //$where = array('id' => $id);
-        //$unit  = Unit::where($where)->first()->load('brand');
-        //$unit = Unit::with('brand')->find($request->unit_id);
-        //$unit = Unit::with('brand')->where($where);
-        //$unit = Unit::with('brand')->where($id)->first();
-        //$unit = Unit::with('brand')->find($id);
         $user = User::find($id);
-        //dd($unit);
-         //$unit = Unit::all();
-        // return Response::json($unit);
         return response()->json($user);
+    }
+
+    public function getcustomeruserrelation($id){
+        $user = User::with('customer')->find($id);
+        if ($user->customer()->exists()){
+            // return response()->json(['errors'=>$validator->errors()]);
+            // return response()->json($user);
+            return response()->json(['firstname' => $user->customer->FirstName, 'lastname'=> $user->customer->LastName]);
+        }
+        return null;
     }
 
 }

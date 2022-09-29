@@ -1,7 +1,6 @@
 @extends('layouts.adminlayout')
 
 @section('content')
-
 <div class="container">
     <div class="table-responsive">
         <div class="table-wrapper">
@@ -63,21 +62,23 @@
                             <td>{{ $user->userrole }}</td>
 
                             <td>
-                                @if($user->customer()->exists())
-                                <form method="GET" action="{{ route('admin.user.edit', $user) }}">
-                                    <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
-                                </form>
-                                @elseif ($user->userrole == "Customer")
-                                <form method="GET" action="{{ route('admin.user.edit', $user) }}">
-                                    <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
-                                </form>
+                                @if ($user->userrole == 'Customer')
+                                    @if($user->customer()->exists())
+                                    <form method="GET" action="{{ route('admin.admincustomer.edit', $user) }}">
+                                        <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
+                                    </form>
+                                    @elseif ($user->userrole == "Customer")
+                                    <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $user) }}">
+                                        <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
+                                    </form>
+                                    @endif
                                 @endif
                             </td>                            
                             <td>
                             @can('edit', $user)
                                 <div class='d-flex'>
                                 <form method="GET" action="{{ route('admin.user.edit', $user) }}">
-                                    <a href="#" class="btn btn-primary col-sm mx-2" data-toggle="modal" data-target="#editUserModal"> <span><i class="fa-solid fa-pen"></i> Edit</span></a>
+                                    <a href="#" class="btn btn-primary col-sm mx-2 editButton" data-id={{$user->id}}> <span><i class="fa-solid fa-pen"></i> Edit</span></a>
                                     {{-- <button type="submit" class="btn btn-primary mx-2" ><i class="fa-solid fa-pen"></i> Edit</button> --}}
                                 </form>
                                 
@@ -125,6 +126,7 @@
                
                     <div class="modal-body">
                         Are you sure you want to delete <span id="modal-category_name"></span>?
+                        <div id="deletecustomerrelation"></div>
                         <input type="hidden" id="category" name="category_id">
                     </div>
 
@@ -143,7 +145,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createUserModalLabel">Create User</h5>
-          <button type="button" class="close modal-dismiss" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close createmodal-dismiss" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -210,7 +212,7 @@
             </div>
         
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary modal-dismiss" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary createmodal-dismiss" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
             </div>
             </form>
@@ -225,47 +227,46 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-          <button type="button" class="close modal-dismiss" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="editUserModalLabel">Edit User: <span id="editUserSpan"></span></h5>
+          <button type="button" class="close editmodal-dismiss" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        <form method="POST" action="{{ route('admin.user.store') }}">
-            @csrf 
+        <form>
             <div class="row mb-3">
                 <label for="editusername" class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
                 <div class="col-md-6">
-                  <input id="editusername" type="text" class="form-control @error('editusername') is-invalid @enderror" name="editusername" value="{{ old('editusername') }}" autocomplete="username" >
-                    @error('editusername')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                  <input id="editusername" type="text" class="form-control" name="editusername" value="{{ old('editusername') }}" autocomplete="username" >
+                    
+                    <span class="invalid-feedback" role="alert" >
+                        <strong id="editusernameerrorlabel">hello</strong>
+                    </span>
+                    
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="editpassword" class="col-md-4 col-form-label text-md-end">{{ __('New Password') }}</label>
                 <div class="col-md-6">
-                  <input id="editpassword" type="password" class="form-control @error('editpassword') is-invalid @enderror" name="editpassword" value="{{ old('editpassword') }}" >
-                    @error('editpassword')
+                  <input id="editpassword" type="password" class="form-control" name="editpassword" value="{{ old('editpassword') }}" >
+
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
+                            <strong id="editpassworderrorlabel"></strong>
                         </span>
-                    @enderror
+
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="userrole" class="col-md-4 col-form-label text-md-end">{{ __('User Type') }}</label>
                 <div class="col-md-6">
                     @can('superadmin', App\Models\User::class)
-                    <select name="userrole" class="form-select form-control">
+                    <select name="userrole" id="userrole-select" class="form-select form-control">
                         <option>{{ "Admin"}}</option>  
                         <option>{{ "Collector" }}</option>
                         <option>{{ "Customer"}}</option>
                     </select>
                     @else
-                    <select name="userrole" class="form-select form-control"> 
+                    <select name="userrole" id="userrole-select" class="form-select form-control"> 
                         <option>{{ "Collector" }}</option>
                         <option>{{ "Customer"}}</option>
                     </select>
@@ -274,9 +275,10 @@
 
                 </div>
             </div>
+            <input type="hidden" value="" id="edit_id">
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary modal-dismiss" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Edit</button>
+            <button type="button" class="btn btn-secondary editmodal-dismiss" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="editSubmitButton">Edit</button>
             </div>
             </form>
         </div>
@@ -299,10 +301,92 @@
         @if ($errors->has('password') || $errors->has('username'))
             $('#createUserModal').modal('show');
         @endif
-        $('.modal-dismiss').on('click', function(){
-            $('#createUserModal').modal('hide');
-        })
 
+        $('.createmodal-dismiss').on('click', function(){
+            $('#createUserModal').modal('hide');
+            
+        });
+
+        $('.editmodal-dismiss').on('click', function(){
+            $('#editUserModal').modal('hide');
+            
+        });
+
+        $('#editSubmitButton').on('click', function(e){
+            e.preventDefault();
+            var id = $("#edit_id").val();
+            var editusername = $("#editusername").val();
+            var editpassword = $("#editpassword").val();
+            var userrole = $("#userrole-select").val();
+            // var userrole2 = $("#userrole-select2").val();
+
+            $.ajax({
+                    url: 'user/' + id,
+                    type: "PUT",
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        id: id,
+                        editusername: editusername,
+                        editpassword: editpassword,
+                        userrole: userrole,
+                        // userrole2: userrole2,
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.hasOwnProperty('errors')){
+                            // console.log("hello");
+                            console.log(data.errors);
+                            if(data.errors.hasOwnProperty('editusername')){
+                                $('#editusername').addClass("is-invalid");
+                                $('#editusernameerrorlabel').html(data.errors.editusername);
+                            }
+                            else{
+                                $('#editusername').removeClass("is-invalid"); 
+                            }
+
+                            if(data.errors.hasOwnProperty('editpassword')){
+                                $('#editpassword').addClass("is-invalid");
+                                console.log( $('#editpassword').attr('class'));
+                                $('#editpassworderrorlabel').html(data.errors.editpassword);
+                            }else{
+                                $('#editpassword').removeClass("is-invalid");
+                            }
+                        }else{
+                            window.location.reload(true);
+                        }
+
+                    
+                    },
+                    error: function (data) {
+                            // console.log(data.responseText);
+                            alert(data.responseText);
+                            // console.log(data.responseJSON.errors);
+                    }
+                    
+  });
+
+        });
+
+        // $('#editButton').click(function(event){
+        //     event.preventDefault();
+        //     console.log("hello");
+        //     console.log("$(this).attr('data-id')");
+        //     //$.get('user/getuser/'+ $(this).attr('data-id'),)
+        // });
+
+        $('.editButton').on('click', function(e) {
+            $.get('user/getuser/'+ $(this).attr('data-id'), function(data){
+                //console.log(data);
+                $('#editUserSpan').html(data.username);
+                $('#editusername').val(data.username);
+                $('#editpassword').val("");
+                $('#userrole-select').val(data.userrole);
+                $('#edit_id').val(data.id);
+                $('#editpassword').removeClass("is-invalid");
+                $('#editusername').removeClass("is-invalid");
+                $('#editUserModal').modal('show');
+            })
+        });
 
         $('#master').on('click', function(e) {
          if($(this).is(':checked',true))  
@@ -406,6 +490,13 @@
     });
 
     function loadDeleteModal(id, name) {
+            $.get('user/getcustomeruserrelation/'+ id, function(data){
+                if((data.hasOwnProperty('firstname'))&&(data.hasOwnProperty('lastname'))){
+                    var name = data.firstname + " " + data.lastname;
+                    console.log(name);
+                }
+
+            });
             $('#modal-category_name').html(name);
             $('#deleteCategory').modal('show');
             $('#modal-confirm_delete').attr('onclick', `confirmDelete(${id})`);
@@ -432,7 +523,22 @@
                 }
             });
         }
-    
+        function getuser(id) {
+        $.ajax({
+            url: 'user/getuser/' + id,
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "json",
+            success: function (response) {
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
 
 </script>
 @endsection

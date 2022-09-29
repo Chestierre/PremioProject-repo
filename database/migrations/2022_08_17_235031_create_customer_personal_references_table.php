@@ -15,13 +15,16 @@ return new class extends Migration
     {
         Schema::create('customer_personal_references', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
             $table->string('PersonalReferenceName');
             $table->string('PersonalReferenceRelationship');
             $table->integer('PersonalReferenceNumber');
             $table->string('PersonalReferenceAddress');
 
             $table->timestamps();
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
             $table->index('customer_id');
         });
     }

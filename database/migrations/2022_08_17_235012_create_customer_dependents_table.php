@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('customer_dependents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
             $table->string('Name');
             $table->integer('Age');
             $table->string('GradeOcc');
@@ -23,6 +22,10 @@ return new class extends Migration
 
 
             $table->timestamps();
+            $table->foreignId('customer_id')
+                        ->constrained()
+                        ->onUpdate('cascade')
+                        ->onDelete('cascade');
 
             $table->index('customer_id');
         });
