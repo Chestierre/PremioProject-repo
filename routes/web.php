@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/admin/user/search', [UserController::class, 'search'])->name('user.search');
         Route::post('/user/adminstore', [UserController::class, 'adminstore'])->name('user.adminstore');
         Route::get('user/getuser/{id}', [UserController::class, 'getuser'])->name('user.getuser');
+        
         Route::get('user/getcustomeruserrelation/{id}', [UserController::class, 'getcustomeruserrelation'])->name('user.getcustomeruserrelation');
         Route::resource('user', UserController::class);
 
@@ -62,6 +63,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/admin/brand/try', [BrandController::class, 'try'])->name('brand.try');
 
         Route::get('admincustomer/createCustomer/{user}', [AdminCustomerController::class, 'createCustomer'])->name('admincustomer.createCustomer');
+        Route::get('admincustomer/customerOrder/{user}', [AdminCustomerController::class, 'customerOrder'])->name('admincustomer.customerOrder');
         Route::post('admincustomer/storeCustomer/{user}', [AdminCustomerController::class, 'storeCustomer'])->name('admincustomer.storeCustomer');
         Route::resource('admincustomer', AdminCustomerController::class);
     });

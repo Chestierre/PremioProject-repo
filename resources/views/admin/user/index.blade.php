@@ -63,15 +63,23 @@
 
                             <td>
                                 @if ($user->userrole == 'Customer')
-                                    @if($user->customer()->exists())
-                                    <form method="GET" action="{{ route('admin.admincustomer.edit', $user) }}">
-                                        <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
-                                    </form>
-                                    @elseif ($user->userrole == "Customer")
-                                    <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $user) }}">
-                                        <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
-                                    </form>
-                                    @endif
+                                    <div class="d-flex">
+                                        @if($user->customer()->exists())
+                                        <form method="GET" action="{{ route('admin.admincustomer.edit', $user) }}">
+                                            <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
+                                        </form>
+                                        @elseif ($user->userrole == "Customer")
+                                        <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $user) }}">
+                                            <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
+                                        </form>
+                                        @endif
+                                        @if($user->customer()->exists() && $user->customer->order()->exists())
+                                        <form method="GET" action="{{ route('admin.admincustomer.customerOrder', $user) }}" class ="mx-2">
+                                            <button type="submit" class="btn btn-secondary" style="width:6em"><i class="fa-solid fa-file-pen"></i>Orders</button>
+                                        </form>
+                                        @endif
+                                    </div>
+
                                 @endif
                             </td>                            
                             <td>
@@ -461,6 +469,13 @@
                 }  
             }  
         });
+
+        // $('[data-toggle=confirmation]').confirmation({
+        //     rootSelector: '[data-toggle=confirmation]',
+        //     onConfirm: function (event, element) {
+        //         element.trigger('confirm');
+        //     }
+        // });
 
         $(document).on('confirm', function (e) {
             var ele = e.target;

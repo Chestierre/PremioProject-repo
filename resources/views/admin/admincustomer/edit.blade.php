@@ -761,7 +761,7 @@
                             </div>
 
                             <div id="div_id_CoMakerEmploymentStatus" class="form-group my-2">
-                                <label for="id_CoMakerEmploymentStatus" class="control-label">Source Income</label>
+                                <label for="id_CoMakerEmploymentStatus" class="control-label">Co-Maker Employment Status</label>
                                 <div class="controls d-flex">
                                     <select name="CoMakerEmploymentStatus" id="id_CoMakerEmploymentStatus" class="form-select form-control" disabled>
                                         <option value="Contractual" {{ $admincustomer->customer->comaker->EmploymentStatus == "Contractual" ? 'selected' : '' }}>Contractual</option>
@@ -911,11 +911,11 @@
                             </div>
 
                             <div id="div_id_HouseProvidedBy" class="form-group my-2">
-                                <label for="id_HouseProvidedBy " class="control-label">House Provided By</label>
+                                <label for="id_HouseProvidedBy" class="control-label">House Provided By</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('HouseProvidedBy ') is-invalid @enderror" id="id_HouseProvidedBy " name="HouseProvidedBy " value="{{ $admincustomer->customer->address->HouseProvidedBy  }}" type="text" disabled/>
-                                    <button class="btn btn-secondary button_click" data-id="id_HouseProvidedBy" id="button_id_HouseProvidedBy " type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
-                                    @error('HouseProvidedBy ')
+                                    <input class="form-control @error('HouseProvidedBy') is-invalid @enderror" id="id_HouseProvidedBy" name="HouseProvidedBy" value="{{ $admincustomer->customer->address->HouseProvidedBy }}" type="text" disabled/>
+                                    <button class="btn btn-secondary button_click" data-id="id_HouseProvidedBy" id="button_id_HouseProvidedBy" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('HouseProvidedBy')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -937,11 +937,11 @@
                             </div>
 
                             <div id="div_id_LotProvidedBy" class="form-group my-2">
-                                <label for="id_LotProvidedBy " class="control-label">Lot Provided By</label>
+                                <label for="id_LotProvidedBy" class="control-label">Lot Provided By</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('LotProvidedBy ') is-invalid @enderror" id="id_LotProvidedBy " name="LotProvidedBy " value="{{ $admincustomer->customer->address->LotProvidedBy  }}" type="text" disabled/>
-                                    <button class="btn btn-secondary button_click" data-id="id_LotProvidedBy" id="button_id_LotProvidedBy " type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
-                                    @error('LotProvidedBy ')
+                                    <input class="form-control @error('LotProvidedBy') is-invalid @enderror" id="id_LotProvidedBy" name="LotProvidedBy" value="{{ $admincustomer->customer->address->LotProvidedBy  }}" type="text" disabled/>
+                                    <button class="btn btn-secondary button_click" data-id="id_LotProvidedBy" id="button_id_LotProvidedBy" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('LotProvidedBy')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

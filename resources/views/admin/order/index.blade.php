@@ -39,7 +39,8 @@
                         <th>Unit</th>
                         <th>Balance</th>
                         <th>Transaction Date</th>
-                        <th>collector</th>
+                        <th>Order Status</th>
+                        {{-- <th>Customer Status</th> --}}
                         <th>Actions</th>
                     </tr>
                 </thead>

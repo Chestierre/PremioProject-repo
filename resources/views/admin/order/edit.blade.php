@@ -60,7 +60,7 @@
                         
                         <br />
                         <button type="submit" class="btn btn-primary"> Save </button>
-                        <a href = {{ route('admin.order.index') }} type="button" class="btn btn-success"> Go Back </a>
+                        <a href = {{ url()->previous() }} type="button" class="btn btn-success"> Go Back </a>
 
                     </form>
                 </div>

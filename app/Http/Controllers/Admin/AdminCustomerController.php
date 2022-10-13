@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Unit;
 use App\Models\CustomerSpouse;
 use App\Models\CustomerParent;
 use App\Models\CustomerAddress;
@@ -133,9 +134,10 @@ class AdminCustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(User $admincustomer)
     {
-        //
+        // $admincustomer->load('customer.spouse','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
+        // return view('admin.admincustomer.edit', compact('admincustomer')); 
     }
 
     /**
@@ -164,7 +166,7 @@ class AdminCustomerController extends Controller
     public function update(Request $request, User $admincustomer)
     {   
         $admincustomer->load('customer.spouse','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
-        //   dd($request->all());
+        // dd($request->all());
         // dd($admincustomer);
         // dd($admincustomer);
 
@@ -221,8 +223,8 @@ class AdminCustomerController extends Controller
             //parents
             'Father' => 'nullable|string',
             'Mother' => 'nullable|string',
-            'ParentAddresss' => 'nullable|string',
-            'ParentNumber' => 'nullable|integer',
+            'ParentAddress' => 'nullable|string',
+            'ParentMobileNumber' => 'nullable|integer',
 
             //address
             'PresentAddress' => 'required|string',	
@@ -250,30 +252,31 @@ class AdminCustomerController extends Controller
             'CoMakerPosition' => 'required|string',	
             'CoMakerTelNo' => 'nullable|integer',
             'CoMakerEmployerAddress' => 'required|string',	
-            'EmploymentStatus' => 'nullable|string',
+            'CoMakerEmployerAddress' => 'nullable|string',
             'CoMakerCreditReference1' => 'nullable|string',
             'CoMakerCreditReference2' => 'nullable|string',
             'CoMakerCreditReference3' => 'nullable|string',
             'CoMakerSketch' => 'nullable|image',
             'CoMakerSignature' => 'nullable|image',
             
+
             //dependencies
-            'DependentName1' => 'nullable|string',
-            'DependentAge1' => 'nullable|integer',
-            'DependentGradeOcc1' => 'nullable|string',
-            'DependentSchoolComp1' => 'nullable|string',
-            'DependentName2' => 'nullable|string',
-            'DependentAge2' => 'nullable|integer',
-            'DependentGradeOcc2' => 'nullable|string',
-            'DependentSchoolComp2' => 'nullable|string',
-            'DependentName3' => 'nullable|string',
-            'DependentAge3' => 'nullable|integer',
-            'DependentGradeOcc3' => 'nullable|string',
-            'DependentSchoolComp3' => 'nullable|string',
-            'DependentName4' => 'nullable|string',
-            'DependentAge4' => 'nullable|integer',
-            'DependentGradeOcc4' => 'nullable|string',
-            'DependentSchoolComp4' => 'nullable|string',
+            'Dependent1_Name' => 'nullable|string',
+            'Dependent1_Age' => 'nullable|integer',
+            'Dependent1_GradeOcc' => 'nullable|string',
+            'Dependent1_SchoolComp' => 'nullable|string',
+            'Dependent2_Name' => 'nullable|string',
+            'Dependent2_Age' => 'nullable|integer',
+            'Dependent2_GradeOcc' => 'nullable|string',
+            'Dependent2_SchoolComp' => 'nullable|string',
+            'Dependent3_Name' => 'nullable|string',
+            'Dependent3_Age' => 'nullable|integer',
+            'Dependent3_GradeOcc' => 'nullable|string',
+            'Dependent3_SchoolComp' => 'nullable|string',
+            'Dependent4_Name' => 'nullable|string',
+            'Dependent4_Age' => 'nullable|integer',
+            'Dependent4_GradeOcc' => 'nullable|string',
+            'Dependent4_SchoolComp' => 'nullable|string',
 
             //Personal References
             'PersonalReferenceName1' => 'required|string',	
@@ -364,6 +367,266 @@ class AdminCustomerController extends Controller
             'Salary' => $request->SpouseSalary,
             'SpouseSignature' => $request->SpouseSignature,
         ]);
+
+        $admincustomer-> customer -> comaker() -> update([
+            'Name' => $request->CoMakerName,	
+            'Age' => $request->CoMakerAge,
+            'Sex' => $request->CoMakerSex,
+            'Address' => $request->CoMakerAddress,	
+            'CoMakeTelNumber' => $request->CoMakeTelNumber,
+            'Residence' => $request->CoMakerResidence,
+            'ResidenceProvidedBy' => $request->CoMakerResidenceProvidedBy,
+            'CivilStatus' => $request->CoMakerCivilStatus,
+            'Relationship' => $request->CoMakerRelationship,
+            'BirthDate' => $request->CoMakerBirthDate,
+            'Tin' => $request->CoMakerTin,
+            'MobileNo' => $request->CoMakerMobileNo,
+            'Employer' => $request->CoMakerEmployer,	
+            'CoMakeDateEmployed' => $request->CoMakeDateEmployed,
+            'Position' => $request->CoMakerPosition,	
+            'TelNo' => $request->CoMakerTelNo,
+            'EmployerAddress' => $request->CoMakerEmployerAddress,	
+            'EmploymentStatus' => $request->CoMakerEmploymentStatus,
+            'CreditReference1' => $request->CoMakerCreditReference1,
+            'CreditReference2' => $request->CoMakerCreditReference2,
+            'CreditReference3' => $request->CoMakerCreditReference3,
+            'Sketch' => $request->CoMakerSketch,
+            'Signature' => $request->CoMakerSignature,
+        ]);
+
+        $admincustomer-> customer -> parent() -> update([
+            'Father' => $request->Father,
+            'Mother' => $request->Mother,
+            'Addresss' => $request->ParentAddress,
+            'MobileNumber' => $request->ParentMobileNumber,
+
+         ]);
+
+         $admincustomer-> customer -> address() -> update([
+            'PresentAddress' => $request->PresentAddress,	
+            'LengthOfStay' => $request->LengthOfStay,	
+            'HouseStatus' => $request->HouseStatus,	
+            'HouseProvidedBy' => $request->HouseProvidedBy,	
+            'LotStatus' => $request->LotStatus,	
+            'LotProvidedBy' => $request->LotProvidedBy,
+        ]);
+
+        switch($request->NumberOfDependencies){
+            case '4':
+                if ($admincustomer-> customer -> dependent -> slice(3, 1) -> first() && $admincustomer -> customer -> dependent -> count() == 4){
+                    $admincustomer-> customer -> dependent -> slice(3, 1) -> first() -> update
+                    ([
+                        'Name' => $request->Dependent4_Name,
+                        'Age' => $request->Dependent4_Age,
+                        'GradeOcc' => $request->Dependent4_GradeOcc,
+                        'SchoolComp' => $request->Dependent4_SchoolComp,
+                    ]);
+                }
+                else
+                {
+                    CustomerDependent::create([
+                        'Name' => $request->input('Dependent4_Name'),
+                        'Age' => $request->input('Dependent4_Age'),
+                        'GradeOcc' => $request->input('Dependent4_GradeOcc'),
+                        'SchoolComp' => $request->input('Dependent4_SchoolComp'),
+                        'customer_id' => $admincustomer -> customer->id
+                    ]);	
+                }
+                
+            case '3':
+                if ($admincustomer-> customer -> dependent -> slice(2, 1) -> first() && $admincustomer -> customer -> dependent -> count() <= 4){
+                $admincustomer-> customer -> dependent -> slice(2, 1) -> first() -> update([
+                    'Name' => $request->Dependent3_Name,
+                    'Age' => $request->Dependent3_Age,
+                    'GradeOcc' => $request->Dependent3_GradeOcc,
+                    'SchoolComp' => $request->Dependent3_SchoolComp,
+                ]);
+                }
+                else
+                {
+                    CustomerDependent::create([
+                        'Name' => $request->input('Dependent3_Name'),
+                        'Age' => $request->input('Dependent3_Age'),
+                        'GradeOcc' => $request->input('Dependent3_GradeOcc'),
+                        'SchoolComp' => $request->input('Dependent3_SchoolComp'),
+                        'customer_id' => $admincustomer -> customer->id
+                    ]);	
+                }
+
+
+	
+            case '2':
+                if ($admincustomer-> customer -> dependent -> slice(1, 1) -> first() && $admincustomer -> customer -> dependent -> count() <= 4){
+                        $admincustomer-> customer -> dependent -> slice(1, 1) -> first() -> update([
+                            'Name' => $request->Dependent2_Name,
+                            'Age' => $request->Dependent2_Age,
+                            'GradeOcc' => $request->Dependent2_GradeOcc,
+                            'SchoolComp' => $request->Dependent2_SchoolComp,
+                    ]);	
+                    }
+                    else
+                    {
+                        CustomerDependent::create([
+                            'Name' => $request->input('Dependent2_Name'),
+                            'Age' => $request->input('Dependent2_Age'),
+                            'GradeOcc' => $request->input('Dependent2_GradeOcc'),
+                            'SchoolComp' => $request->input('Dependent2_SchoolComp'),
+                            'customer_id' => $admincustomer -> customer->id
+                        ]);	
+                    }
+
+
+            case '1':
+                if ($admincustomer-> customer -> dependent -> slice(0, 1) -> first() && $admincustomer -> customer -> dependent -> count() <= 4){
+                    $admincustomer-> customer -> dependent -> slice(0, 1) -> first() -> update([
+                        'Name' => $request->Dependent1_Name,
+                        'Age' => $request->Dependent1_Age,
+                        'GradeOcc' => $request->Dependent1_GradeOcc,
+                        'SchoolComp' => $request->Dependent1_SchoolComp,
+                    ]);	
+                }
+                else
+                {
+                    CustomerDependent::create([
+                        'Name' => $request->input('Dependent1_Name'),
+                        'Age' => $request->input('Dependent1_Age'),
+                        'GradeOcc' => $request->input('Dependent1_GradeOcc'),
+                        'SchoolComp' => $request->input('Dependent1_SchoolComp'),
+                        'customer_id' => $admincustomer -> customer->id
+                    ]);	
+                }
+            default:
+                ;
+        };
+
+        // dd($admincustomer-> customer -> personalreference -> slice(0, 1) -> first());
+
+        $admincustomer-> customer -> personalreference -> slice(0, 1) -> first() -> update([
+            'PersonalReferenceName' => $request->PersonalReferenceName1,
+            'PersonalReferenceRelationship' => $request->PersonalReferenceRelationship1,
+            'PersonalReferenceNumber' => $request->PersonalReferenceNumber1,
+            'PersonalReferenceAddress' => $request->PersonalReferenceAddress1,
+        ]);	
+
+        $admincustomer-> customer -> personalreference -> slice(1, 1) -> first() -> update([
+            'PersonalReferenceName' => $request->PersonalReferenceName2,
+            'PersonalReferenceRelationship' => $request->PersonalReferenceRelationship2,
+            'PersonalReferenceNumber' => $request->PersonalReferenceNumber2,
+            'PersonalReferenceAddress' => $request->PersonalReferenceAddress2,
+        ]);
+
+        $admincustomer-> customer -> personalreference -> slice(2, 1) -> first() -> update([
+            'PersonalReferenceName' => $request->PersonalReferenceName3,
+            'PersonalReferenceRelationship' => $request->PersonalReferenceRelationship3,
+            'PersonalReferenceNumber' => $request->PersonalReferenceNumber3,
+            'PersonalReferenceAddress' => $request->PersonalReferenceAddress3,
+        ]);
+
+
+
+
+        switch($request->NumberofCreditReference){
+            case '4':
+                if ($admincustomer-> customer -> creditreference -> slice(3, 1) -> first() && $admincustomer -> customer -> creditreference -> count() == 4){
+                    $admincustomer-> customer -> creditreference -> slice(3, 1) -> first() -> update
+                    ([
+                        'StoreBank' => $request->StoreBank4,
+                        'ItemLoadAmount' => $request->ItemLoadAmount4,
+                        'Term' => $request->Term4,
+                        'CreditDate' => $request->CreditDate4,
+                        'CreditBalance' => $request->CreditBalance4
+                    ]);
+                }
+                else
+                {
+                    
+                    CustomerCreditReference::create([
+                        'StoreBank' => $request->input('StoreBank4'),
+                        'ItemLoadAmount' => $request->input('ItemLoadAmount4'),
+                        'Term' => $request->input('Term4'),
+                        'CreditDate' => $request->input('CreditDate4'),
+                        'CreditBalance' => $request->input('CreditBalance4'),
+                        'customer_id' => $admincustomer -> customer->id	
+                    ]);
+
+                }
+                
+            case '3':
+                if ($admincustomer-> customer -> creditreference -> slice(2, 1) -> first() && $admincustomer -> customer -> creditreference -> count() <= 4){
+                    $admincustomer-> customer -> creditreference -> slice(2, 1) -> first() -> update
+                    ([
+                        'StoreBank' => $request->StoreBank3,
+                        'ItemLoadAmount' => $request->ItemLoadAmount3,
+                        'Term' => $request->Term3,
+                        'CreditDate' => $request->CreditDate3,
+                        'CreditBalance' => $request->CreditBalance3
+                    ]);
+                }
+                else
+                {
+                    CustomerCreditReference::create([
+                        'StoreBank' => $request->input('StoreBank3'),
+                        'ItemLoadAmount' => $request->input('ItemLoadAmount3'),
+                        'Term' => $request->input('Term3'),
+                        'CreditDate' => $request->input('CreditDate3'),
+                        'CreditBalance' => $request->input('CreditBalance3'),
+                        'customer_id' => $admincustomer -> customer->id	
+                    ]);
+                }
+
+
+	
+            case '2':
+                if ($admincustomer-> customer -> creditreference -> slice(1, 1) -> first() && $admincustomer -> customer -> creditreference -> count() <= 4){
+                    $admincustomer-> customer -> creditreference -> slice(1, 1) -> first() -> update
+                    ([
+                        'StoreBank' => $request->StoreBank2,
+                        'ItemLoadAmount' => $request->ItemLoadAmount2,
+                        'Term' => $request->Term2,
+                        'CreditDate' => $request->CreditDate2,
+                        'CreditBalance' => $request->CreditBalance2
+                    ]);
+                    }
+                    else
+                    {
+                        CustomerCreditReference::create([
+                            'StoreBank' => $request->input('StoreBank2'),
+                            'ItemLoadAmount' => $request->input('ItemLoadAmount2'),
+                            'Term' => $request->input('Term2'),
+                            'CreditDate' => $request->input('CreditDate2'),
+                            'CreditBalance' => $request->input('CreditBalance2'),
+                            'customer_id' => $admincustomer -> customer->id	
+                        ]);
+                    }
+
+
+            case '1':
+                if ($admincustomer-> customer -> creditreference -> slice(0, 1) -> first() && $admincustomer -> customer -> creditreference -> count() <= 4){
+                    $admincustomer-> customer -> creditreference -> slice(0, 1) -> first() -> update
+                    ([
+                        'StoreBank' => $request->StoreBank1,
+                        'ItemLoadAmount' => $request->ItemLoadAmount1,
+                        'Term' => $request->Term1,
+                        'CreditDate' => $request->CreditDate1,
+                        'CreditBalance' => $request->CreditBalance1
+                    ]);
+                }
+                else
+                {
+                    CustomerCreditReference::create([
+                        'StoreBank' => $request->input('StoreBank1'),
+                        'ItemLoadAmount' => $request->input('ItemLoadAmount1'),
+                        'Term' => $request->input('Term1'),
+                        'CreditDate' => $request->input('CreditDate1'),
+                        'CreditBalance' => $request->input('CreditBalance1'),
+                        'customer_id' => $admincustomer -> customer->id	
+                    ]);
+                }
+            default:
+                ;
+        };
+
+
 
         return redirect()->route('admin.user.index');
     }
@@ -594,7 +857,7 @@ class AdminCustomerController extends Controller
                     'Father' => $request->input('Father'),
                     'Mother' => $request->input('Mother'),
                     'Addresss' => $request->input('ParentAddresss'),
-                    'MobileNumber ' => $request->input('ParentNumber'),
+                    'MobileNumber' => $request->input('ParentNumber'),
 
                     'customer_id' => $customer->id
 
@@ -749,5 +1012,11 @@ class AdminCustomerController extends Controller
 
 
             return redirect()->route('admin.user.index');
+    }
+    public function customerOrder(User $user)
+    {
+        $unit = Unit::all();
+        $user->load('customer.spouse', 'customer.order','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
+        return view('admin.admincustomer.orders', compact('user', 'unit')); 
     }
 }

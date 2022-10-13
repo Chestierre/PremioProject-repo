@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = User::with('customer')->get();
+        $user = User::with('customer.order')->get();
         return view('admin.user.index', compact('user'));
     }
    public function create()
