@@ -23,6 +23,9 @@ return new class extends Migration
             //dynamic
             $table->integer('balance');
             $table->integer('currentmonth');
+            $table->boolean('orderstatus');
+            $table->string('customerstatus');
+
             $table->integer('monthspaid');
             $table->integer('monthone');
             $table->integer('monthtwo');

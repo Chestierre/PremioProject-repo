@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('monthspaid');
             $table->integer('payment');
             $table->date('date_updated');
+            $table->string('customerstatus');
+            
             $table->integer('monthone');
             $table->integer('monthtwo');
             $table->integer('monththree');

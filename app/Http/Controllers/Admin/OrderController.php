@@ -47,6 +47,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -78,6 +80,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -100,6 +103,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -137,6 +142,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -165,6 +171,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -208,6 +216,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -242,6 +251,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -291,6 +302,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -331,6 +343,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -386,6 +400,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -432,6 +447,8 @@ class OrderController extends Controller
                         'balance' => $request->balance,
                         'currentmonth' => '0',
                         'monthspaid' => '0',
+                        'orderstatus' => FALSE,
+                        'customerstatus' => 'regular',
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -458,6 +475,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
+                        'customerstatus' => 'regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -569,7 +587,7 @@ class OrderController extends Controller
         $request->validate([
             'payment' => 'required|int',
          ]);
-
+        $customerstatus = 'regular';
         $totalmonths = $order->ordertransactiondetails->monthsinstallment;
         $mo_current = $order->currentmonth;
         $mo_paid  = $order->monthspaid;
@@ -736,6 +754,7 @@ class OrderController extends Controller
         }
         // check if paid
         if ($balance_array[$mo_paid] < 1){
+            $order -> update(['orderstatus' => TRUE]);
             return redirect()->route('admin.order.show',$order); 
         }
 
@@ -769,11 +788,14 @@ class OrderController extends Controller
             for ($i=$mo_paid; $i<$mo_current; $i++)
             {
                 $balance_array[$i] *= $r_penalty;
-            }}
+                $customerstatus = 'delinquent';
+            }
+            }
             elseif($mo_current - $mo_paid >= 2 && $mo_current>$totalmonths){
             for ($i=$mo_paid; $i<$totalmonths; $i++)
             {
                 $balance_array[$i] *= $r_penalty;
+                $customerstatus = 'delinquent';
             }
 
             }
@@ -782,6 +804,11 @@ class OrderController extends Controller
         $mo_current += 1;
         $balance = array_sum($balance_array);
         
+        // check if paid
+        if ($balance_array[$mo_paid] < 1){
+            $order -> update(['orderstatus' => TRUE]);
+            return redirect()->route('admin.order.show',$order); 
+        }
 
         switch($totalmonths){
             case '36':
@@ -789,6 +816,7 @@ class OrderController extends Controller
                     'balance' => $balance,
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'monthone' =>  $balance_array[0],
                     'monthtwo' => $balance_array[1],
@@ -833,6 +861,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'payment' => $payment,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'date_updated' => $order->updated_at,
                     'monthone' =>  $balance_array[0],
@@ -878,6 +907,7 @@ class OrderController extends Controller
                     'balance' => $balance,
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'monthone' =>  $balance_array[0],
                     'monthtwo' => $balance_array[1],
@@ -916,6 +946,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'payment' => $payment,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'date_updated' => $order->updated_at,
                     'monthone' =>  $balance_array[0],
@@ -955,6 +986,7 @@ class OrderController extends Controller
                     'balance' => $balance,
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'monthone' =>  $balance_array[0],
                     'monthtwo' => $balance_array[1],
@@ -987,6 +1019,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'payment' => $payment,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'date_updated' => $order->updated_at,
                     'monthone' =>  $balance_array[0],
@@ -1020,6 +1053,7 @@ class OrderController extends Controller
                     'balance' => $balance,
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'monthone' =>  $balance_array[0],
                     'monthtwo' => $balance_array[1],
@@ -1046,6 +1080,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'payment' => $payment,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'date_updated' => $order->updated_at,
                     'monthone' =>  $balance_array[0],
@@ -1073,6 +1108,7 @@ class OrderController extends Controller
                     'balance' => $balance,
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'monthone' =>  $balance_array[0],
                     'monthtwo' => $balance_array[1],
@@ -1093,6 +1129,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'payment' => $payment,
                     'monthspaid' => $mo_paid,
+                    'customerstatus' => $customerstatus,
         
                     'date_updated' => $order->updated_at,
                     'monthone' =>  $balance_array[0],
@@ -1114,6 +1151,7 @@ class OrderController extends Controller
                 'balance' => $balance,
                 'currentmonth' => $mo_current,
                 'monthspaid' => $mo_paid,
+                'customerstatus' => $customerstatus,
     
                 'monthone' =>  $balance_array[0],
                 'monthtwo' => $balance_array[1],
@@ -1128,6 +1166,7 @@ class OrderController extends Controller
                 'currentmonth' => $mo_current,
                 'payment' => $payment,
                 'monthspaid' => $mo_paid,
+                'customerstatus' => $customerstatus,
     
                 'date_updated' => $order->updated_at,
                 'monthone' =>  $balance_array[0],

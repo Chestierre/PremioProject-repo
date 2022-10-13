@@ -15,6 +15,8 @@ class Order extends Model
         'balance',
         'currentmonth',
         'monthspaid',
+        'orderstatus',
+        'customerstatus',
 
         'monthone',
         'monthtwo',
