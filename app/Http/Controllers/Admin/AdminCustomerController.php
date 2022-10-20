@@ -1015,6 +1015,7 @@ class AdminCustomerController extends Controller
     }
     public function customerOrder(User $user)
     {
+        
         $unit = Unit::all();
         $user->load('customer.spouse', 'customer.order','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
         return view('admin.admincustomer.orders', compact('user', 'unit')); 

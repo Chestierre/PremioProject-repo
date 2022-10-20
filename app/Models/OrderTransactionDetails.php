@@ -18,7 +18,8 @@ class OrderTransactionDetails extends Model
         'initial_price', //plus discounts
         'unitmodeldownpayment',
         'monthlypayment',
-        'monthsinstallment'
+        'monthsinstallment',
+        'paymentdate'
     ];
 
     public function order(){

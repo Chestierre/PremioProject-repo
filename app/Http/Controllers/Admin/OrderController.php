@@ -11,6 +11,7 @@ use App\Models\OrderHistory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -39,6 +40,18 @@ class OrderController extends Controller
 
           ]);
           $unit = Unit::with('brand')->find($request->unit_id);
+          $date = Carbon::now();
+
+          if($date->day > 7 && $date->day <= 14){
+            $paymentdate = "14";
+          }else if($date->day >14 && $date->day <= 21){
+            $paymentdate = "21";
+          }else if($date->day >21 && $date->day <= 28){
+            $paymentdate = "28";
+          }else{
+            $paymentdate = "7";
+          }
+
           switch($request->monthsinstallment){
                 case 12:
                     $order = Order::create([
@@ -72,7 +85,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
                     OrderHistory::create([
                         'order_id' => $order->id,
@@ -134,7 +148,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
                     OrderHistory::create([
                         'order_id' => $order->id,
@@ -208,7 +223,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
                     OrderHistory::create([
                         'order_id' => $order->id,
@@ -294,7 +310,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
                     OrderHistory::create([
                         'order_id' => $order->id,
@@ -392,7 +409,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
                     OrderHistory::create([
                         'order_id' => $order->id,
@@ -466,7 +484,8 @@ class OrderController extends Controller
                         'initial_price' => $unit->price, 
                         'unitmodeldownpayment' => $request->downpayment,
                         'monthlypayment' => $request->monthly,
-                        'monthsinstallment' => $request->monthsinstallment
+                        'monthsinstallment' => $request->monthsinstallment,
+                        'paymentdate' => $paymentdate
                     ]);
 
                     OrderHistory::create([

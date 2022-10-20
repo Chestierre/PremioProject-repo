@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('unitmodeldownpayment');
             $table->integer('monthlypayment');
             $table->string('monthsinstallment');
+            $table->string('paymentdate');
             $table->timestamps();
 
             $table->foreignId('order_id')
