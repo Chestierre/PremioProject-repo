@@ -40,6 +40,8 @@
                         <th>Balance</th>
                         <th>Transaction Date</th>
                         <th>Order Status</th>
+                        <th>Customer Status</th>
+                        <th>Due date</th>
                         {{-- <th>Customer Status</th> --}}
                         <th>Actions</th>
                     </tr>
@@ -53,12 +55,16 @@
                             <td>{{$order->customer->FirstName}} {{$order->customer->LastName}}</td>
                             <td>{{$order->unit->modelname}}</td>
                             <td>&#8369 {{number_format($order->balance)}}</td>
-                            <td>{{$order->created_at}}</td>
-                            @if (!$order->user == NULL)
-                                <td>{{$order->user->username}}</td>
+                            <td>{{date('m-d-Y', strtotime($order->created_at));}}</td>
+                            
+                            @if ($order->orderstatus == 0)
+                                <td>Ongoing Installment</td>
                             @else
-                                <td>None</td>    
+                                <td>Paid</td>    
                             @endif
+
+                            <td>{{$order->customerstatus}}</td>
+                            <td>{{ date('m-d-Y', strtotime($order->due_date));}}</td>
                             <td>
                                 <div class="d-flex">
                                     <form method="GET" action="{{ route('admin.order.show', $order) }}">
@@ -114,7 +120,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createOrderModalLabel">Create Order</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close createmodal-dismiss" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -152,6 +158,9 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
+                                    {{-- <div id="downpayment_divtext" style="display:none;"> --}}
+                                    <input id="downpayment_text" style="display:none;" class="form-control" type="text">
+                                    {{-- </div> --}}
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -170,8 +179,8 @@
                             <input type="hidden" name="monthly" id="monthly" value="">
                             <input type="hidden" name="balance" id="balance" value="">
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button type="button" class="btn btn-secondary createmodal-dismiss" data-dismiss="modal">Close</button>
+                                <button type="submit" id="createOrderButton" class="btn btn-primary">Create</button>
                             </div>
                         </form>
                     </div>
@@ -205,14 +214,30 @@
     </div>
 </div>
 
+@endsection
 
 
-
+@section('scripts')
  {{-- Scripts - checkbox --}}
  <script type="text/javascript">
-    
+
+
     $(document).ready(function () {
-        console.log($('#input_modal-price').val());
+        $.fn.digits = function(){ 
+            return this.each(function(){ 
+                $(this).val( $(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") );  
+            })
+        }
+
+        @if ($errors->has('downpayment'))
+            $('#createOrderModal').modal('show');
+        @endif
+
+        $('.createmodal-dismiss').on('click', function(){
+            $('#createOrderModal').modal('hide'); 
+        });
+
+        // console.log($('#input_modal-price').val());
         // initial: price and downpayment
         id = $('#modal_unit_select').val();
         queryPrice(id);
@@ -221,6 +246,7 @@
             queryPrice(id);
         });
 
+
         $('select#monthsinstallment').on('click', function(e) {
             months = $('select#monthsinstallment').val();
             $('#modal-months').html(months);
@@ -228,12 +254,37 @@
             calculatePrice(payment, months);
         });
 
-        $('input#downpayment').on('keydown change', function(e){
+
+
+        $('input#downpayment').on('keyup change', function(e){
             months = $('select#monthsinstallment').val();
             payment = $('input#downpayment').val();
+            // $('input#downpayment').val(addCommas(payment));
             calculatePrice(payment, months);
         });
 
+        $('input#downpayment').on('change blur', function(e){
+            // $("input#downpayment").digits();
+            // $('#downpayment_text').attr('type', "text");
+            $("input#downpayment").hide();
+            $('#downpayment_text').show();
+             $('#downpayment_text').val($('input#downpayment').val());
+            // $('#downpayment_text').val('&euro');
+            $('#downpayment_text').digits();
+        });
+
+        $('#downpayment_text').on('focus', function(e){
+            $('#downpayment_text').hide();
+            $("input#downpayment").show();
+            $("input#downpayment").focus();
+        });
+
+        
+        $('#createOrderButton').on('click', function(e) {
+            $('#downpayment_text').hide();
+            $("input#downpayment").show();
+            $("input#downpayment").focus();
+        });
 
         // select all checkbox
         $('#master').on('click', function(e) {
@@ -333,6 +384,7 @@
         });
     });
 
+
     function loadDeleteModal(id, name) {
         $('#modal-category_name').html(name);
         $('#deleteCategory').modal('show');
@@ -379,6 +431,7 @@
                 // $('#input_modal-downpayment').val(response.modeldownpayment);
                 $('#modal-downpayment').html(response.modeldownpayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
                 $('input#downpayment').attr({"min" : response.modeldownpayment});
+                $('input#downpayment').attr({"max" : response.price});
                 $('#modal-months').html($('select#monthsinstallment').val());
                 months = $('select#monthsinstallment').val();
                 payment = $('input#downpayment').val();

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('currentmonth');
             $table->boolean('orderstatus');
             $table->string('customerstatus');
+            $table->date('due_date');
 
             $table->integer('monthspaid');
             $table->integer('monthone');

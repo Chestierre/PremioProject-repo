@@ -69,7 +69,7 @@ class CustomerController extends Controller
             'ProvincialAddress' => 'required|string',	
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
-            'MobileNumber' => 'required|integer',
+            'MobileNumber' => 'required|numeric',
             'email' => 'nullable|email',
             // 'Spouse' => 'nullable|string',
             // 'SpouseAge' => 'nullable|integer',

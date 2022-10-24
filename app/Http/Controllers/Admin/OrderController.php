@@ -18,7 +18,9 @@ class OrderController extends Controller
     public function index()
     {
         $unit = Unit::all();
-        $order = Order::all();
+        // $order = Order::all();
+        $order = Order::orderBy('due_date', 'asc')->get();
+
         $customer = Customer::all();
         $user = User::all();
         return view('admin.order.index', compact('unit','order','customer', 'user'));
@@ -29,28 +31,57 @@ class OrderController extends Controller
     
     public function store(Request $request)
     {
+         $dt = Carbon::now();
+        // $dt = Carbon::create(2023, 1, 29);
 
+        if($dt->day > 7 && $dt->day <= 14)
+        {
+            $daysy = 14 - $dt->day;
+            $dt->addDays($daysy);
+            $paymentdate = "14";
+            
+        }
+        else if($dt->day > 14 && $dt->day <= 21)
+        {
+            $daysy = 21 - $dt->day;
+            $dt->addDays($daysy);
+            $paymentdate = "21";
+            
+        }
+        else if($dt->day > 21 && $dt->day <= 28)
+        {
+            $daysy = 28 - $dt->day;
+            $dt->addDays($daysy);
+            $paymentdate = "28";
+            
+        }
+        else if($dt->day <= 7)
+        {
+            $dt->day = 7;
+            $paymentdate = "7";
+            
+        }
+        else
+        {
+            $dt->addWeek();
+            $dt->day = 7;
+            $paymentdate = "7";
+            
+        }
+
+        $unit_downpayment = Unit::find($request->unit_id);
+
+        // dd($unit_downpayment->modeldownpayment);
          $request->validate([
              'customer_id' => 'required',
              'unit_id' => 'required',
-             'downpayment' => 'required|integer',
+             'downpayment' => "required|integer|min:$unit_downpayment->modeldownpayment|max:$unit_downpayment->price",
              'monthsinstallment' => 'required|integer',
              'monthly' => 'required|integer',
              'balance' => 'required|integer'
 
           ]);
           $unit = Unit::with('brand')->find($request->unit_id);
-          $date = Carbon::now();
-
-          if($date->day > 7 && $date->day <= 14){
-            $paymentdate = "14";
-          }else if($date->day >14 && $date->day <= 21){
-            $paymentdate = "21";
-          }else if($date->day >21 && $date->day <= 28){
-            $paymentdate = "28";
-          }else{
-            $paymentdate = "7";
-          }
 
           switch($request->monthsinstallment){
                 case 12:
@@ -61,7 +92,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -94,7 +126,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -118,7 +150,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -157,7 +190,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -187,7 +220,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -232,7 +266,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -268,7 +302,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -319,7 +354,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -361,7 +396,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -418,7 +454,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -466,7 +502,8 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'monthspaid' => '0',
                         'orderstatus' => FALSE,
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
+                        'due_date' => $dt,
 
                         'monthone' =>  $request->monthly,
                         'monthtwo' => $request->monthly,
@@ -494,7 +531,7 @@ class OrderController extends Controller
                         'currentmonth' => '0',
                         'payment' => '0',
                         'monthspaid' => '0',
-                        'customerstatus' => 'regular',
+                        'customerstatus' => 'Regular',
                         'date_updated' => $order->updated_at,
                         'monthone' => $order->monthone,
                         'monthtwo' => $order->monthtwo,
@@ -606,7 +643,7 @@ class OrderController extends Controller
         $request->validate([
             'payment' => 'required|int',
          ]);
-        $customerstatus = 'regular';
+        $customerstatus = 'Regular';
         $totalmonths = $order->ordertransactiondetails->monthsinstallment;
         $mo_current = $order->currentmonth;
         $mo_paid  = $order->monthspaid;
@@ -807,14 +844,14 @@ class OrderController extends Controller
             for ($i=$mo_paid; $i<$mo_current; $i++)
             {
                 $balance_array[$i] *= $r_penalty;
-                $customerstatus = 'delinquent';
+                $customerstatus = 'Delinquent';
             }
             }
             elseif($mo_current - $mo_paid >= 2 && $mo_current>$totalmonths){
             for ($i=$mo_paid; $i<$totalmonths; $i++)
             {
                 $balance_array[$i] *= $r_penalty;
-                $customerstatus = 'delinquent';
+                $customerstatus = 'Delinquent';
             }
 
             }
