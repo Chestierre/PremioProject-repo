@@ -22,4 +22,12 @@ class WelcomeController extends Controller
         $promo = Promo::all();
         return view('welcome', compact('unit', 'brand', 'promo'));
     }
+    
+    public function aboutus()
+    {
+        $brand = Brand::all();       
+        return view('about-us', compact('brand'));
+    }
+
+
 }

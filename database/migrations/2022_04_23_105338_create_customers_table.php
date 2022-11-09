@@ -31,18 +31,8 @@ return new class extends Migration
             $table->integer('id_ResNo')->nullable();
             $table->date('IssueDate')->nullable();
             $table->string('PlaceIssue')->nullable();
-            $table->string('OtherProperties1')->nullable();
-            $table->string('OtherProperties2')->nullable();
-            $table->string('OtherProperties3')->nullable();
-            $table->string('OtherProperties4')->nullable();
-            $table->string('OtherProperties5')->nullable();
-            $table->string('OtherProperties6')->nullable();
-            $table->string('OtherProperties7')->nullable();
-            $table->string('FarmLotAddress')->nullable();
-            $table->string('FarmLotSize')->nullable();
             $table->integer('NumberOfDependencies');
             $table->integer('NumberofCreditReference');
-            $table->string('ProvincialAddress');
             $table->integer('HomePhoneNumber')->nullable();
             $table->integer('OfficePhoneNumber')->nullable();
             $table->integer('MobileNumber');

@@ -16,6 +16,16 @@ class CustomerAddress extends Model
         'HouseProvidedBy',	
         'LotStatus',	
         'LotProvidedBy',
+        'OtherPropertiesTV',
+        'OtherPropertiesRef',
+        'OtherPropertiesStereoComponent',
+        'OtherPropertiesGasRange',
+        'OtherPropertiesMotorcycle',
+        'OtherPropertiesComputer',
+        'OtherPropertiesFarmlot',
+        'FarmLotAddress',
+        'FarmLotSize',
+        'ProvincialAddress',
         'customer_id'
     ];
     

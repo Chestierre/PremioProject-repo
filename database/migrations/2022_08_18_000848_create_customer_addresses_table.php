@@ -21,15 +21,23 @@ return new class extends Migration
             $table->string('HouseProvidedBy')->nullable();
             $table->string('LotStatus');
             $table->string('LotProvidedBy')->nullable();
+            $table->boolean('OtherPropertiesTV')->nullable();
+            $table->boolean('OtherPropertiesRef')->nullable();
+            $table->boolean('OtherPropertiesStereoComponent')->nullable();
+            $table->boolean('OtherPropertiesGasRange')->nullable();
+            $table->boolean('OtherPropertiesMotorcycle')->nullable();
+            $table->boolean('OtherPropertiesComputer')->nullable();
+            $table->boolean('OtherPropertiesFarmlot')->nullable();
+            $table->string('FarmLotAddress')->nullable();
+            $table->string('FarmLotSize')->nullable();
+            $table->string('ProvincialAddress');
+
+
             $table->timestamps();
-
-
             $table->foreignId('customer_id')
                         ->constrained()
                         ->onUpdate('cascade')
                         ->onDelete('cascade');
-
-
             $table->index('customer_id');
         });
     }

@@ -208,7 +208,7 @@
                             <div id="div_id_PlaceIssue" class="form-group required">
                                 <label for="id_PlaceIssuse" class="control-label col-md-4  requiredField"> Place Issued<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8">
-                                    <input class="input-md  textinput textInput form-control  @error('PlaceIssue') is-invalid @enderror" id="PlaceIssue" maxlength="30" name="PlaceIssue" value="{{ old('PlaceIssuse') }}" placeholder="Enter the Place Issued" style="margin-bottom: 10px" type="text" />
+                                    <input class="input-md  textinput textInput form-control  @error('PlaceIssue') is-invalid @enderror" id="PlaceIssue" maxlength="30" name="PlaceIssue" value="{{ old('PlaceIssue') }}" placeholder="Enter the Place Issued" style="margin-bottom: 10px" type="text" />
                                     @error('PlaceIssue')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -300,13 +300,20 @@
                             <div id="div_id_OtherProperties" class="form-group required">
                                 <label for="id_OtherProperties"  class="control-label col-md-4  requiredField"> Other Properties<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8"  style="margin-bottom: 15px">
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties1" id="id_OtherProperties_1" value="TV"  style="margin-bottom: 10px">TV</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties2" id="id_OtherProperties_2" value="Ref"  style="margin-bottom: 10px">Ref</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties3" id="id_OtherProperties_3" value="Stereo/Component"  style="margin-bottom: 10px">Stereo/Component</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties4" id="id_OtherProperties_4" value="Gas Range"  style="margin-bottom: 10px">Gas Range</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties5" id="id_OtherProperties_5" value="Motorcycle"  style="margin-bottom: 10px">Motorcycle</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties6" id="id_OtherProperties_6" value="Computers"  style="margin-bottom: 10px">Computers</label>
-                                        <label class="check-inline"> <input type="checkbox" name="OtherProperties7" id="id_OtherProperties_7" value="Farm/Lot"  style="margin-bottom: 10px">Farm/Lot</label>
+                                        <input type="hidden" value=0 name="OtherPropertiesTV">
+                                        <input type="hidden" value=0 name="OtherPropertiesRef">
+                                        <input type="hidden" value=0 name="OtherPropertiesStereoComponent">
+                                        <input type="hidden" value=0 name="OtherPropertiesGasRange">
+                                        <input type="hidden" value=0 name="OtherPropertiesMotorcycle">
+                                        <input type="hidden" value=0 name="OtherPropertiesComputer">
+                                        <input type="hidden" value=0 name="OtherPropertiesFarmlot">
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesTV" id="id_OtherPropertiesTV" value=1 {{ old('OtherPropertiesTV') == 1 ? 'checked' : '' }}  style="margin-bottom: 10px">TV</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesRef" id="id_OtherPropertiesRef" value=1 {{ old('OtherPropertiesRef') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Ref</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesStereoComponent" id="id_OtherPropertiesStereoComponent" value=1 {{ old('OtherPropertiesStereoComponent') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Stereo/Component</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesGasRange" id="id_OtherPropertiesGasRange" value=1 {{ old('OtherPropertiesGasRange') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Gas Range</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesMotorcycle" id="id_OtherPropertiesMotorcycle" value=1 {{ old('OtherPropertiesMotorcycle') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Motorcycle</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesComputer" id="id_OtherPropertiesComputer" value=1 {{ old('OtherPropertiesComputer') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Computers</label>
+                                        <label class="check-inline"> <input type="checkbox" name="OtherPropertiesFarmlot" id="id_OtherPropertiesFarmlot" value=1 {{ old('OtherPropertiesFarmlot') == 1 ? 'checked' : '' }} style="margin-bottom: 10px">Farm/Lot</label>
                                 </div>
                             </div>
                             <div id="div_id_FarmLot" class="form-group required" style="display:none">
@@ -1779,7 +1786,7 @@
         }
 
 
-        $('#id_OtherProperties_7').on('click', function(e) {
+        $('#id_OtherPropertiesFarmlot').on('click', function(e) {
             if($(this).is(':checked',true)){
                 $('#div_id_FarmLot').show();
             }

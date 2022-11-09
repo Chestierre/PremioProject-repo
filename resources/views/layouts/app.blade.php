@@ -41,12 +41,8 @@
                         <li class = "nav-item">
                             <a class="nav-link active" href="{{ url('/') }}">Home</a>
                         </li>
-                        <li class = "nav-item">
-                            <a class="nav-link active" href="#">About us</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a class="nav-link active" href="#">Contact us</a>
-                        </li>
+
+
                         <li class = "nav-item">
                             <a class="nav-link active" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Categories
@@ -57,6 +53,12 @@
                                 <a class="dropdown-item" href="#">{{ $brand->brandname }}</a>                                
                                 @endforeach
                             </div>
+                        </li>
+                        <li class = "nav-item">
+                            <a class="nav-link active" href="/contact-us">Contact us</a>
+                        </li>
+                        <li class = "nav-item">
+                            <a class="nav-link active" href="/about-us">About us</a>
                         </li>
                     </ul>
 

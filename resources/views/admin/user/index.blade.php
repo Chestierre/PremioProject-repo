@@ -2,6 +2,17 @@
 
 @section('content')
 <div class="container">
+    <form action="{{ route('admin.user.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file" class="form-control">
+        <br>
+        <button class="btn btn-success">
+                Import User Data
+        </button>
+        <a class="btn btn-warning" href="{{ route('admin.user.export-users') }}">
+                    Export User Data
+        </a>
+    </form>
     <div class="table-responsive">
         <div class="table-wrapper">
             <div class="table-title">

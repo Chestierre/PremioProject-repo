@@ -18,6 +18,12 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::view('/pdfOrder', 'admin.order.pdfOrder');
 
+
+//Route::get('/contact-us'), function() { return view('contact-us', '');};
+Route::get('/about-us', [App\Http\Controllers\WelcomeController::class, 'aboutus'])->name('about-us') -> middleware('welcomeauthmiddleware');
+Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'contact'])->name('contact-us') -> middleware('welcomeauthmiddleware');
+Route::post('/sendEmail', [App\Http\Controllers\ContactController::class, 'sendEmail'])->name('contact.sendEmail') -> middleware('welcomeauthmiddleware');
+
 Route::group(['middleware' => 'auth'],function(){
     Route::group([
         'prefix' => 'admin',
@@ -25,12 +31,15 @@ Route::group(['middleware' => 'auth'],function(){
         'as' => 'admin.'
     ], function () {
 
+        Route::post('user/import',[UserController::class, 'import'])->name('user.import'); 
+        Route::get('user/export-users',[UserController::class,'exportUsers'])->name('user.export-users');
         Route::get('/user/password/{user}/edit', [UserController::class, 'password_edit'])->name('password_edit');
         Route::put('/user/password/{user}', [UserController::class, 'password_update'])->name('password_update');
         Route::delete('userDeleteAll', [UserController::class, 'deleteAll']);
         Route::post('/admin/user/search', [UserController::class, 'search'])->name('user.search');
         Route::post('/user/adminstore', [UserController::class, 'adminstore'])->name('user.adminstore');
         Route::get('user/getuser/{id}', [UserController::class, 'getuser'])->name('user.getuser');
+
         
         Route::get('user/getcustomeruserrelation/{id}', [UserController::class, 'getcustomeruserrelation'])->name('user.getcustomeruserrelation');
         Route::resource('user', UserController::class);
@@ -55,6 +64,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('queryPrice/{id}', [OrderController::class, 'queryPrice'])->name('order.queryPrice');
         Route::resource('order', OrderController::class);
 
+        Route::post('/SMS/sendapisms', [SMSController::class, 'sendapisms'])->name('SMS.sendapisms');
         Route::resource('SMS', SMSController::class);
         
         Route::resource('collector', CollectorController::class);

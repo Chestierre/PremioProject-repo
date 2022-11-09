@@ -52,8 +52,8 @@
                             <td>
                                 <input type="checkbox" class="sub_chk" data-id={{$order->id  }}>
                             </td>
-                            <td>{{$order->customer->FirstName}} {{$order->customer->LastName}}</td>
-                            <td>{{$order->unit->modelname}}</td>
+                            <td>{{$order->ordercustomerinformation->FirstName}} {{$order->ordercustomerinformation->LastName}}</td>
+                            <td>{{$order->ordertransactiondetails->unitmodelname}}</td>
                             <td>&#8369 {{number_format($order->balance)}}</td>
                             <td>{{date('m-d-Y', strtotime($order->created_at));}}</td>
                             
@@ -73,7 +73,7 @@
                                     <form method="GET" action="{{ route('admin.order.edit', $order) }}">
                                         <button type="submit" class="btn btn-primary" ><i class="fa-solid fa-pen"></i> Edit</button>
                                     </form>
-                                    <button type="button" class="btn btn-danger" onclick="loadDeleteModal({{ $order->id }}, `{{ $order->unit->modelname }}`)">
+                                    <button type="button" class="btn btn-danger" onclick="loadDeleteModal({{ $order->id }}, `{{ $order->ordertransactiondetails->unitmodelname }}`)">
                                         <i class="fa-solid fa-trash-can"></i> Delete</button>
                                     </button>
                                 </div>

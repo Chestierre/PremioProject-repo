@@ -644,6 +644,7 @@ class AdminCustomerController extends Controller
     public function storeCustomer(Request $request, User $user)
     {
         // dd($user);
+        // dd($request->all());
         $request->validate([
             'FillOutDate' => 'nullable|date',
             'FirstName' => 'required|string',
@@ -658,10 +659,7 @@ class AdminCustomerController extends Controller
             'TinNo' => 'nullable|integer',
             'id_ResNo' => 'nullable|integer',
             'IssueDate' => 'nullable|date',
-            'PlaceIssue' => 'nullable|string',	
-            'FarmLotAddress' => 'nullable|string',	
-            'FarmLotSize' => 'nullable|string',	
-            'ProvincialAddress' => 'required|string',	
+            'PlaceIssue' => 'nullable|string',		
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
             'MobileNumber' => 'required|numeric',
@@ -708,6 +706,16 @@ class AdminCustomerController extends Controller
             'HouseProvidedBy' => 'nullable|string',	
             'LotStatus' => 'required|string',	
             'LotProvidedBy' => 'nullable|string',
+            'OtherPropertiesTV' => 'nullable|boolean',
+            'OtherPropertiesRef' => 'nullable|boolean',
+            'OtherPropertiesStereoComponent' => 'nullable|boolean',
+            'OtherPropertiesGasRange' => 'nullable|boolean',
+            'OtherPropertiesMotorcycle' => 'nullable|boolean',
+            'OtherPropertiesComputer' => 'nullable|boolean',
+            'OtherPropertiesFarmlot' => 'nullable|boolean',
+            'FarmLotAddress' => 'nullable|string',	
+            'FarmLotSize' => 'nullable|string',	
+            'ProvincialAddress' => 'required|string',
             
             //co-maker
             'CoMakerName' => 'required|string',	
@@ -807,10 +815,7 @@ class AdminCustomerController extends Controller
                 'TinNo' => $request->input('TinNo'),
                 'id_ResNo' => $request->input('id_ResNo'),
                 'IssueDate' => $request->input('IssueDate'),
-                'PlaceIssue' => $request->input('PlaceIssue'),
-                'FarmLotAddress' => $request->input('FarmLotAddress'),	
-                'FarmLotSize' => $request->input('FarmLotSize'),	
-                'ProvincialAddress' => $request->input('ProvincialAddress'),	
+                'PlaceIssue' => $request->input('PlaceIssue'),	
                 'HomePhoneNumber' => $request->input('HomePhoneNumber'),
                 'OfficePhoneNumber' => $request->input('OfficePhoneNumber'),
                 'MobileNumber' => $request->input('MobileNumber'),
@@ -862,7 +867,7 @@ class AdminCustomerController extends Controller
                     'customer_id' => $customer->id
 
                  ]);
-            }
+            }   
 
             CustomerAddress::create([
                 'PresentAddress' => $request->input('PresentAddress'),	
@@ -870,8 +875,18 @@ class AdminCustomerController extends Controller
                 'HouseStatus' => $request->input('HouseStatus'),	
                 'HouseProvidedBy' => $request->input('HouseProvidedBy'),	
                 'LotStatus' => $request->input('LotStatus'),	
-                'LotStatus' => $request->input('LotProvidedBy'),
-
+                'LotProvidedBy' => $request->input('LotProvidedBy'),
+                'OtherPropertiesTV' => $request->input('OtherPropertiesTV'),
+                'OtherPropertiesRef' => $request->input('OtherPropertiesRef'),
+                
+                'OtherPropertiesStereoComponent' => $request->input('OtherPropertiesStereoComponent'),
+                'OtherPropertiesGasRange' => $request->input('OtherPropertiesGasRange'),
+                'OtherPropertiesMotorcycle' => $request->input('OtherPropertiesMotorcycle'),
+                'OtherPropertiesComputer' => $request->input('OtherPropertiesComputer'),
+                'OtherPropertiesFarmlot' => $request->input('OtherPropertiesFarmlot'),
+                'FarmLotAddress' => $request->input('FarmLotAddress'),	
+                'FarmLotSize' => $request->input('FarmLotSize'),	
+                'ProvincialAddress' => $request->input('ProvincialAddress'),
                 'customer_id' => $customer->id	
             ]);
 

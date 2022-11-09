@@ -184,42 +184,6 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div id="div_id_FarmLotAddress" class="form-group my-2">
-                                <label for="id_FarmLotAddress" class="control-label">Farm Lot Address</label>
-                                <div class="controls d-flex">
-                                    <input class="form-control @error('FarmLotAddress') is-invalid @enderror" id="id_FarmLotAddress" name="FarmLotAddress" value="{{ $admincustomer->customer->FarmLotAddress }}"  type="text" disabled/>
-                                    <button class="btn btn-secondary"id="button_id_FarmLotAddress" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
-                                    @error('FarmLotAddress')
-                                        <span class="invalid-feedback text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div id="div_id_FarmLotSize" class="form-group my-2">
-                                <label for="id_FarmLotSize" class="control-label">Farm Lot Size</label>
-                                <div class="controls d-flex">
-                                    <input class="form-control @error('FarmLotSize') is-invalid @enderror" id="id_FarmLotSize" name="FarmLotSize" value="{{ $admincustomer->customer->FarmLotSize }}"  type="text" disabled/>
-                                    <button class="btn btn-secondary"id="button_id_FarmLotSize" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
-                                    @error('FarmLotSize')
-                                        <span class="invalid-feedback text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div id="div_id_ProvincialAddress" class="form-group my-2">
-                                <label for="id_ProvincialAddress" class="control-label">Provincial Address</label>
-                                <div class="controls d-flex">
-                                    <input class="form-control @error('ProvincialAddress') is-invalid @enderror" id="id_ProvincialAddress" name="ProvincialAddress" value="{{ $admincustomer->customer->ProvincialAddress }}"  type="text" required disabled/>
-                                    <button class="btn btn-secondary"id="button_id_ProvincialAddress" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
-                                    @error('ProvincialAddress')
-                                        <span class="invalid-feedback text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
                             <div id="div_id_HomePhoneNumber" class="form-group my-2">
                                 <label for="id_HomePhoneNumber" class="control-label">Home Phone Number</label>
                                 <div class="controls d-flex">
@@ -942,6 +906,113 @@
                                     <input class="form-control @error('LotProvidedBy') is-invalid @enderror" id="id_LotProvidedBy" name="LotProvidedBy" value="{{ $admincustomer->customer->address->LotProvidedBy  }}" type="text" disabled/>
                                     <button class="btn btn-secondary button_click" data-id="id_LotProvidedBy" id="button_id_LotProvidedBy" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('LotProvidedBy')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesTV" class="form-group my-2">
+                                <label for="id_OtherPropertiesTV" class="control-label">TV</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesTV" id="id_OtherPropertiesTV" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesTV == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesTV == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesTV" id="button_id_OtherPropertiesTV" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesRef" class="form-group my-2">
+                                <label for="id_OtherPropertiesRef" class="control-label">Ref</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesRef" id="id_OtherPropertiesRef" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesRef == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesRef == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesRef" id="button_id_OtherPropertiesRef" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesStereoComponent" class="form-group my-2">
+                                <label for="id_OtherPropertiesStereoComponent" class="control-label">Stereo/Component</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesStereoComponent" id="id_OtherPropertiesStereoComponent" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesStereoComponent == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesStereoComponent == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesStereoComponent" id="button_id_OtherPropertiesStereoComponent" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesGasRange" class="form-group my-2">
+                                <label for="id_OtherPropertiesGasRange" class="control-label">Gas Range</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesGasRange" id="id_OtherPropertiesGasRange" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesGasRange == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesGasRange == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesGasRange" id="button_id_OtherPropertiesGasRange" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesMotorcycle" class="form-group my-2">
+                                <label for="id_OtherPropertiesMotorcycle" class="control-label">Motorcycle</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesMotorcycle" id="id_OtherPropertiesMotorcycle" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesMotorcycle == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesMotorcycle == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesMotorcycle" id="button_id_OtherPropertiesMotorcycle" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesComputer" class="form-group my-2">
+                                <label for="id_OtherPropertiesComputer" class="control-label">Computers</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesComputer" id="id_OtherPropertiesComputer" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesComputer == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesComputer == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesComputer" id="button_id_OtherPropertiesComputer" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+                            <div id="div_id_OtherPropertiesFarmLot" class="form-group my-2">
+                                <label for="id_OtherPropertiesFarmLot" class="control-label">Farm/Lot</label>
+                                <div class="controls d-flex">
+                                    <select name="OtherPropertiesFarmLot" id="id_OtherPropertiesFarmLot" class="form-select form-control" disabled>
+                                        <option value=1 {{ $admincustomer->customer->address->OtherPropertiesFarmLot == 1 ? 'selected' : '' }}>True</option>
+                                        <option value=0 {{ $admincustomer->customer->address->OtherPropertiesFarmLot == 0 ? 'selected' : '' }}>False</option>
+                                    </select>
+                                    <button class="btn btn-secondary button_click" data-id="id_OtherPropertiesFarmLot" id="button_id_OtherPropertiesFarmLot" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
+
+                            <div id="div_id_FarmLotAddress" class="form-group my-2">
+                                <label for="id_FarmLotAddress" class="control-label">Farm Lot Address</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('FarmLotAddress') is-invalid @enderror" id="id_FarmLotAddress" name="FarmLotAddress" value="{{ $admincustomer->customer->address->FarmLotAddress }}"  type="text" disabled/>
+                                    <button class="btn btn-secondary"id="button_id_FarmLotAddress" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('FarmLotAddress')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div id="div_id_FarmLotSize" class="form-group my-2">
+                                <label for="id_FarmLotSize" class="control-label">Farm Lot Size</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('FarmLotSize') is-invalid @enderror" id="id_FarmLotSize" name="FarmLotSize" value="{{ $admincustomer->customer->address->FarmLotSize }}"  type="text" disabled/>
+                                    <button class="btn btn-secondary"id="button_id_FarmLotSize" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('FarmLotSize')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div id="div_id_ProvincialAddress" class="form-group my-2">
+                                <label for="id_ProvincialAddress" class="control-label">Provincial Address</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('ProvincialAddress') is-invalid @enderror" id="id_ProvincialAddress" name="ProvincialAddress" value="{{ $admincustomer->customer->address->ProvincialAddress }}"  type="text" required disabled/>
+                                    <button class="btn btn-secondary"id="button_id_ProvincialAddress" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('ProvincialAddress')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

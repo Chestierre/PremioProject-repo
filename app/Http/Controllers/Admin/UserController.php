@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportUser;
+use App\Exports\ExportUser;
 
 class UserController extends Controller
 {
@@ -173,6 +176,15 @@ class UserController extends Controller
             return response()->json(['firstname' => $user->customer->FirstName, 'lastname'=> $user->customer->LastName]);
         }
         return null;
+    }
+
+    public function import(Request $request){
+        Excel::import(new ImportUser, $request->file('file')->store('files'));
+        return redirect()->back();
+    }
+  
+    public function exportUsers(Request $request){
+        return Excel::download(new ExportUser, 'users.csv');
     }
 
 }
