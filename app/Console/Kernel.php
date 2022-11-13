@@ -15,7 +15,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        //$schedule->command('inspire')->hourly();
+        $schedule->call(function(){
+            info('run everyminute');
+        })->everyMinute();
+        //$schedule->command('smsmessage:send')->everyMinute();
+        $schedule->command('smsmessage:send')->monthlyOn(7, '09:00');
+        $schedule->command('smsmessage:send')->monthlyOn(14, '09:00');
+        $schedule->command('smsmessage:send')->monthlyOn(21, '09:00');
+        $schedule->command('smsmessage:send')->monthlyOn(28, '09:00');
     }
 
     /**

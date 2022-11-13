@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class SMS extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'type',
+        'recipient',
+        'recipientnumber',
+        'message',
+        'status',
+        'apimessage'
+    ];
 }

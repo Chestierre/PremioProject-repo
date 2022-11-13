@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SMSController;
 use App\Http\Controllers\Admin\CollectorController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\AdminCustomerController;
+use App\Http\Controllers\Admin\SuperfuncController;
 use App\Http\Controllers\mocksms;
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome') -> middleware('welcomeauthmiddleware');
@@ -64,6 +65,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('queryPrice/{id}', [OrderController::class, 'queryPrice'])->name('order.queryPrice');
         Route::resource('order', OrderController::class);
 
+        Route::post('/SMS/setsmstemplate', [SMSController::class, 'setsmstemplate'])->name('SMS.setsmstemplate');
         Route::post('/SMS/sendapisms', [SMSController::class, 'sendapisms'])->name('SMS.sendapisms');
         Route::resource('SMS', SMSController::class);
         
@@ -76,6 +78,8 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('admincustomer/customerOrder/{user}', [AdminCustomerController::class, 'customerOrder'])->name('admincustomer.customerOrder');
         Route::post('admincustomer/storeCustomer/{user}', [AdminCustomerController::class, 'storeCustomer'])->name('admincustomer.storeCustomer');
         Route::resource('admincustomer', AdminCustomerController::class);
+
+        Route::get('/superfunc', [SuperfuncController::class, 'index'])->name('superfunc.index')->middleware('is_super');
     });
 
     Route::group([

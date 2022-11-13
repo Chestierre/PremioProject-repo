@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('s_m_s', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('promo_id')->nullable();
-            $table->unsignedBigInteger('customer_id');
-            $table->string('SMS_type');
-
+            $table->string('type');
+            $table->string('recipient');
+            $table->integer('recipientnumber');
+            $table->string('message');
+            $table->string('status');
+            $table->string('apimessage');
             $table->timestamps();
-
-
         });
     }
 

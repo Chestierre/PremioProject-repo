@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\SMS;
+use App\Models\SmsTemplate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,13 +13,15 @@ class SMSController extends Controller
 
     public function index()
     {
-        return view('admin.SMS.index');
+        $sms = SMS::all();
+        return view('admin.SMS.index', compact('sms'));
     }
 
 
     public function create()
     {
-        
+        $smstemplate = SmsTemplate::find(1);
+        return view('admin.SMS.smstemplate', compact('smstemplate'));
     }
 
 
@@ -64,6 +67,28 @@ class SMSController extends Controller
         //dd($response->json());
         //dd(json_decode($response->json()));
         return back()->with($response->json());
+    }
+    
+    public function setsmstemplate(Request $request){
+        $request->validate([
+            'beforename' => 'string|nullable',
+            'inbetweennamebalance' => 'string|nullable',
+            'inbetweenbalanceunitname' => 'string|nullable',
+            'afterunitname' => 'string|nullable'
+        ]);
+
+        $smstemplate = SmsTemplate::find(1);
+
+        $smstemplate -> update([
+            'beforename' => $request->beforename,
+            'inbetweennamebalance' => $request->inbetweennamebalance,
+            'inbetweenbalanceunitname' => $request->inbetweenbalanceunitname,
+            'afterunitname' => $request->afterunitname
+        ]);
+        
+
+        return redirect()->route('admin.SMS.index');
+
     }
 
 }

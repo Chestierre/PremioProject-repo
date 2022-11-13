@@ -18,6 +18,7 @@ class Order extends Model
         'orderstatus',
         'customerstatus',
         'due_date',
+        'balancetobepaid',
 
         'monthone',
         'monthtwo',

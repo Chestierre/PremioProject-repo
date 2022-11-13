@@ -26,7 +26,7 @@
     <div id="app">
         
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <admin-sidebar routename = {{ Route::current()->getName()}}></admin-sidebar>
+            <admin-sidebar routename = {{ Route::current()->getName()}} super = {{ (Auth::user()->can('superadmin', App\Models\User::class)?'1':'0')}}></admin-sidebar>
             <div class="container">
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

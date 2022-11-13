@@ -31,6 +31,10 @@
         <i class="fas fa-sms"></i>
         <span>Manage SMS</span>
       </a>
+      <a href="/admin/superfunc" :class="[classActiveSuper, classSuper]">
+        <i class="fas fa-dumpster-fire"></i>
+        <span>SuperAdmin Func</span>
+      </a>
     </div>
   </div>
 </template>
@@ -77,6 +81,9 @@
 a.active,a:hover{
   border-left: 5px solid #b93632;
   color: #b93632;
+}
+a.IsSuper{
+  display:none;
 }
 .sidebar a i{
   font-size: 23px;
@@ -157,7 +164,7 @@ label #cancel{
 
 <script>
     export default {
-        props: ['routename'],
+        props: ['routename', 'super'],
         computed: {
            classActiveUnit(){
              return{
@@ -193,6 +200,17 @@ label #cancel{
              return{
               active: (this.routename == 'admin.order.index')
 
+             }
+           },
+           classActiveSuper(){
+             return{
+              active: (this.routename == 'admin.super.index')
+
+             }
+           },
+           classSuper(){
+             return{
+              IsSuper: (this.super == '0')
              }
            }
         }
