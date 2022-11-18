@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('company_details', function (Blueprint $table) {
+        Schema::create('collectors', function (Blueprint $table) {
             $table->id();
-            // $table->string('headtitle');
-            //$table->string('favicon');
-            $table->string('introduction')->nullable();
-            $table->string('vision')->nullable();
-            $table->string('corevalues')->nullable();
-            $table->string('history')->nullable();
-            $table->string('mission')->nullable();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+                
+            $table->index('user_id');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_details');
+        Schema::dropIfExists('collectors');
     }
 };

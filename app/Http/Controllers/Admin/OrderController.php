@@ -802,7 +802,8 @@ class OrderController extends Controller
     }
     
     public function pay(Request $request, Order $order){
-  
+        // dd(asd);
+        // dd($request->all());
         $request->validate([
             'payment' => 'required|int',
          ]);
@@ -1044,7 +1045,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
                     'customerstatus' => $customerstatus,
-                    'due_date' => $td,
+                    'due_date' => $dt,
                     'balancetobepaid' => $balancetobepaid,
         
                     'monthone' =>  $balance_array[0],
@@ -1138,7 +1139,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
                     'customerstatus' => $customerstatus,
-                    'due_date' => $td,
+                    'due_date' => $dt,
                     'balancetobepaid' => $balancetobepaid,
         
                     'monthone' =>  $balance_array[0],
@@ -1219,7 +1220,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
                     'customerstatus' => $customerstatus,
-                    'due_date' => $td,
+                    'due_date' => $dt,
                     'balancetobepaid' => $balancetobepaid,
         
                     'monthone' =>  $balance_array[0],
@@ -1288,7 +1289,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
                     'customerstatus' => $customerstatus,
-                    'due_date' => $td,
+                    'due_date' => $dt,
                     'balancetobepaid' => $balancetobepaid,
         
                     'monthone' =>  $balance_array[0],
@@ -1345,7 +1346,7 @@ class OrderController extends Controller
                     'currentmonth' => $mo_current,
                     'monthspaid' => $mo_paid,
                     'customerstatus' => $customerstatus,
-                    'due_date' => $td,
+                    'due_date' => $dt,
                     'balancetobepaid' => $balancetobepaid,
         
                     'monthone' =>  $balance_array[0],
@@ -1390,7 +1391,7 @@ class OrderController extends Controller
                 'currentmonth' => $mo_current,
                 'monthspaid' => $mo_paid,
                 'customerstatus' => $customerstatus,
-                'due_date' => $td,
+                'due_date' => $dt,
                 'balancetobepaid' => $balancetobepaid,
     
                 'monthone' =>  $balance_array[0],
@@ -1417,7 +1418,7 @@ class OrderController extends Controller
                 'monthsix' => $balance_array[5]
             ]);
         }
-        return redirect()->route('admin.order.show',$order); 
+        return redirect()->back(); 
 
     }
 }

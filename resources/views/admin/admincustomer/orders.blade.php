@@ -10,7 +10,7 @@
                         <div class="col-xs-6 d-flex justify-content-between mb-2">
                             <div>
                                 <a href="#" class="btn btn-primary col-sm" data-toggle="modal" data-target="#createOrderModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Add New Order</span></a>
-                                <a href = {{ route('admin.user.index') }} type="button" class="btn btn-success"> Go Back </a>
+                                <a href = {{ url()->previous() }} type="button" class="btn btn-success"> Go Back </a>
                             </div>
                             <div class="">
                                 <form method="POST" action={{route("admin.order.search")}}>

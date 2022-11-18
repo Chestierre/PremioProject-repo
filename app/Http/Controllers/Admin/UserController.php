@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Collector;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -32,18 +33,23 @@ class UserController extends Controller
             'password' => 'required|string|min:5|confirmed',
             'userrole' => 'required|string|max:20'
         ]);
-        User::create([
+        $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'userrole' => $request->userrole,
         ]);
+        
+        if ($request->userrole == "Collector"){
+            Collector::create([
+                'user_id' => $user->id
+            ]);
+        }
+
         return redirect()->route('admin.user.index'); 
 
     }
 
     public function adminstore(Request $request){
-
-        
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:5|confirmed',
@@ -54,6 +60,12 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'userrole' => $request->userrole,
         ]);
+        if ($request->userrole == "Collector"){
+            Collector::create([
+                'user_id' => $user->id
+            ]);
+        }
+
         return redirect()->route('admin.user.index'); 
     }
 
@@ -185,6 +197,22 @@ class UserController extends Controller
   
     public function exportUsers(Request $request){
         return Excel::download(new ExportUser, 'users.csv');
+    }
+
+    public function checkcollector($id){
+
+        $user = User::with('collector.customer')->find($id);
+    
+        return response()->json($user);
+        // return response()->json(['gello' => 'me']);
+    }
+
+    public function getcustomer($id)
+    {
+        //spouse, 'parent', 'address', 'comaker', 'creditreference', 'dependent', 'personalreference'
+        $user = User::with('customer.spouse', 'customer.parent', 'customer.address', 'customer.comaker', 'customer.creditreference', 'customer.dependent', 'customer.personalreference')->find($id);
+        
+        return response()->json($user->customer);
     }
 
 }

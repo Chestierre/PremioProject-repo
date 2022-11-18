@@ -24,6 +24,9 @@ class WelcomeAuthMiddleware
             if(((auth()->user()->userrole == "Super Admin") || auth()->user()->userrole == "Admin")){
                 return redirect()->route('admin.user.index');
             }
+            if(auth()->user()->userrole == "Collector"){
+                return redirect()->route('collector.inspector.index');
+            }
             if(auth()->user()->userrole == "Customer" && !(auth()->user()->customer()->exists()) ){
                 Auth::logout();
             }

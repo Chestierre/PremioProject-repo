@@ -78,8 +78,6 @@
                         @if($orderhistory->monththirthyfour) {{number_format($orderhistory->monththirthyfour)}} || @endif
                         @if($orderhistory->monththirthyfive) {{number_format($orderhistory->monththirthyfive)}} || @endif
                         @if($orderhistory->monththirthysix) {{number_format($orderhistory->monththirthysix)}} || @endif
-                 
-
                     </td>
                 </tr>
             @endforeach

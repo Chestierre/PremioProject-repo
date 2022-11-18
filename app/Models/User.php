@@ -46,6 +46,9 @@ class User extends Authenticatable
     public function customer(){
         return $this->hasOne(Customer::class);
     }
+    public function collector(){
+        return $this->hasOne(Collector::class);
+    }
     public function order(){
         return $this->hasMany(Order::class);
     }

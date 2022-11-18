@@ -34,7 +34,7 @@ class LoginController extends Controller
              return route('admin.user.index');
         }
         if (auth()->user()->userrole == 'Collector') {
-            return route('collector.collector.index'); 
+            return route('collector.inspector.index'); 
         }
         // $brand = Brand::all();
         // $customer = Customer::with('user')->get();

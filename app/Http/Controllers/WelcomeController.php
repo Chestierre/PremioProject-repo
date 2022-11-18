@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Brand;
 use App\Models\Promo;
+use App\Models\CompanyDetail;
 use Illuminate\Http\Request;
 
 class WelcomeController extends Controller
@@ -25,8 +26,9 @@ class WelcomeController extends Controller
     
     public function aboutus()
     {
-        $brand = Brand::all();       
-        return view('about-us', compact('brand'));
+        $brand = Brand::all();
+        $companydetail = CompanyDetail::find(1);       
+        return view('about-us', compact('brand','companydetail'));
     }
 
 

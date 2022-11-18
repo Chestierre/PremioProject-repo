@@ -41,7 +41,8 @@ class Customer extends Model
         'ModeOfPayment',
         'ApplicantSketch',	
         'ApplicantSignature',
-        'user_id'
+        'user_id',
+        'collector_id'
     ];
     public function user(){
         return $this->belongsTo(User::class);

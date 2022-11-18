@@ -51,6 +51,7 @@ return new class extends Migration
             $table->string('ApplicantSignature')->nullable(); //not nullable
             $table->timestamps();
 
+            $table->foreignId('collector_id')->nullable()->constrained();
             $table->foreignId('user_id')
                     ->constrained()
                     ->onUpdate('cascade')

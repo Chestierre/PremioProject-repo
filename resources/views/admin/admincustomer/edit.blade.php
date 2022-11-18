@@ -4,7 +4,11 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1>Customer Information</h1>
+            {{-- <div class="d-flex justify-content-between"> --}}
+                <h1>Customer Information</h1>
+            {{-- </div> --}}
+            
+            
             <div class="d-flex justify-content-between my-3">
                 <div class="d-flex flex-column col col-md-2">
                     <button class="btn btn-primary" type="button" id="applicant_button">Applicant</button>

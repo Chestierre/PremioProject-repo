@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CollectorController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\Admin\SuperfuncController;
+use App\Http\Controllers\Collector\InspectorController;
 use App\Http\Controllers\mocksms;
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome') -> middleware('welcomeauthmiddleware');
@@ -31,7 +32,7 @@ Route::group(['middleware' => 'auth'],function(){
         'middleware' => 'is_admin',
         'as' => 'admin.'
     ], function () {
-
+        Route::get('user/getcustomer/{id}', [UserController::class, 'getcustomer'])->name('user.getcustomer');
         Route::post('user/import',[UserController::class, 'import'])->name('user.import'); 
         Route::get('user/export-users',[UserController::class,'exportUsers'])->name('user.export-users');
         Route::get('/user/password/{user}/edit', [UserController::class, 'password_edit'])->name('password_edit');
@@ -41,7 +42,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/user/adminstore', [UserController::class, 'adminstore'])->name('user.adminstore');
         Route::get('user/getuser/{id}', [UserController::class, 'getuser'])->name('user.getuser');
 
-        
+        Route::get('user/checkcollector/{id}', [UserController::class, 'checkcollector'])->name('user.checkcollector');
         Route::get('user/getcustomeruserrelation/{id}', [UserController::class, 'getcustomeruserrelation'])->name('user.getcustomeruserrelation');
         Route::resource('user', UserController::class);
 
@@ -69,6 +70,11 @@ Route::group(['middleware' => 'auth'],function(){
         Route::post('/SMS/sendapisms', [SMSController::class, 'sendapisms'])->name('SMS.sendapisms');
         Route::resource('SMS', SMSController::class);
         
+        Route::get('collector/ajaxindex/', [CollectorController::class, 'ajaxindex'])->name('collector.ajaxindex');
+        Route::get('collector/findcollector/{id}', [CollectorController::class, 'findcollector'])->name('collector.findcollector');
+        Route::get('collector/getallcustomerfromcollector/{id}', [CollectorController::class, 'getallcustomerfromcollector'])->name('collector.getallcustomerfromcollector');
+        Route::patch('collector/assigncustomer/{id}', [CollectorController::class, 'assigncustomer'])->name('collector.assigncustomer');
+        Route::get('collector/getcustomercollectorrelation/{id}', [CollectorController::class, 'getcustomercollectorrelation'])->name('collector.getcustomercollectorrelation');
         Route::resource('collector', CollectorController::class);
         Route::get('collector/{order}/orderEdit', [CollectorController::class, 'orderEdit'])->name('collector.orderEdit');
         Route::post('collector/{user}/{order}/unassignOrder', [CollectorController::class, 'unassignOrder'])->name('collector.unassignOrder');
@@ -80,6 +86,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::resource('admincustomer', AdminCustomerController::class);
 
         Route::get('/superfunc', [SuperfuncController::class, 'index'])->name('superfunc.index')->middleware('is_super');
+        Route::post('/superfunc/aboutusedit', [SuperfuncController::class, 'aboutusedit'])->name('superfunc.aboutusedit')->middleware('is_super');
     });
 
     Route::group([
@@ -97,9 +104,12 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::group([
         'prefix' => 'collector',
+        'middleware' => 'is_collector',
         'as' => 'collector.'
     ], function () {
-        Route::resource('collector', CollectorController::class);
+        Route::get('inspector/getorder/{id}', [InspectorController::class, 'getorder'])->name('inspector.getorder');
+        Route::post('{order}/pay', [OrderController::class, 'pay'])->name('inspector.pay');
+        Route::resource('inspector', InspectorController::class);
     });
     
 
