@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\AdminCustomerController;
 use App\Http\Controllers\Admin\SuperfuncController;
 use App\Http\Controllers\Collector\InspectorController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\mocksms;
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome') -> middleware('welcomeauthmiddleware');
@@ -25,6 +26,7 @@ Route::view('/pdfOrder', 'admin.order.pdfOrder');
 Route::get('/about-us', [App\Http\Controllers\WelcomeController::class, 'aboutus'])->name('about-us') -> middleware('welcomeauthmiddleware');
 Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'contact'])->name('contact-us') -> middleware('welcomeauthmiddleware');
 Route::post('/sendEmail', [App\Http\Controllers\ContactController::class, 'sendEmail'])->name('contact.sendEmail') -> middleware('welcomeauthmiddleware');
+
 
 Route::group(['middleware' => 'auth'],function(){
     Route::group([
@@ -91,6 +93,7 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::group([
         'prefix' => 'customer',
+        'middleware' => 'is_customer',
         'as' => 'customer.'
     ], function () {
         Route::resource('customer', App\Http\Controllers\Customer\CustomerController::class, ['except' => ['store']]) -> middleware(['ensurecustomerdetails']);
@@ -99,9 +102,19 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/FillOutform', function () {
             $id = Auth::id();
             return view('FillOutform', compact('id'));
-        })->name('FillOutform');;                                                
+        })->name('FillOutform');;
+                                                
     });
-
+    Route::group([
+        'middleware' => 'is_customer',
+    ], function(){
+        Route::get('/CustomerViewDetails', [CustomerController::class, 'CustomerViewDetails'])->name('CustomerViewDetails');
+        Route::get('/AccountSetting', [CustomerController::class, 'AccountSetting'])->name('AccountSetting');
+        Route::patch('/updateCustomer', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');
+        Route::patch('/updateCustomerDetails', [CustomerController::class, 'updateCustomerDetails'])->name('updateCustomerDetails');
+    }); 
+    
+ 
     Route::group([
         'prefix' => 'collector',
         'middleware' => 'is_collector',

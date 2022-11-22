@@ -16,12 +16,23 @@ class ContactController extends Controller
     }
 
     public function sendEmail(Request $request){
-        $details = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'msg' => $request->msg
-        ];
+        if (Auth()->user()->userrole == "Customer"){
+            $details = [
+                'name' => Auth()->user()->customer->FirstName ." ". Auth()->user()->customer->LastName,
+                'email' => Auth()->user()->customer->email,
+                'phone' => Auth()->user()->customer->MobileNumber,
+                'msg' => $request->msg
+            ];
+        }else{
+            $details = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'msg' => $request->msg
+            ];
+        }
+
+        
 
         Mail::to('chesterdoliente@gmail.com')->send(new ContactMail($details));
         return back()->with('message_sent', 'your message has been sent successfully!');

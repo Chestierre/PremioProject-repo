@@ -42,7 +42,7 @@ class LoginController extends Controller
         // if (auth()->user()->customer == null){
         //     return route('customer.CustomerRequestDetails');
         // }
-        return  route('customer.customer.index');
+        return  route('welcome');
         // return view('/home', compact('customer','brand'));
         //return '/'; 
     }

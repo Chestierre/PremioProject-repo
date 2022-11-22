@@ -105,7 +105,14 @@ class UnitController extends Controller
         // dd('gello');
         // dd($unit->unitimage[0]);
         foreach ($unit->unitimage as $unit->unitimage) {
-            Storage::delete('$unit->unitimage->image');
+            if($unit->unitimage->image){
+                if(Storage::disk('public')->exists($unit->unitimage->image )){
+                    Storage::disk('public')->delete($unit->unitimage->image);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            // Storage::delete('$unit->unitimage->image');
             $unit->unitimage->delete();
         }
         

@@ -21,7 +21,7 @@
                     <button class="btn btn-secondary" type="button" id="credit_references_button">Credit References</button>
                 </div>
                 <div class="col col-md-10 mx-3">
-                    <form method="POST" action="{{route("admin.admincustomer.update", $admincustomer) }}">
+                    <form method="POST" enctype="multipart/form-data" action="{{route("admin.admincustomer.update", $admincustomer) }}">
                         @method('PUT')
                         @csrf
                         @if ($errors->any())
@@ -357,6 +357,36 @@
                                 </div>
                             </div>
 
+                            <div id="div_id_ApplicantSketch" class="form-group my-2">
+                                <label for="id_ApplicantSketch" class="control-label">Applicant Sketch:</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('ApplicantSketch') is-invalid @enderror" id="id_ApplicantSketch" name="ApplicantSketch"   type="file" disabled/>
+                                    <button class="btn btn-secondary button_click"id="button_id_ApplicantSketch" data-id="id_ApplicantSketch" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('ApplicantSketch')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSketch }}">
+
+                            <div id="div_id_ApplicantSignature" class="form-group my-2">
+                                <label for="id_ApplicantSignature" class="control-label">Applicant Signature:</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('ApplicantSignature') is-invalid @enderror" id="id_ApplicantSignature" name="ApplicantSignature"   type="file" disabled/>
+                                    <button class="btn btn-secondary button_click"id="button_id_ApplicantSignature" data-id="id_ApplicantSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('ApplicantSignature')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSignature }}">
+
+
+
 
 
                         </div>
@@ -503,6 +533,19 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div id="div_id_SpouseSignature" class="form-group my-2">
+                                <label for="id_SpouseSignature" class="control-label">Spouse Signature:</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('SpouseSignature') is-invalid @enderror" id="id_SpouseSignature" name="SpouseSignature"   type="file" disabled/>
+                                    <button class="btn btn-secondary button_click"id="button_id_SpouseSignature" data-id="id_SpouseSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('SpouseSignature')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <img src= "/storage/{{ $admincustomer->customer->spouse->SpouseSignature }}">
 
 
                         </div>
@@ -778,6 +821,32 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div id="div_id_CoMakerSketch" class="form-group my-2">
+                                <label for="id_CoMakerSketch" class="control-label">Applicant Sketch:</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('CoMakerSketch') is-invalid @enderror" id="id_CoMakerSketch" name="CoMakerSketch"   type="file" disabled/>
+                                    <button class="btn btn-secondary button_click"id="button_id_CoMakerSketch" data-id="id_CoMakerSketch" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('CoMakerSketch')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <img src= "/storage/{{ $admincustomer->customer->comaker->Sketch }}">
+                            <div id="div_id_CoMakerSignature" class="form-group my-2">
+                                <label for="id_CoMakerSignature" class="control-label">Applicant Sketch:</label>
+                                <div class="controls d-flex">
+                                    <input class="form-control @error('CoMakerSignature') is-invalid @enderror" id="id_CoMakerSignature" name="CoMakerSignature"   type="file" disabled/>
+                                    <button class="btn btn-secondary button_click"id="button_id_CoMakerSignature" data-id="id_CoMakerSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
+                                    @error('CoMakerSignature')
+                                        <span class="invalid-feedback text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <img src= "/storage/{{ $admincustomer->customer->comaker->Signature }}">
 
 
 
@@ -1859,6 +1928,7 @@
 
         $('.button_click').on('click', function(e) {
             event.preventDefault();
+        
             var item = $(this).attr('data-id');
             $('#'+ item ).prop("disabled", (i, v) => !v);
         });

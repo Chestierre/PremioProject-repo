@@ -40,28 +40,7 @@
                         <tr>
                         </thead>
                         <tbody>
-                        @foreach ($customer as $customer)
-                            <tr>
-                                <td>
-                                    {{ $customer->FillOutDate }}
-                                </td>
-                                <td>
-                                    {{ $customer->FirstName }}
-                                </td>
-                                <td>
-                                    {{ $customer->MiddleName }}
-                                </td>
-                                <td>
-                                    {{ $customer->LastName }}
-                                </td>
-                                <td>
-                                    {{ $customer->user->username }}
-                                </td>
-                                <td>
-                                    {{ $customer->user->userrole }}
-                                </td>
-                            </tr>
-                        @endforeach   
+ 
                         </tbody>
 
                     </table>

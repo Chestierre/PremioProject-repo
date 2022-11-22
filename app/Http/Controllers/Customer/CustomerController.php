@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Brand;
+use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
@@ -17,9 +19,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        // $customer = Customer::with('user')->get();
-        // $brand = Brand::all();
-        return view('customer.index');
+        $customer = Customer::with('user')->get();
+        $brand = Brand::all();
+        return view('customer.index', compact('brand'));
         //return view('/');
     
     }
@@ -378,8 +380,39 @@ class CustomerController extends Controller
         //
     }
 
-    public function try(Request $request)
+    public function AccountSetting()
     {
-        dd($request->all());
+        $brand = Brand::all();
+        return view('customer.AccountSetting', compact('brand'));
+        // $customer = Customer::find(1);
+        // return view('customer.index', compact('customer', 'brand'));
+    }
+    public function updateCustomer(Request $request){
+
+        $request->validate([
+            'username' => ['required', 'string', 'max:255', 'min:5', Rule::unique('users','username')->ignore(auth()->user()->id)],
+            'password' => 'nullable|string|min:5|confirmed',
+        ]);
+
+        if ($request->editpassword == ""){
+            auth()->user() -> update([
+                'username' => $request->username,
+            ]);
+        }else{
+            auth()->user() -> update([
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+            ]);
+        }
+        return redirect()->route('welcome'); 
+    }
+
+    public function CustomerViewDetails(){
+        $customer = Customer::with('spouse', 'parent', 'address', 'comaker', 'creditreference', 'dependent', 'personalreference')->find(auth()->user()->customer->id);
+        $brand = Brand::all();
+        return view('customer.CustomerViewDetails', compact('brand', 'customer'));
+    }
+    public function updateCustomerDetails(Request $request){
+
     }
 }

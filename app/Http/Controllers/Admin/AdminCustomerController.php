@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Unit;
@@ -14,6 +15,7 @@ use App\Models\CustomerPersonalReference;
 use App\Models\CustomerCreditReference;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 
 class AdminCustomerController extends Controller
 {
@@ -165,10 +167,11 @@ class AdminCustomerController extends Controller
      */
     public function update(Request $request, User $admincustomer)
     {   
-        $admincustomer->load('customer.spouse','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
-        // dd($request->all());
-        // dd($admincustomer);
-        // dd($admincustomer);
+        $admincustomer->load('customer.spouse','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference', 'customer.order.ordercustomerinformation');
+        $sorted = $admincustomer->customer->order->sortBy('created_at')->last();
+        // dd($sorted->ordercustomerinformation);
+        
+
 
         $request->validate([
             'FirstName' => 'required|string',
@@ -183,10 +186,7 @@ class AdminCustomerController extends Controller
             'TinNo' => 'nullable|integer',
             'id_ResNo' => 'nullable|integer',
             'IssueDate' => 'nullable|date',
-            'PlaceIssue' => 'nullable|string',	
-            'FarmLotAddress' => 'nullable|string',	
-            'FarmLotSize' => 'nullable|string',	
-            'ProvincialAddress' => 'required|string',	
+            'PlaceIssue' => 'nullable|string',		
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
             'MobileNumber' => 'required|integer',
@@ -233,6 +233,16 @@ class AdminCustomerController extends Controller
             'HouseProvidedBy' => 'nullable|string',	
             'LotStatus' => 'required|string',	
             'LotProvidedBy' => 'nullable|string',
+            'OtherPropertiesTV' => 'nullable|boolean',
+            'OtherPropertiesRef' => 'nullable|boolean',
+            'OtherPropertiesStereoComponent' => 'nullable|boolean',
+            'OtherPropertiesGasRange' => 'nullable|boolean',
+            'OtherPropertiesMotorcycle' => 'nullable|boolean',
+            'OtherPropertiesComputer' => 'nullable|boolean',
+            'OtherPropertiesFarmlot' => 'nullable|boolean',
+            'FarmLotAddress' => 'nullable|string',	
+            'FarmLotSize' => 'nullable|string',	
+            'ProvincialAddress' => 'required|string',
             
             //co-maker
             'CoMakerName' => 'required|string',	
@@ -316,6 +326,29 @@ class AdminCustomerController extends Controller
             
         ]);
 
+        $imagePathApplicantSketch = ($admincustomer->customer->ApplicantSketch)?$admincustomer->customer->ApplicantSketch:"";
+        $imagePathApplicantSignature = ($admincustomer->customer->ApplicantSignature)?$admincustomer->customer->ApplicantSignature:"";
+        // dd($request->ApplicantSketch);
+        if ($request->ApplicantSketch != NULL){
+            if ($sorted->ordercustomerinformation->ApplicantSketch != $admincustomer->customer->ApplicantSketch && $admincustomer->customer->ApplicantSketch){
+                if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSketch )){
+                    Storage::disk('public')->delete($admincustomer->customer->ApplicantSketch);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            $imagePathApplicantSketch = request('ApplicantSketch')->store('uploads', 'public');
+        }
+        if ($request->ApplicantSignature != NULL) {
+            if($sorted->ordercustomerinformation->ApplicantSignature != $admincustomer->customer->ApplicantSignature && $admincustomer->customer->ApplicantSignature){
+                if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSignature )){
+                    Storage::disk('public')->delete($admincustomer->customer->ApplicantSignature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            $imagePathApplicantSignature = request('ApplicantSignature')->store('uploads', 'public');
+        }
         $admincustomer-> customer() -> update([
             'NumberOfDependencies' => $request->NumberOfDependencies,
             'NumberofCreditReference' => $request->NumberofCreditReference,
@@ -332,9 +365,6 @@ class AdminCustomerController extends Controller
             'id_ResNo' => $request->id_ResNo,
             'IssueDate' => $request->IssueDate,
             'PlaceIssue' => $request->PlaceIssue,
-            'FarmLotAddress' => $request->FarmLotAddress,	
-            'FarmLotSize' => $request->FarmLotSize,	
-            'ProvincialAddress' => $request->ProvincialAddress,	
             'HomePhoneNumber' => $request->HomePhoneNumber,
             'OfficePhoneNumber' => $request->OfficePhoneNumber,
             'MobileNumber' => $request->MobileNumber,
@@ -349,25 +379,69 @@ class AdminCustomerController extends Controller
             'Salary' => $request->Salary,
             'UnitToBeUsedFor' => $request->UnitToBeUsedFor,
             'ModeOfPayment' => $request->ModeOfPayment,
-            'ApplicantSignature' => $request->ApplicantSignature,
-            'ApplicantSketch' => $request->ApplicantSketch,	
+            'ApplicantSketch' => $imagePathApplicantSketch,
+            'ApplicantSignature' => $imagePathApplicantSignature	
         ]);
 
-        $admincustomer-> customer -> spouse() -> update([
-            'Name' => $request->SpouseName,
-            'Age' => $request->SpouseAge,
-            'ProvincialAddress' => $request->SpouseProvincialAddress,
-            'MobileNumber' => $request->SpouseMobileNumber,
-            'Email' => $request->SpouseEmail,
-            'Employer' => $request->SpouseEmployer,
-            'Position' => $request->SpousePosition,
-            'JobAddress' => $request->SpouseJobAddress,
-            'WorkTelNum' => $request->SpouseWorkTelNum,
-            'DateEmployed' => $request->SpouseDateEmployed,
-            'Salary' => $request->SpouseSalary,
-            'SpouseSignature' => $request->SpouseSignature,
-        ]);
+        
+        
+        $imagePathSpouseSignature = ($admincustomer->customer->spouse->SpouseSignature)?$admincustomer->customer->spouse->SpouseSignature:"";
+        
+        if ($request->SpouseSignature != NULL) {
+            if($sorted->ordercustomerinformation->SpouseSignature != $admincustomer->customer->spouse->SpouseSignature && $admincustomer->customer->spouse->SpouseSignature){
+                if(Storage::disk('public')->exists($admincustomer->customer->spouse->SpouseSignature )){
+                    Storage::disk('public')->delete($admincustomer->customer->spouse->SpouseSignature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            $imagePathSpouseSignature = request('SpouseSignature')->store('uploads', 'public');
+        }
+            
+            $admincustomer-> customer -> spouse() -> update([
+                'Name' => $request->SpouseName,
+                'Age' => $request->SpouseAge,
+                'ProvincialAddress' => $request->SpouseProvincialAddress,
+                'MobileNumber' => $request->SpouseMobileNumber,
+                'Email' => $request->SpouseEmail,
+                'Employer' => $request->SpouseEmployer,
+                'Position' => $request->SpousePosition,
+                'JobAddress' => $request->SpouseJobAddress,
+                'WorkTelNum' => $request->SpouseWorkTelNum,
+                'DateEmployed' => $request->SpouseDateEmployed,
+                'Salary' => $request->SpouseSalary,
+                'SpouseSignature' => $imagePathSpouseSignature
+            ]);
 
+        
+        $imagePathCoMakerSketch = ($admincustomer->customer->comaker->Sketch)?$$admincustomer->customer->comaker->Sketch:"";
+        $imagePathCoMakerSignature = ($admincustomer->customer->comaker->Signature)?$admincustomer->customer->comaker->Signature:"";
+
+        if ($request->CoMakerSketch != NULL){ 
+            if($sorted->ordercustomerinformation->CoMakerSketch != $admincustomer->customer->comaker->Sketch && $admincustomer->customer->comaker->Sketch){
+                if(Storage::disk('public')->exists(admincustomer->customer->comaker->Sketch )){
+                    Storage::disk('public')->delete(admincustomer->customer->comaker->Sketch);
+                }else{
+                    dd("storage not working");
+                }
+            } 
+
+            $imagePathCoMakerSketch = request('CoMakerSketch')->store('uploads', 'public');
+
+        }
+        if ($request->CoMakerSignature != NULL) {
+            if($sorted->ordercustomerinformation->CoMakerSignature != $admincustomer->customer->comaker->Signature && $admincustomer->customer->comaker->Signature){
+                if(Storage::disk('public')->exists($admincustomer->customer->comaker->Signature )){
+                    Storage::disk('public')->delete($admincustomer->customer->comaker->Signature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+
+            $imagePathCoMakerSignature = request('CoMakerSignature')->store('uploads', 'public');
+        }
+            
+            
         $admincustomer-> customer -> comaker() -> update([
             'Name' => $request->CoMakerName,	
             'Age' => $request->CoMakerAge,
@@ -390,9 +464,12 @@ class AdminCustomerController extends Controller
             'CreditReference1' => $request->CoMakerCreditReference1,
             'CreditReference2' => $request->CoMakerCreditReference2,
             'CreditReference3' => $request->CoMakerCreditReference3,
-            'Sketch' => $request->CoMakerSketch,
-            'Signature' => $request->CoMakerSignature,
+            'Sketch' => $imagePathCoMakerSketch,
+            'Signature' => $imagePathCoMakerSignature
         ]);
+        
+
+       
 
         $admincustomer-> customer -> parent() -> update([
             'Father' => $request->Father,
@@ -406,9 +483,20 @@ class AdminCustomerController extends Controller
             'PresentAddress' => $request->PresentAddress,	
             'LengthOfStay' => $request->LengthOfStay,	
             'HouseStatus' => $request->HouseStatus,	
-            'HouseProvidedBy' => $request->HouseProvidedBy,	
+            'HouseProvidedBy' => $request->HouseProvidedBy,
             'LotStatus' => $request->LotStatus,	
             'LotProvidedBy' => $request->LotProvidedBy,
+            'OtherPropertiesTV' => $request->OtherPropertiesTV,
+            'OtherPropertiesRef' => $request->OtherPropertiesRef,
+            'OtherPropertiesStereoComponent' => $request->OtherPropertiesStereoComponent,
+            'OtherPropertiesGasRange' => $request->OtherPropertiesGasRange,
+            'OtherPropertiesMotorcycle' => $request->OtherPropertiesMotorcycle,
+            'OtherPropertiesComputer' => $request->OtherPropertiesComputer,
+            'OtherPropertiesFarmlot' => $request->OtherPropertiesFarmlot,
+            'FarmLotAddress' => $request->FarmLotAddress,	
+            'FarmLotSize' => $request->FarmLotSize,
+            'ProvincialAddress' => $request->ProvincialAddress,			
+
         ]);
 
         switch($request->NumberOfDependencies){
@@ -676,8 +764,8 @@ class AdminCustomerController extends Controller
             'Salary' => 'required|integer',
             'UnitToBeUsedFor' => 'required|string',
             'ModeOfPayment' => 'nullable|string',
-            'ApplicantSketch' => 'nullable|image',
-            'ApplicantSignature' => 'nullable|image',
+            'ApplicantSketch' => 'required|image',
+            'ApplicantSignature' => 'required|image',
 
             //spouse
             'Spouse' => 'nullable|string',
@@ -691,7 +779,7 @@ class AdminCustomerController extends Controller
             'SpouseWorkTelNum' => 'nullable|integer',
             'SpouseDateEmployed' => 'nullable|date',
             'SpouseSalary' => 'nullable|integer',
-            'SpouseSignature' => 'nullable|image',
+            'SpouseSignature' => 'required|image',
 
             //parents
             'Father' => 'nullable|string',
@@ -739,8 +827,8 @@ class AdminCustomerController extends Controller
             'CoMakerCreditReference1' => 'nullable|string',
             'CoMakerCreditReference2' => 'nullable|string',
             'CoMakerCreditReference3' => 'nullable|string',
-            'CoMakerSketch' => 'nullable|image',
-            'CoMakerSignature' => 'nullable|image',
+            'CoMakerSketch' => 'required|image',
+            'CoMakerSignature' => 'required|image',
             
             //dependencies
             'DependentName1' => 'nullable|string',
@@ -878,7 +966,6 @@ class AdminCustomerController extends Controller
                 'LotProvidedBy' => $request->input('LotProvidedBy'),
                 'OtherPropertiesTV' => $request->input('OtherPropertiesTV'),
                 'OtherPropertiesRef' => $request->input('OtherPropertiesRef'),
-                
                 'OtherPropertiesStereoComponent' => $request->input('OtherPropertiesStereoComponent'),
                 'OtherPropertiesGasRange' => $request->input('OtherPropertiesGasRange'),
                 'OtherPropertiesMotorcycle' => $request->input('OtherPropertiesMotorcycle'),

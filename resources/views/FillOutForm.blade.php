@@ -247,7 +247,7 @@
                                         <label class="radio-inline"> <input type="radio" name="HouseStatus" class="HouseStatus" id="id_HouseStatus_1" value="Owned" {{ old('HouseStatus') == "Owned" ? 'checked' : ''  }} style="margin-bottom: 10px">Owned</label>
                                         <label class="radio-inline"> <input type="radio" name="HouseStatus" class="HouseStatus" id="id_HouseStatus_2" value="Rented" {{ old('HouseStatus') == "Rented" ? 'checked' : ''  }} style="margin-bottom: 10px">Rented</label>
                                         <label class="radio-inline"> <input type="radio" name="HouseStatus" class="HouseStatus" id="id_HouseStatus_3" value="Mortgaged" {{ old('HouseStatus') == "Mortgaged" ? 'checked' : ''  }} style="margin-bottom: 10px">Mortgaged</label>
-                                        <label class="radio-inline"> <input type="radio" name="HouseStatus" class="HouseStatus" id="id_HouseStatus_4" value="Provided_By" {{ old('HouseStatus') == "Provided_By" ? 'checked' : ''  }} style="margin-bottom: 10px">Provided By</label>
+                                        <label class="radio-inline"> <input type="radio" name="HouseStatus" class="HouseStatus" id="id_HouseStatus_4" value="Provided_by" {{ old('HouseStatus') == "Provided_by" ? 'checked' : ''  }} style="margin-bottom: 10px">Provided By</label>
                                         @error('HouseStatus')
                                             <br />
                                             <span class="invalid-feedback text-danger" role="alert">
@@ -1444,7 +1444,7 @@
                                 <div class="controls col-md-8"  style="margin-bottom: 15px">
                                         <label class="radio-inline"> <input type="radio" name="CoMakerCivilStatus" id="id_CoMakerCivilStatus_1" value="Single" {{ old('CoMakerCivilStatus') == "Single" ? 'checked' : ''  }} style="margin-bottom: 10px">Single</label>
                                         <label class="radio-inline"> <input type="radio" name="CoMakerCivilStatus" id="id_CoMakerCivilStatus_2" value="Married" {{ old('CoMakerCivilStatus') == "Married" ? 'checked' : ''  }} style="margin-bottom: 10px">Married </label>
-                                        <label class="radio-inline"> <input type="radio" name="CoMakerCivilStatus" id="id_CoMakerCivilStatus_3" value="Divored/Separated" {{ old('CoMakerCivilStatus') == "Divored/Separated" ? 'checked' : ''  }} style="margin-bottom: 10px">Divored/Separated </label>
+                                        <label class="radio-inline"> <input type="radio" name="CoMakerCivilStatus" id="id_CoMakerCivilStatus_3" value="Divorced/Separated" {{ old('CoMakerCivilStatus') == "Divorced/Separated" ? 'checked' : ''  }} style="margin-bottom: 10px">Divorced/Separated </label>
                                         <label class="radio-inline"> <input type="radio" name="CoMakerCivilStatus" id="id_CoMakerCivilStatus_4" value="Widowed" {{ old('CoMakerCivilStatus') == "Widowed" ? 'checked' : ''  }} style="margin-bottom: 10px">Widowed </label>
                                         @error('CoMakerCivilStatus')
                                             <br />
@@ -1619,7 +1619,7 @@
                             <div id="div_id_ApplicantSketch" class="form-group required">
                                 <label for="id_ApplicantSketch" class="control-label col-md-4  requiredField">Applicant Address<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input type="file" class="form-control-file @error('ApplicantSketch') is-invalid @enderror ApplicantSketch" id="ApplicantSketch" name="ApplicantSketch" style="margin-bottom: 15px">
+                                     <input type="file" class="form-control-file @error('ApplicantSketch') is-invalid @enderror ApplicantSketch" id="ApplicantSketch" name="ApplicantSketch" style="margin-bottom: 15px" required>
                                      @error('ApplicantSketch')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -1631,7 +1631,7 @@
                             <div id="div_id_CoMakerSketch" class="form-group required">
                                 <label for="id_CoMakerSketch" class="control-label col-md-4  requiredField">Co-maker Address<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input type="file" class="form-control-file @error('CoMakerSketch') is-invalid @enderror CoMakerSketch" id="CoMakerSketch" name="CoMakerSketch" style="margin-bottom: 15px">
+                                     <input type="file" class="form-control-file @error('CoMakerSketch') is-invalid @enderror CoMakerSketch" id="CoMakerSketch" name="CoMakerSketch" style="margin-bottom: 15px" required>
                                      @error('CoMakerSketch')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -1643,7 +1643,7 @@
                             <div id="div_id_CoMakerSignature" class="form-group required">
                                 <label for="id_CoMakerSignature" class="control-label col-md-4  requiredField">Co-maker Signature<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input type="file" class="form-control-file @error('CoMakerSignature') is-invalid @enderror CoMakerSignature" id="CoMakerSignature" name="CoMakerSignature" style="margin-bottom: 15px">
+                                     <input type="file" class="form-control-file @error('CoMakerSignature') is-invalid @enderror CoMakerSignature" id="CoMakerSignature" name="CoMakerSignature" style="margin-bottom: 15px" required>
                                      @error('CoMakerSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -1655,7 +1655,7 @@
                             <div id="div_id_SpouseSignature" class="form-group required">
                                 <label for="id_SpouseSignature" class="control-label col-md-4  requiredField">Spouse Signature<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input type="file" class="form-control-file @error('SpouseSignature') is-invalid @enderror SpouseSignature" id="SpouseSignature" name="SpouseSignature" style="margin-bottom: 15px">
+                                     <input type="file" class="form-control-file @error('SpouseSignature') is-invalid @enderror SpouseSignature" id="SpouseSignature" name="SpouseSignature" style="margin-bottom: 15px" required>
                                      @error('SpouseSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -1667,7 +1667,7 @@
                             <div id="div_id_ApplicantSignature" class="form-group required">
                                 <label for="id_ApplicantSignature" class="control-label col-md-4  requiredField">Applicant Signature<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input type="file" class="form-control-file @error('ApplicantSignature') is-invalid @enderror ApplicantSignature" id="ApplicantSignature" name="ApplicantSignature" style="margin-bottom: 15px">
+                                     <input type="file" class="form-control-file @error('ApplicantSignature') is-invalid @enderror ApplicantSignature" id="ApplicantSignature" name="ApplicantSignature" style="margin-bottom: 15px" required>
                                      @error('ApplicantSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>

@@ -553,6 +553,8 @@ class OrderController extends Controller
                     ]);
 
           }
+
+        //   $ApplicantSketch = request('ApplicantSignature')->store('uploads', 'public');
         //    dd($order->customer->parent->Father);
           OrderCustomerInformation::create([
             'order_id' => $order->id,

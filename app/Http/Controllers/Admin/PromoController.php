@@ -71,7 +71,14 @@ class PromoController extends Controller
     }
     public function destroy(promo $promo)
     {
-        Storage::delete('$promo->PromoImage');
+        if($promo->PromoImage){
+            if(Storage::disk('public')->exists($promo->PromoImage )){
+                Storage::disk('public')->delete($promo->PromoImage);
+            }else{
+                dd("storage not working");
+            }
+        }
+        // Storage::delete('$promo->PromoImage');
         $promo->delete();
         return redirect()->route('admin.promo.index'); 
     }

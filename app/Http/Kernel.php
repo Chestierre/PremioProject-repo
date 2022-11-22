@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'ensurecustomerdetails' => Middleware\EnsureCustomerHasDetailsMiddleware::class,
         'welcomeauthmiddleware' => Middleware\WelcomeAuthMiddleware::class,
         'is_super' => Middleware\IsSuperAdminMiddleware::class,
-        'is_collector' => Middleware\IsCollectorMiddleware::class
+        'is_collector' => Middleware\IsCollectorMiddleware::class,
+        'is_customer' => Middleware\IsCustomerMiddleware::class
     ];
 }

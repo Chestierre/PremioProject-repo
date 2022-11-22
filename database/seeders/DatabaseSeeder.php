@@ -73,6 +73,161 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
+        // var FirstName = "Chester Lloyd";
+        // var MiddleName = "Guarino";	
+        // var LastName = "Doliente";	
+        // var Sex = 'M';
+        // var Age = "25";
+        // var Citizenship = "Filipino";	
+        // var BirthDate = "04/29/97";	
+        // var Religion = "Fundamental Baptist";	
+        // var CivilStatus = "Single";	
+        // var TinNo = "5555555";
+        // var id_ResNo = "555555";
+        // var IssueDate = "04/29/97";
+        // var PlaceIssue = "Tagum City";
+        // var NumberOfDependencies = "0";		
+        // var HomePhoneNumber = "655-2313";
+        // var OfficePhoneNumber = "432-2341";
+        // var MobileNumber = "09056138839";
+        // var email = "chesterdoliete@gmail.com";
+        // var SourceIncome = "Self-Employed/Business";	
+        // var ProvidedBy = "null"; //if only checked
+        // var EmployerName = "Messi Ronaldo";	
+        // var WorkPosition = "Senior Programmer";	
+        // var WorkAddress = "Fd Rd #4 Sto. Tomas Davao del Norte";	
+        // var WorkTelNumber = "123-2422";
+        // var DateEmployed = "04/29/97";	
+        // var Salary = "50000";
+        // var UnitToBeUsedFor = "Personal Use";
+        // var ModeOfPayment = "Cash to be paid to office"; 
+
+        // // spouse
+        // var SpouseName = "Chester Lloyd G. Doliente";
+        // var SpouseAge = "25";
+        // var SpouseProvincialAddress = "FD RD #4 Sto. Tomas Davao del Norte";
+        // var SpouseMobileNumber = "09056138839";
+        // var SpouseEmail = "chesterdoliete@gmail.com";
+        // var SpouseEmployer = "Chester Lloyd Doliente";
+        // var SpousePosition = "Senior Programmer";
+        // var SpouseJobAddress = "FD RD #4 Sto. Tomas Davao del Norte";
+        // var SpouseWorkTelNum = "432-2341";
+        // var SpouseDateEmployed = "04/29/97";
+        // var SpouseSalary = "50000";
+        // var SpouseSignature = "";
+        
+        // //parent
+        // var Father = "Chester Lloyd G. Doliente";
+        // var Mother = "Chester Lloyd G. Doliente";
+        // var ParentAddresss = "FD RD #4 Sto. Tomas Davao del Norte";
+        // var ParentMobileNumber = "09056138839";             
+
+        // //comaker
+        // var CoMakerName = "Chester Lloyd G. Doliente";	
+        // var CoMakerAge = "25";
+        // var CoMakerSex = "M";
+        // var CoMakerAddress = "FD RD #4 Sto.Tomas Davao del Norte";	
+        // var CoMakeTelNumber = "785-8925";
+        // var CoMakerResidence = "Owned";
+        // var CoMakerResidenceProvidedBy = "Chester Lloyd G. Doliente";
+        // var CoMakerCivilStatus = "Single";
+        // var CoMakerRelationship = "Impecable";
+        // var CoMakerBirthDate = "04/29/97";
+        // var CoMakerTin = "55454549";
+        // var CoMakerMobileNo = "09857485984";
+        // var CoMakerEmployer = "Chester Lloyd G. Doliente";	
+        // var CoMakeDateEmployed = "04/29/97";
+        // var CoMakerPosition = "Senior Programer";	
+        // var CoMakerTelNo = "785-8925";
+        // var CoMakerEmployerAddress = "FD RD #4 Sto.Tomas Davao del Norte";	
+        // var CoMakerEmploymentStatus = "Contractual";
+        // var CoMakerCreditReference1 = "Landbank";
+        // var CoMakerCreditReference2 = "BDO";
+        // var CoMakerCreditReference3 = "BPI";
+        // var CoMakerSketch = "";
+        // var CoMakerSignature = "";               
+
+        // //address
+        // var PresentAddress = "FD RD #4 Sto. Tomas Davao del Norte";
+        // var LengthOfStay = "30 years";
+        // var HouseStatus	= "Owned";
+        // var HouseProvidedBy	= "Megan Poe";
+        // var LotStatus = "Owned";
+        // var LotProvidedBy = "Joseph Johnson";
+        // var OtherPropertiesTV = "True";
+        // var OtherPropertiesRef = "True";
+        // var OtherPropertiesStereoComponent = "TRUE";
+        // var OtherPropertiesGasRange = "TRUE";
+        // var OtherPropertiesMotorcycle = "TRUE";
+        // var OtherPropertiesComputer = "TRUE";
+        // var OtherPropertiesFarmlot = "TRUE";
+        // var FarmLotAddress = "Fd Rd #4 Sto. Tomas Davao del Norte";
+        // var FarmLotSize = "10 sq m"
+        // var ProvincialAddress = "FD RD #4 Sto. Tomas Davao del Norte";
+        
+        // //customer dependent
+        // var DependentName1 = "Chester Lloyd G. Doliente";
+        // var DependentAge1 = "25";
+        // var DependentGradeOcc1 = "Overwhelming";
+        // var DependentSchoolComp1 = "Sto. Tomas Bank";
+
+        // var DependentName2 = "Chester Lloyd G. Doliente";
+        // var DependentAge2 = "25";
+        // var DependentGradeOcc2 = "Overwhelming";
+        // var DependentSchoolComp2 = "Sto. Tomas Bank";
+
+        // var DependentName3 = "Chester Lloyd G. Doliente";
+        // var DependentAge3 = "25";
+        // var DependentGradeOcc3 = "Overwhelming";
+        // var DependentSchoolComp3 = "Sto. Tomas Bank";
+
+        // var DependentName4 = "Chester Lloyd G. Doliente";
+        // var DependentAge4 = "25";
+        // var DependentGradeOcc4 = "Overwhelming";
+        // var DependentSchoolComp4 = "Sto. Tomas Bank";
+
+        // //credit reference
+        // var StoreBank1 = "Landbank"
+        // var ItemLoadAmount1 = "15000"
+        // var Term1 = "5 years";
+        // var CreditDate1 = "04/29/97";
+        // var CreditBalance1 = "10000";
+        
+        // var StoreBank2 = "Landbank"
+        // var ItemLoadAmount2 = "15000"
+        // var Term2 = "5 years";
+        // var CreditDate2 = "04/29/97";
+        // var CreditBalance2 = "10000";
+
+        // var StoreBank3 = "Landbank"
+        // var ItemLoadAmount3 = "15000"
+        // var Term3 = "5 years";
+        // var CreditDate3 = "04/29/97";
+        // var CreditBalance3 = "10000";
+
+        // var StoreBank4 = "Landbank"
+        // var ItemLoadAmount4 = "15000"
+        // var Term4 = "5 years";
+        // var CreditDate4 = "04/29/97";
+        // var CreditBalance4 = "10000";
+        
+        // //personal reference
+        // var PersonalReferenceName1 = "Chester Lloyd G. Doliente";	
+        // var PersonalReferenceRelationship1 = "Brother";	
+        // var PersonalReferenceNumber1 = "231-4123";
+        // var PersonalReferenceAddress1 = "FD RD #4 Sto.Tomas Davao del Norte";
+
+        // var PersonalReferenceName2 = "Chester Lloyd G. Doliente";	
+        // var PersonalReferenceRelationship2 = "Brother";	
+        // var PersonalReferenceNumber2 = "231-4123";
+        // var PersonalReferenceAddress2 = "FD RD #4 Sto.Tomas Davao del Norte";
+
+        // var PersonalReferenceName3 = "Chester Lloyd G. Doliente";	
+        // var PersonalReferenceRelationship3 = "Brother";	
+        // var PersonalReferenceNumber3 = "231-4123";
+        // var PersonalReferenceAddress3 = "FD RD #4 Sto.Tomas Davao del Norte";
+
+
         // \App\Models\User::factory(10)->create();
     }
 }
