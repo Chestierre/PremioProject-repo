@@ -16,6 +16,7 @@
                             <a href = "#" class="btn btn-primary" data-toggle="modal" data-target="#createBrandModal"> <span class = "">Add New Brand</span></a>
                             <a href="#" class="btn btn-info" data-toggle="modal" data-target="#viewBrandModal"> <span class = "">View Brands</span></a>
                             <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteBrandModal"> <span class = "">Delete Brand</span></a>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#unitReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                         </div>
                         <div class="">
                             <form method="POST" action={{route("admin.unit.search")}}>
@@ -50,6 +51,7 @@
                   <th>Model Price</th>
                   <th>Model Downpayment</th>
                   <th>Model Brand</th>
+                  <th>Number of Orders</th>
                   <th>Actions</th>
 
                 </tr>
@@ -65,6 +67,7 @@
                       <td>&#8369 {{ number_format($unit->price) }}</td>
                       <td>&#8369 {{ number_format($unit->modeldownpayment) }}</td>
                       <td>{{ $unit->brand->brandname }}</td>
+                      <td>{{$unit->order->count()}}</td>
                       <td>
                         <div class="d-flex">
                         <form method="GET" action="{{ route('admin.unit.edit', $unit) }}">
@@ -76,8 +79,10 @@
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash-can"></i> Delete</button>
                         </form>
                         </div>
+                        {{-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#unitReportModal{{$"><i class="fa-regular fa-lightbulb"></i></button> --}}
                       </td>
                     </tr>
+                    
                   
                 @endforeach
               </tbody>
@@ -96,6 +101,30 @@
         <button style="display:none;" class="btn btn-danger delete_all" data-url="{{ url('admin/unitDeleteAll') }}">Delete All Selected</button>
     </div>
 </div>
+
+
+
+{{-- Unit Reporting Modal --}}
+<div class="modal fade" id="unitReportModal" tabindex="-1" role="dialog" aria-labelledby="unitReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="unitReportModalLabel">Reporting for Unit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <p class="">Total number of Units: {{$unit->count()}}</p>
+            <p class="">Total number of Brand: {{$brand->count()}}</p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="createUnitModal" tabindex="-1" role="dialog" aria-labelledby="createUnitModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -381,7 +410,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="viewBrandModalLabel">Create Brand</h5>
+          <h5 class="modal-title" id="viewBrandModalLabel">View Brand</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -397,6 +426,7 @@
                         <th>24 month rate</th>
                         <th>30 month rate</th>
                         <th>36 month rate</th>
+                        {{-- <th>Total Number of Orders</th> --}}
                         <th>action</th>
                     </tr>
                 </thead>
@@ -410,6 +440,7 @@
                             <td>{{$brand->twentyfourMonthRate}}</td>
                             <td>{{$brand->thirtyMonthRate}}</td>
                             <td>{{$brand->thirtysixMonthRate}}</td>
+                            {{-- <td>{{$brand->unit->order->count()}}</td> --}}
                             <td>
                             <form method="GET" action="{{ route('admin.brand.edit', $brand) }}">
                                     <button type="submit" class="btn btn-info" ><i class="fa-solid fa-eye"></i> Edit</button>

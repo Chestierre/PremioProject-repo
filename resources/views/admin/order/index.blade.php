@@ -8,8 +8,10 @@
                 <div class="row">
                     <h2 class="col-6"><b>Manage Order</b></h2>
                     <div class="col-xs-6 d-flex mb-2 justify-content-between">
-                        <div>
+                        <div class="d-flex">
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#createOrderModal"> <span>Add New Order</span></a>
+                            <button type="button" class="mx-1 btn btn-secondary" data-toggle="modal" data-target="#orderReportModal"><i class="fa-regular fa-lightbulb"></i></button>
+                            <button type="button" class="btn btn-danger"  id="getModalbtn"><i class="fa-solid fa-hand"></i></button>
                         </div>
                         <div class="">
                             <form method="POST" action={{route("admin.order.search")}}>
@@ -89,6 +91,97 @@
     <div class="d-flex justify-content-end">  
         <button  style="display:none;" class="btn btn-danger delete_all p-2" data-url="{{ url('admin/userDeleteAll') }}">Delete All Selected</button>
     </div>  
+</div>
+
+{{-- blank status modal --}}
+<div class="modal fade" id="blankStatusModal" tabindex="-1" role="dialog" aria-labelledby="blankStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="blankStatusModalLabel"><span id="blanktitle"></span></h5>
+        <button type="button" class="close blankModalDismiss" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <P>Total number of <span id="orderdelinquent"></span> from <span id="timebefore"> </span> to <span id="timeafter"></span> are <span id="result"></span>.</P>
+        </div>
+
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary blankModalDismiss" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+{{-- getter modals --}}
+<div class="modal fade" id="getterModal" tabindex="-1" role="dialog" aria-labelledby="getterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="getterModalLabel">Fetching Reporting</h5>
+        <button type="button" class="close getterModalDismiss" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <p class="h6">Get number of Delinquent:</p>
+                <label for="" class="col-form-label">{{ __('Print by date:') }}</label>
+                <input type="date" id="timebeforedeliquent" class="form-control" >
+                <label for="" class="col-form-label">{{ __('to:') }}</label>
+                <input type="date" id="timeafterdeliquent" class="form-control">
+                <a href="#" class="btn btn-primary getterbutton" id="delinquentbtn" data-id="deliquent">Get</a>
+            </div>
+
+            {{-- <div class="row mt-4">
+                <p class="h6">Get number of Orders:</p>
+                <label for="" class="col-form-label">{{ __('Print by date:') }}</label>
+                <input type="date" id="datebeforeorder" class="form-control">
+                <label for="" class="col-form-label">{{ __('to:') }}</label>
+                <input type="date" id="dateafterorder" class="form-control">
+                <a href="#" class="btn btn-primary getterbutton" id="ordersbtn" data-id="deliquent">Get</a>
+            </div> --}}
+        </div>
+
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary getterModalDismiss" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+{{-- Order Reporting Modal --}}
+<div class="modal fade" id="orderReportModal" tabindex="-1" role="dialog" aria-labelledby="orderReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="orderReportModalLabel">Reporting for Orders</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <p class="">Total number of Orders: {{$order->count()}}</p>
+            <p class="">Total number of Orders late in payment: {{$order->where('customerstatus', 'Delinquent')->count()}}</p>
+            <p class="">Total number of Orders on time in payment: {{$order->where('customerstatus', '	Regular')->count()}}</p>
+            <p class="">Total number of Completed Orders: {{$order->where('orderstatus', '1')->count()}}</p>
+            <p class="">Total number of Ongoing Orders: {{$order->where('orderstatus', '0')->count()}}</p>
+            <p class="">Total Number of Orders got this month: {{$order->where('created_at', '>', now()->subDays(30))->count()}}</p>    
+            {{-- <div class="row">
+                <p class="h6">Get number of Delinquent:</p>
+                <label for="customerLabel" class="col-form-label">{{ __('Print by date:') }}</label>
+                <input type="date" name="datebefore" class="form-control">
+                <label for="customerLabel" class="col-form-label">{{ __('to:') }}</label>
+                <input type="date" name="dateafter" class="form-control">
+                <a href="" class="btn btn-primary">Get</a>
+            </div> --}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
 </div>
 
 {{-- modal delete on-click --}}
@@ -233,9 +326,114 @@
             $('#createOrderModal').modal('show');
         @endif
 
+        $('.blankModalDismiss').on('click', function(){
+            $('#blankStatusModal').modal('hide');
+        });
+
         $('.createmodal-dismiss').on('click', function(){
             $('#createOrderModal').modal('hide'); 
         });
+
+        $('#getModalbtn').on('click', function(){
+            $('#getterModal').modal('show');
+        });
+
+        $('.getterModalDismiss').on('click', function(){
+            $('#getterModal').modal('hide');
+        })
+
+        $('.getterbutton').on('click', function(){
+            var mode = $(this).attr('data-id');
+
+            if (mode == "deliquent"){                
+                var timebefore = $('#timebeforedeliquent').val();
+                var timeafter = $('#timeafterdeliquent').val();
+            }else{
+
+            }
+
+            // console.log(timeafter);
+            if (timebefore != ""|| timeafter != ""){
+                $('#getterModal').modal('hide');
+                $('#blankStatusModal').modal('show');
+                if (mode == "deliquent"){
+                    $('#blanktitle').html('Get Delinquent');
+                    $('#orderdelinquent').html('Delinquents');
+                    var urls = 'order/getordersdelinquent';
+                }else{
+
+                }
+
+                $('#timebefore').html(timebefore);
+                $('#timeafter').html(timeafter);
+
+                // $.get('order/getorders', function(data){
+                //     console.log(data);
+                // });
+
+                $.ajax({
+                    url: urls,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        timebefore: timebefore,
+                        timeafter: timeafter,
+                    },
+                    success: function (data) {
+                        // console.log(data);
+                        $('span#result').html(data);
+                    },
+                    error: function (error) {
+                    }
+                });
+            }else{
+                alert("Input Date");
+            }
+        });
+
+        // $('#ordersbtn').on('click', function(){
+        //     var timebefore = $('#datebeforeorder').val();
+        //     var timeafter = $('#dateafterorder').val();
+        //     // console.log(timeafter);
+        //     if (timebefore != ""|| timeafter != ""){
+        //         $('#getterModal').modal('hide');
+        //         $('#blankStatusModal').modal('show');
+        //         $('#blanktitle').html('Get Orders Count');
+        //         $('#orderdelinquent').html('Orders');
+        //         $('#timebefore').html(timebefore);
+        //         $('#timeafter').html(timeafter);
+
+        //         // $.get('order/getorders', function(data){
+        //         //     console.log(data);
+        //         // });
+
+        //         $.ajax({
+        //             url: 'order/getordersdelinquent',
+        //             type: 'POST',
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             },
+        //             data: {
+        //                 timebefore: timebefore,
+        //                 timeafter: timeafter,
+        //             },
+        //             success: function (data) {
+        //                 // console.log(data);
+        //                 $('span#result').html(data);
+        //             },
+        //             error: function (error) {
+        //             }
+        //         });
+        //     }else{
+        //         alert("Input Date");
+        //     }
+        // });
+
+        $('#blankStatusModal').on('hidden.bs.modal', function (e) {
+            $('#getterModal').modal('show');
+        })
 
         // console.log($('#input_modal-price').val());
         // initial: price and downpayment

@@ -6,10 +6,11 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <h2><b>Manage Employees</b></h2>
+                    <h2><b>Manage User</b></h2>
                     <div class="col-xs-6 d-flex justify-content-between mb-2">
                         <div>
                             <a href="#" class="btn btn-primary col-sm" data-toggle="modal" data-target="#createUserModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Add New Employee</span></a>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#userReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                         </div>
                         <div class="">
                             <form method="POST" action={{route("admin.user.search")}}>
@@ -119,7 +120,28 @@
     </div>   
 </div>
 
-
+{{-- User Reporting Modal --}}
+<div class="modal fade" id="userReportModal" tabindex="-1" role="dialog" aria-labelledby="userReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userReportModalLabel">Reporting for Users</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="">total number of Users: {{$user->count()}}</p>
+          <p class="">total number of Admin: {{$user->where('userrole', 'Admin')->count()}}</p>
+          <p class="">total number of Collector: {{$user->where('userrole', 'Collector')->count()}}</p>
+          <p class="">total number of Customer: {{$user->where('userrole', 'Customer')->count()}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
 
 
 {{-- modal delete on-click --}}

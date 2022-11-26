@@ -4,13 +4,13 @@
 <div class="container">
     <div class="row">
         <div class="d-flex mb-2 col">
-            <h2 class="col-6"><b>Manage Order</b></h2>
+            <h2 class="col-9"><b>Order History</b></h2>
             <div class="col-1 px-1">
                 <form method="GET"action="{{ url()->previous()}}">
                     <button type="submit" class="btn btn-success w-100"><i class="fa-solid primary"></i>Go Back</button>    
                 </form>
             </div>
-            <a href="#" class="btn btn-secondary col-3 " data-toggle="modal" data-target="#paymentModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Payment Test</span></a>
+            {{-- <a href="#" class="btn btn-secondary col-3 " data-toggle="modal" data-target="#paymentModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Payment Test</span></a> --}}
             <div class="col-2 px-1">
                 <a href="#" class="btn btn-primary w-100" data-toggle="modal" data-target="#printpdfModal"> <span><i class="fa-solid fa-face-grin-hearts"></i>Print pdf form</span></a>
                 {{-- <form method="GET"action="{{ route('admin.order.pdfOrderHistory', $order) }}">

@@ -414,13 +414,13 @@ class AdminCustomerController extends Controller
             ]);
 
         
-        $imagePathCoMakerSketch = ($admincustomer->customer->comaker->Sketch)?$$admincustomer->customer->comaker->Sketch:"";
+        $imagePathCoMakerSketch = ($admincustomer->customer->comaker->Sketch)?$admincustomer->customer->comaker->Sketch:"";
         $imagePathCoMakerSignature = ($admincustomer->customer->comaker->Signature)?$admincustomer->customer->comaker->Signature:"";
 
         if ($request->CoMakerSketch != NULL){ 
             if($sorted->ordercustomerinformation->CoMakerSketch != $admincustomer->customer->comaker->Sketch && $admincustomer->customer->comaker->Sketch){
-                if(Storage::disk('public')->exists(admincustomer->customer->comaker->Sketch )){
-                    Storage::disk('public')->delete(admincustomer->customer->comaker->Sketch);
+                if(Storage::disk('public')->exists($admincustomer->customer->comaker->Sketch )){
+                    Storage::disk('public')->delete($admincustomer->customer->comaker->Sketch);
                 }else{
                     dd("storage not working");
                 }

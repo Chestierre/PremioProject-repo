@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::resource('brand', BrandController::class);
 
+        Route::post('order/getordersdelinquent', [OrderController::class, 'getordersdelinquent'])->name('order.getordersdelinquent');
         Route::post('order/{order}/pay', [OrderController::class, 'pay'])->name('order.pay');
         Route::post('/admin/order/search', [OrderController::class, 'search'])->name('order.search');
         Route::delete('orderDeleteAll', [OrderController::class, 'deleteAll']);
@@ -107,11 +108,14 @@ Route::group(['middleware' => 'auth'],function(){
     });
     Route::group([
         'middleware' => 'is_customer',
+        'as' => 'customer.',
     ], function(){
+        Route::get('/getorderdata/{id}', [CustomerController::class, 'getorderdata'])->name('getorderdata');
         Route::get('/CustomerViewDetails', [CustomerController::class, 'CustomerViewDetails'])->name('CustomerViewDetails');
         Route::get('/AccountSetting', [CustomerController::class, 'AccountSetting'])->name('AccountSetting');
         Route::patch('/updateCustomer', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');
         Route::patch('/updateCustomerDetails', [CustomerController::class, 'updateCustomerDetails'])->name('updateCustomerDetails');
+        Route::get('/orders', [CustomerController::class, 'Orderdetails'])->name('Orderdetails');
     }); 
     
  

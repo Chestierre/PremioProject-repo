@@ -11,6 +11,7 @@
                             <div>
                                 <a href="#" class="btn btn-primary col-sm" data-toggle="modal" data-target="#createOrderModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Add New Order</span></a>
                                 <a href = {{ url()->previous() }} type="button" class="btn btn-success"> Go Back </a>
+                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#orderCustomerReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                             </div>
                             <div class="">
                                 <form method="POST" action={{route("admin.order.search")}}>
@@ -41,7 +42,7 @@
                             <th>Balance</th>
                             <th>Transaction Date</th>
                             <th>Order Status</th>
-                            {{-- <th>Customer Status</th> --}}
+                            <th>Customer Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -55,7 +56,14 @@
                                 <td>{{$order->unit->modelname}}</td>
                                 <td>&#8369 {{number_format($order->balance)}}</td>
                                 <td>{{$order->created_at}}</td>
-                                <td>None</td>    
+                                <td>
+                                    @if ($order->orderstatus == 0)
+                                    ongoing
+                                    @elseif ($order->orderstatus == 1)
+                                    paid
+                                @endif
+                                </td>
+                                <td>{{$order->customerstatus}}</td>    
                                 <td>
                                     <div class="d-flex">
                                         <form method="GET" action="{{ route('admin.order.show', $order) }}">
@@ -80,6 +88,30 @@
         <div class="d-flex justify-content-end">  
             <button  style="display:none;" class="btn btn-danger delete_all p-2" data-url="{{ url('admin/userDeleteAll') }}">Delete All Selected</button>
         </div> 
+    </div>
+
+    {{-- OrderCustomer Reporting Modal --}}
+    <div class="modal fade" id="orderCustomerReportModal" tabindex="-1" role="dialog" aria-labelledby="orderCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="orderCustomerModalLabel">Reporting for Users</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <p class="">Total number of Orders: {{$order->count()}}</p>
+                <p class="">Total number of Orders late in payment: {{$order->where('customerstatus', 'Delinquent')->count()}}</p>
+                <p class="">Total number of Orders on time in payment: {{$order->where('customerstatus', '	Regular')->count()}}</p>
+                <p class="">Total number of Completed Orders: {{$order->where('orderstatus', '1')->count()}}</p>
+                <p class="">Total number of Ongoing Orders: {{$order->where('orderstatus', '0')->count()}}</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
     </div>
 
     {{-- modals --}}

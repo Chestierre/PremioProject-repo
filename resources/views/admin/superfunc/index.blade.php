@@ -79,7 +79,7 @@
             </div>
         </div> 
     </div>
-
+{{-- 
     <div class="row mb-1">
         <div class="shadow-lg p-5 mb-4 bg-white rounded">
             <div class="d-flex">
@@ -109,7 +109,7 @@
         </div>
     </div>
     
-</div>
+</div> --}}
 
 
 @endsection

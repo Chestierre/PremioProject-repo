@@ -16,8 +16,10 @@ class UnitController extends Controller
 {
     public function index()
     {
-        $unit = Unit::all();
-        $brand = Brand::all();
+        
+        $unit = Unit::with('order')->get();
+        $brand = Brand::with('unit.order')->get();
+        // dd($brand->unit);
         return view('admin.unit.index', compact('unit','brand'));
     }
     public function create()
@@ -77,6 +79,7 @@ class UnitController extends Controller
     public function edit(Unit $unit)
     {
         $brand = Brand::all();
+        $unit->load('order');
         return view('admin.unit.edit', compact('unit','brand'));
     }
     public function update(Request $request, Unit $unit)

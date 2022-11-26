@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">Account Settings</div>
                 <div class="card-body">
-                    <form method="POST" action="{{route("updateCustomer")}}">
+                    <form method="POST" action="{{route("customer.updateCustomer")}}">
                         @method('PATCH')
                         @csrf
                         @if ($errors->any())
