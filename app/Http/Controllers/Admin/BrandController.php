@@ -83,34 +83,11 @@ class BrandController extends Controller
         return redirect()->route('admin.unit.index');
     }
 
-    public function try(Request $request){
-        $query = addslashes(request('brandname'));
-        $brands = DB::table('brands')           
-            // ->select('brandname', request('brandname'))
-            ->select('id', 'brandname')
-            -> where('brandname', 'like', $query)
-            // ->select('id', 'brandname')
-            // ->find(request('brandname'));
-            ->get();
-            //dd($me);
-            //dd($query);
-        //dd(request('brandname'));
-        //dd($brands[0]->id);
-        $object = Brand::findorfail($brands[0]->id);
-        //dd($object->unit());
-        //$temp = Brand::has('unit')->get();
-        //dd($object->unit()->exist());
-        //dd($object->unit()->get()->isEmpty());
-        if ($object->unit()->get()->isEmpty()){
-            $object->delete();
-            return redirect()->route('admin.unit.index');  
-        }
-        else{
-            $unit = $object->unit()->get();
-            return view('admin.brand.deletewarn', compact('unit','object')); 
-        }
-
-        //dd($object->units_count);
-        
+    public function deletebrand(Request $request){
+        $brand = Brand::find($request->brand_id);
+        $brand->delete();
+        return redirect()->route('admin.unit.index');
     }
+
+
 }

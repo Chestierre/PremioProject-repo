@@ -26,7 +26,9 @@ Route::view('/pdfOrder', 'admin.order.pdfOrder');
 Route::get('/about-us', [App\Http\Controllers\WelcomeController::class, 'aboutus'])->name('about-us') -> middleware('welcomeauthmiddleware');
 Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'contact'])->name('contact-us') -> middleware('welcomeauthmiddleware');
 Route::post('/sendEmail', [App\Http\Controllers\ContactController::class, 'sendEmail'])->name('contact.sendEmail') -> middleware('welcomeauthmiddleware');
-
+Route::get('/getunit/{id}', [App\Http\Controllers\WelcomeController::class, 'getunit'])->name('getunit');
+Route::get('/getpromo/{id}', [App\Http\Controllers\WelcomeController::class, 'getpromo'])->name('getpromo');
+Route::get('/buyproduct/{id}', [App\Http\Controllers\PreorderController::class, 'buyproduct'])->name('buyproduct');
 
 Route::group(['middleware' => 'auth'],function(){
     Route::group([
@@ -53,6 +55,9 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/user/password/{user}/image_add', [UnitimageController::class, 'image_add'])->name('image_add');
         Route::delete('unitDeleteAll', [UnitController::class, 'deleteAll']);
         Route::post('/unit/{unit}/variationStore', [UnitController::class, 'variationStore'])->name('unit.variationStore');
+        Route::get('unit/getbrand/{id}', [UnitController::class, 'getbrand'])->name('unit.getbrand');
+        
+        
 
         Route::resource('promo', PromoController::class);
         Route::post('/admin/promo/search', [PromoController::class, 'search'])->name('promo.search');
@@ -60,6 +65,7 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::resource('brand', BrandController::class);
 
+        Route::post('order/getorders', [OrderController::class, 'getorders'])->name('order.getorders');
         Route::post('order/getordersdelinquent', [OrderController::class, 'getordersdelinquent'])->name('order.getordersdelinquent');
         Route::post('order/{order}/pay', [OrderController::class, 'pay'])->name('order.pay');
         Route::post('/admin/order/search', [OrderController::class, 'search'])->name('order.search');
@@ -81,7 +87,9 @@ Route::group(['middleware' => 'auth'],function(){
         Route::resource('collector', CollectorController::class);
         Route::get('collector/{order}/orderEdit', [CollectorController::class, 'orderEdit'])->name('collector.orderEdit');
         Route::post('collector/{user}/{order}/unassignOrder', [CollectorController::class, 'unassignOrder'])->name('collector.unassignOrder');
-        Route::post('/admin/brand/try', [BrandController::class, 'try'])->name('brand.try');
+
+
+        Route::post('/brand/deletebrand', [BrandController::class, 'deletebrand'])->name('brand.deletebrand');
 
         Route::get('admincustomer/createCustomer/{user}', [AdminCustomerController::class, 'createCustomer'])->name('admincustomer.createCustomer');
         Route::get('admincustomer/customerOrder/{user}', [AdminCustomerController::class, 'customerOrder'])->name('admincustomer.customerOrder');
@@ -90,6 +98,7 @@ Route::group(['middleware' => 'auth'],function(){
 
         Route::get('/superfunc', [SuperfuncController::class, 'index'])->name('superfunc.index')->middleware('is_super');
         Route::post('/superfunc/aboutusedit', [SuperfuncController::class, 'aboutusedit'])->name('superfunc.aboutusedit')->middleware('is_super');
+        Route::post('/superfunc/addBrand', [SuperfuncController::class, 'addBrand'])->name('superfunc.addBrand')->middleware('is_super');
     });
 
     Route::group([
@@ -113,6 +122,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('/getorderdata/{id}', [CustomerController::class, 'getorderdata'])->name('getorderdata');
         Route::get('/CustomerViewDetails', [CustomerController::class, 'CustomerViewDetails'])->name('CustomerViewDetails');
         Route::get('/AccountSetting', [CustomerController::class, 'AccountSetting'])->name('AccountSetting');
+        Route::get('/Preorder', [CustomerController::class, 'Preorder'])->name('Preorder');
         Route::patch('/updateCustomer', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');
         Route::patch('/updateCustomerDetails', [CustomerController::class, 'updateCustomerDetails'])->name('updateCustomerDetails');
         Route::get('/orders', [CustomerController::class, 'Orderdetails'])->name('Orderdetails');

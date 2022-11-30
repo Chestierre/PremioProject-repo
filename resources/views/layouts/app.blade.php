@@ -94,6 +94,9 @@
                                     <a class="dropdown-item" href={{route("customer.Orderdetails")}}>
                                         {{ "Order Information"}} 
                                     </a>
+                                    <a class="dropdown-item" href={{route("customer.Preorder")}}>
+                                        {{ "Pre-Orders"}} 
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

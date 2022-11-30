@@ -24,9 +24,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignId('brand_id')
+                        ->nullable()
                         ->constrained()
                         ->onUpdate('cascade')
-                        ->onDelete('cascade');
+                        ->nullOnDelete();
 
             $table->index('brand_id');
         });

@@ -18,9 +18,10 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        $unit = Unit::all();
+        $unit = Unit::orWhereNotNull('brand_id')->get();
         $brand = Brand::all();
-        $promo = Promo::all();
+        $promo = Promo::with('unit.unitimage', 'unit.brand')->where('PromoActive', 1)->get();
+        
         return view('welcome', compact('unit', 'brand', 'promo'));
     }
     
@@ -30,6 +31,15 @@ class WelcomeController extends Controller
         $companydetail = CompanyDetail::find(1);       
         return view('about-us', compact('brand','companydetail'));
     }
+    public function getunit($id){
+        $unit = Unit::with('unitimage', 'brand')->orWhereNotNull('brand_id')->find($id);
+        return response()->json($unit);
 
+    }
+    public function getpromo($id){
+        $promo = Promo::with('unit.unitimage', 'unit.brand')->where('PromoActive', 1)->find($id);
+        return response()->json($promo);
+
+    }
 
 }

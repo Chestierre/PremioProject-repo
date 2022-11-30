@@ -17,7 +17,7 @@ class UnitController extends Controller
     public function index()
     {
         
-        $unit = Unit::with('order')->get();
+        $unit = Unit::with('order')->orWhereNotNull('brand_id')->get();
         $brand = Brand::with('unit.order')->get();
         // dd($brand->unit);
         return view('admin.unit.index', compact('unit','brand'));
@@ -179,4 +179,12 @@ class UnitController extends Controller
 
         return redirect()->route('admin.unit.edit', $unit);
     }
+
+    public function getbrand($id){
+        $brand = Brand::with('unit')->find($id);
+        return response()->json($brand);
+
+    }
+
+
 }

@@ -956,6 +956,12 @@ class CustomerController extends Controller
         return view('customer.Orderdetails', compact('brand', 'customer'));
 
     }
+    public function Preorder(){
+        $customer = Customer::with('preorder.unit.unitimage')->find(auth()->user()->customer->id);
+        $brand = Brand::all();
+        return view('customer.preorder', compact('brand', 'customer'));
+
+    }
     public function getorderdata($id){
         $order = Order::with('orderhistory', 'ordertransactiondetails')->find($id);
 

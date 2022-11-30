@@ -79,16 +79,73 @@
             </div>
         </div> 
     </div>
-{{-- 
+ 
     <div class="row mb-1">
         <div class="shadow-lg p-5 mb-4 bg-white rounded">
             <div class="d-flex">
-                <div class="h4">Deleted Units Brand</div>
-                <span class="mx-2"><i class="fa-regular fa-circle-question" data-toggle="tooltip" data-placement="bottom" title="Function stated in the study"></i></span>    
+                <div class="h4">Deleted/unlinked Units Brand</div>
+                <span class="mx-2"><i class="fa-regular fa-circle-question" data-toggle="tooltip" data-placement="bottom" title="Function stated in the study"></i></span>
+   
             </div>
+            <div class="table-responisve">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="h2">Deleted Unit</div>
+                        </div>
+
+                    </div>
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th width="50px"><input type="checkbox" id="master"></th>
+                                <th>Model Image</th>
+                                <th>Model Name</th>
+                                <th>Model Price</th>
+                                <th>Model Downpayment</th>
+                                <th>Model Brand</th>
+                                <th>Number of Orders</th>
+                                <th>Actions</th>
+              
+                              </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($unit as $unit)
+                            <tr>
+                              <td>
+                                  <input type="checkbox" class="sub_chk" data-id={{$unit->id  }}>
+                            </td>
+                              <td><img src= "/storage/{{ $unit->unitimage[0]->image }}" style="width:120px;"></td>
+                              <td>{{ $unit->modelname }}</td>
+                              <td>&#8369 {{ number_format($unit->price) }}</td>
+                              <td>&#8369 {{ number_format($unit->modeldownpayment) }}</td>
+                              <td> Null </td>
+                              <td>{{$unit->order->count()}}</td>
+                              <td>
+                                <div class="d-flex">
+                                <form method="GET" action="{{ route('admin.unit.edit', $unit) }}">
+                                    <button type="submit" class="btn btn-warning" ><i class="fa-solid fa-eye"></i> View</button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.unit.destroy', $unit) }}">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash-can"></i> Delete</button>
+                                </form>
+                                <a href="#" class="btn btn-primary addBrandbtn" id="" data-id ={{$unit->id}}><i class="fa-solid fa-thumbs-up" ></i> Add Brand</a>
+                                </div>
+                                {{-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#unitReportModal{{$"><i class="fa-regular fa-lightbulb"></i></button> --}}
+                              </td>
+                            </tr>
+                            
+                          
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
         </div>
     </div>
-
+{{-- 
     <div class="row mb-1">
         <div class="shadow-lg p-5 mb-4 bg-white rounded">
             <div class="d-flex">
@@ -112,6 +169,33 @@
 </div> --}}
 
 
+<!-- Modal -->
+<div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addBrandModalLabel">Add Brand to Unit</h5>
+          <button type="button" class="close addBrandModal-dismiss" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <input type="hidden" id="unit_id" value="">
+          <select name="brand_id" class="form-select form-control" id="brandSelect">
+            @foreach ($brand as $brand)
+                <option value={{$brand->id}}>{{$brand->brandname}}</option>  
+            @endforeach
+          </select>
+          <p class="mt-4" style="font-size: 12px;">Adding Brand to this unit will move this to viewable content in both unit and product page</p>            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary addBrandModal-dismiss" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="addBrandConfirmbtn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 @endsection
 
 @section('scripts')
@@ -122,15 +206,40 @@
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+    $(document).ready(function(){
+        $('.addBrandbtn').on('click', function(){
+            $('#addBrandModal').modal('show');
+            $('#unit_id').val($(this).attr('data-id'));
 
-    // var doc = new jsPDF()
-    // var bas64img = ;
-
-    // doc.addImage(bas64img, 'JPEG', 0, 0, 216, 275);
-    // var name = "Chester"
-
-    // doc.text(10, 10, name)
-    // doc.save('a4.pdf')
+        });
+        $('.addBrandModal-dismiss').on('click', function(){
+            $('#addBrandModal').modal('hide');
+        });
+        $('#addBrandConfirmbtn').on('click', function(){
+            var unit_id = $('#unit_id').val();
+            var brand_id = $('#brandSelect').val();
+            console.log(unit_id);
+            console.log(brand_id);
+            $.ajax({
+                url: '/admin/superfunc/addBrand',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data:{
+                    brand_id: brand_id,
+                    unit_id: unit_id,
+                },
+                success: function(data){
+                    window.location.reload(true);
+                },
+                error: function(error){
+                    alert(error.responseText);
+                    
+                }
+            });
+        });
+    });
 </script>
 
 @endsection

@@ -50,6 +50,9 @@ class Customer extends Model
     public function order(){
         return $this->hasMany(Order::class);
     }
+    public function preorder(){
+        return $this->hasMany(Preorder::class);
+    }
     public function spouse(){
         return $this->hasOne(CustomerSpouse::class);
     }

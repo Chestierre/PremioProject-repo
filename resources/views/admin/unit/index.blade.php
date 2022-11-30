@@ -15,7 +15,7 @@
                             <a href = "#" class="btn btn-success" data-toggle="modal" data-target="#createUnitModal"> <span class = "">Add New Unit</span></a>
                             <a href = "#" class="btn btn-primary" data-toggle="modal" data-target="#createBrandModal"> <span class = "">Add New Brand</span></a>
                             <a href="#" class="btn btn-info" data-toggle="modal" data-target="#viewBrandModal"> <span class = "">View Brands</span></a>
-                            <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteBrandModal"> <span class = "">Delete Brand</span></a>
+                            <a href="#" class="btn btn-danger" id="deleteModalbtn"> <span class = "">Delete Brand</span></a>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#unitReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                         </div>
                         <div class="">
@@ -375,33 +375,27 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="deleteBrandModalLabel">Delete Brand</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close deleteModal-dismiss" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="POST" action={{route("admin.brand.try")}}>
-        @csrf   
+        {{-- <form method="POST" action="{{route("admin.brand.deletebrand")}}"> --}}
+        
+        {{-- @csrf    --}}
         <div class="modal-body">
-            {{-- {{$brand->brandname}} --}}
-            <select name="brandname" class="form-select form-control">
+            <select name="brand_id" id="deleteBrandConfirmselect" class="form-select form-control">
             @foreach ($brand as $count => $brands)
-                <option>{{$brands->brandname}}</option>
-                {{-- <option>{{$count}}</option> --}}
+                <option value={{$brands->id}}>{{$brands->brandname}}</option>
                 
             @endforeach
-            
             </select>
-            {{-- @foreach ($brand as $count => $brands) --}}
-                {{-- {{$count}} --}}
-            {{-- @endforeach --}}
-
             
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">Delete</button>
+          <button type="button" class="btn btn-secondary deleteModal-dismiss" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="deleteBrandConfirmbtn">Delete</button>
         </div>
-        </form>
+        
       </div>
     </div>
 </div>
@@ -459,13 +453,78 @@
     </div>
 </div>
 
+<div class="modal fade" id="brandDeleteConflictModal" tabindex="-1" role="dialog" aria-labelledby="brandDeleteConflictModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="brandDeleteConflictModalLabel">Unit Connected With Brand</h5>
+          <button type="button" class="brandDeleteConflictModal-dismiss" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="h6">Are you sure you want to delete <span id="deleteBrandName"></span>?</div>
+            <input type="hidden" id="brand_id" value="">
+            <table class="table justify-content-center">
+                <thead>
+                    <tr>
+                        <th>Unit ID</th>
+                        <th>Unit Name</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodydeleteBrandConflict">
+                </tbody>
+            </table>
+            <p style="font-size: 12px;">Unit Items deleted will still be saved but will not be viewable in both product page and unit page but can be accessed in Super Admin Function Page</p>            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="brandDeleteConflictModal-Yes">Yes</button>
+                <button type="button" class="btn btn-danger brandDeleteConflictModal-dismiss">No</button>
+
+                {{-- <button type="button" class="btn btn-secondary brandDeleteConflictModal-dismiss">No</button> --}}
+            </div>
+        </div>
+        
+        </div>
+    </div>
+</div>
 
 
+@endsection
 
-
+@section('scripts')
 
   <script type="text/javascript">
     $(document).ready(function () {
+
+        $('#deleteModalbtn').on('click', function(){
+            $('#deleteBrandModal').modal('show');
+        });
+        $('.deleteModal-dismiss').on('click', function(){
+            $('#deleteBrandModal').modal('hide');
+        });
+
+        $('.brandDeleteConflictModal-dismiss').on('click', function(){
+            $('#brandDeleteConflictModal').modal('hide');
+        });
+
+        $('#brandDeleteConflictModal-Yes').on('click', function(){
+            var brand_id = $('#brand_id').val();
+            $.ajax({
+                url: '/admin/brand/deletebrand',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    brand_id: brand_id,
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (error) {
+                }
+            });
+        });
 
         $('#master').on('click', function(e) {
          if($(this).is(':checked',true))  
@@ -483,10 +542,56 @@
          {
             //$(".delete_all").css("background-color", "yellow");
             $(".delete_all").show(); 
-         } else {  
+         } else {   
              $(".delete_all").hide();
             // $(".delete_all").css("background-color", "red");
          }  
+        });
+
+        $('#brandDeleteConflictModal').on('hidden.bs.modal', function (e) {
+            $('.deleteBrandInstance').remove();
+            $('#deleteBrandModal').modal('show');
+        })
+
+        $('#deleteBrandConfirmbtn').on('click', function(e){
+            e.preventDefault();
+            var brand_id = $('#deleteBrandConfirmselect').val();
+            $('#deleteBrandModal').modal('hide');
+            
+
+            $.get('unit/getbrand/'+brand_id, function(data){
+                if (data.unit.length == 0){
+                    $.ajax({
+                        url: '/admin/brand/deletebrand',
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            brand_id: brand_id,
+                        },
+                        success: function (data) {
+                            window.location.reload(true);
+                        },
+                        error: function (error) {
+                        }
+                    });
+                }else{
+                    $('#brandDeleteConflictModal').modal('show');
+                    $('#brand_id').val(brand_id);
+                    // console.log(data.unit.id);
+                    $('#deleteBrandName').html(data.brandname);
+                    $.each(data.unit, function(key, item){
+                        
+                        var firstText = '<td class="deleteBrandInstance" >'+item.id+'</td>';
+                        var secondText = '<td class="deleteBrandInstance" >'+item.modelname+'</td>';
+                        finalText = '<tr class="deleteBrandInstance">'+firstText+secondText+'</tr>'
+                        $('tbody#tbodydeleteBrandConflict').append(finalText);
+                    });
+
+                }
+            });
+
         });
 
         $('.delete_all').on('click', function(e) {

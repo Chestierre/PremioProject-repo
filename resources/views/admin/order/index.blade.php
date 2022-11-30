@@ -134,14 +134,14 @@
                 <a href="#" class="btn btn-primary getterbutton" id="delinquentbtn" data-id="deliquent">Get</a>
             </div>
 
-            {{-- <div class="row mt-4">
+            <div class="row mt-4">
                 <p class="h6">Get number of Orders:</p>
                 <label for="" class="col-form-label">{{ __('Print by date:') }}</label>
                 <input type="date" id="datebeforeorder" class="form-control">
                 <label for="" class="col-form-label">{{ __('to:') }}</label>
                 <input type="date" id="dateafterorder" class="form-control">
-                <a href="#" class="btn btn-primary getterbutton" id="ordersbtn" data-id="deliquent">Get</a>
-            </div> --}}
+                <a href="#" class="btn btn-primary getterbutton" id="ordersbtn" data-id="order">Get</a>
+            </div>
         </div>
 
         <div class="modal-footer">
@@ -344,12 +344,13 @@
 
         $('.getterbutton').on('click', function(){
             var mode = $(this).attr('data-id');
-
+            console.log(mode);
             if (mode == "deliquent"){                
                 var timebefore = $('#timebeforedeliquent').val();
                 var timeafter = $('#timeafterdeliquent').val();
             }else{
-
+                var timebefore = $('#datebeforeorder').val();
+                var timeafter = $('#dateafterorder').val();
             }
 
             // console.log(timeafter);
@@ -361,6 +362,9 @@
                     $('#orderdelinquent').html('Delinquents');
                     var urls = 'order/getordersdelinquent';
                 }else{
+                    $('#blanktitle').html('Get Orders Count');
+                    $('#orderdelinquent').html('Orders');
+                    var urls = 'order/getorders';
 
                 }
 
@@ -394,14 +398,12 @@
         });
 
         // $('#ordersbtn').on('click', function(){
-        //     var timebefore = $('#datebeforeorder').val();
-        //     var timeafter = $('#dateafterorder').val();
+
         //     // console.log(timeafter);
         //     if (timebefore != ""|| timeafter != ""){
         //         $('#getterModal').modal('hide');
         //         $('#blankStatusModal').modal('show');
-        //         $('#blanktitle').html('Get Orders Count');
-        //         $('#orderdelinquent').html('Orders');
+
         //         $('#timebefore').html(timebefore);
         //         $('#timeafter').html(timeafter);
 

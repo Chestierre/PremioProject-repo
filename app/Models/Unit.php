@@ -30,4 +30,7 @@ class Unit extends Model
     public function order(){
         return $this->hasMany(Order::class);
     }
+    public function preorder(){
+        return $this->hasMany(Preorder::class);
+    }
 }

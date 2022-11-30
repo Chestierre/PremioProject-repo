@@ -114,16 +114,22 @@
         $(document).ready(function(){
 
             $(document).on('click', 'a.viewButton',function(){
-                console.log("view button pressed");
+                // console.log("view button pressed");
                 var collector_id = $(this).attr('data-id');
                 $.get('collector/getallcustomerfromcollector/'+ $(this).attr('data-id'), function(data){
                     $.each(data, function(key, item){
-                        console.log(item.user.id);
+                        // console.log(item.user.id);
                         var firstline = '<td class="viewCustomerTable">' + item.FirstName+ ' ' + item.LastName +'</td>';
-                        var secondline = '<td class="viewCustomerTable">\
+                        // console.log(item.order.length);
+                        
+                        if(item.order.length != 0){
+                            // console.log(';huh');
+                            var secondline = '<td class="viewCustomerTable">\
                             <form method="GET" action="/admin/admincustomer/customerOrder/'+item.user.id+'" class ="mx-2">\
                                 <button type="submit" class="btn btn-secondary" style="width:6em"><i class="fa-solid fa-file-pen"></i>Orders</button></form></td>';
-                            
+                        }else{
+                           var secondline = '<td></td>' 
+                        }
                             
                          //{{ route('admin.admincustomer.customerOrder', 'item.user.id') }}    
                          
@@ -199,7 +205,7 @@
                              }else{
                                 $('#atd3'+item.id).replaceWith('<a id="atd3'+item.id+'"></a>');
                              }
-                            //  <a href="#" id="atd3{{$collector->id}}" class="btn btn-warning col-sm mx-2 viewButton" data-id={{$collector->id}}> <span><i class="fa-solid fa-eye"></i> View</span></a>    
+                            
                         });
                     },
                     error: function (data) {

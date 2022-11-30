@@ -1425,6 +1425,11 @@ class OrderController extends Controller
     }
     public function getordersdelinquent(Request $request)
     {
+        $order = Order::whereBetween('created_at', [$request->timebefore, $request->timeafter])->where('customerstatus', 'Delinquent')->get();
+        return response()->json($order->count());
+    }
+    public function getorders(Request $request)
+    {
         $order = Order::whereBetween('created_at', [$request->timebefore, $request->timeafter])->get();
         return response()->json($order->count());
     }

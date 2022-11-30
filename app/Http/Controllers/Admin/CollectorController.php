@@ -70,7 +70,7 @@ class CollectorController extends Controller
     }
 
     public function getallcustomerfromcollector($id){
-        $customer = Customer::with('user.collector')->where('collector_id', '=', $id)->get();
+        $customer = Customer::with('user.collector','order')->where('collector_id', '=', $id)->get();
         // $customer = Customer::where('collector_id', '=', $id)->get();
 
         return response()->json($customer);

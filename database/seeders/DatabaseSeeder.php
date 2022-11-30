@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Brand;
 use App\Models\SmsTemplate;
 use App\Models\CompanyDetail;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

@@ -39,7 +39,7 @@
                         <input type="text" class="mb-2 form-control" name="price" value ="{{ $unit->price }}" />
                         <div class="float-end">
                             <button type="submit" class="btn btn-primary"> Save </button>
-                            <a href = {{ route('admin.unit.index') }} type="button" class="btn btn-success"> Go Back </a>
+                            <a href = {{ URL::previous() }} type="button" class="btn btn-success"> Go Back </a>
                         </div>
                     </form>
 
