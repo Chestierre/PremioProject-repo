@@ -383,7 +383,7 @@
                             <div id="div_id_MobileNumber" class="form-group required">
                                 <label for="id_MobileNumber" class="control-label col-md-4  requiredField"> Mobile Number<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8">
-                                    <input class="input-md  textinput textInput form-control @error('MobileNumber') is-invalid @enderror" id="id_MobileNumber" maxlength="30" name="MobileNumber" value="{{ old('MobileNumber') }}" placeholder="Enter your Mobile Number" style="margin-bottom: 10px" type="number" />
+                                    <input class="input-md  textinput textInput form-control @error('MobileNumber') is-invalid @enderror" id="id_MobileNumber" maxlength="30" name="MobileNumber" value="{{ old('MobileNumber') }}" placeholder="Enter your Mobile Number (+639)" style="margin-bottom: 10px" type="text" />
                                     @error('MobileNumber')
                                         <span class="invalid-feedback text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -446,7 +446,7 @@
                                 <div id="div_id_SpouseMobileNumber" class="form-group required">
                                     <label for="id_SpouseMobileNumber" class="control-label col-md-4  requiredField" style="color: red">Mobile Number <span class="asteriskField">*</span> </label>
                                     <div class="controls col-md-8">
-                                        <input class="input-md SpouseMobileNumber input form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" value="{{ old('SpouseMobileNumber') }}" placeholder="Enter Spouse's Mobile Number" style="margin-bottom: 10px" type="number" />
+                                        <input class="input-md SpouseMobileNumber input form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" value="{{ old('SpouseMobileNumber') }}" placeholder="Enter Spouse's Mobile Number (+639)" style="margin-bottom: 10px" type="text" />
                                         @error('SpouseMobileNumber')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -798,7 +798,7 @@
                             <div id="div_id_ParentNumber" class="form-group required">
                                 <label for="id_ParentNumber" class="control-label col-md-4  requiredField"> Parent's Number<span class="asteriskField">*</span> </label>
                                 <div class="controls col-md-8">
-                                    <input class="input-md ParentNumberinput form-control @error('ParentNumber') is-invalid @enderror" id="id_ParentNumber" name="ParentNumber" value="{{ old('ParentNumber') }}" placeholder="Enter Parent's Tel/Mobile No." style="margin-bottom: 10px" type="number" />
+                                    <input class="input-md ParentNumberinput form-control @error('ParentNumber') is-invalid @enderror" id="id_ParentNumber" name="ParentNumber" value="{{ old('ParentNumber') }}" placeholder="Enter Parent's Tel/Mobile No." style="margin-bottom: 10px" type="text" />
                                     @error('ParentNumber')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -1495,7 +1495,7 @@
                             <div id="div_id_CoMakerMobileNo" class="form-group required">
                                 <label for="id_CoMakerMobileNo" class="control-label col-md-4  requiredField">Mobile Number<span class="asteriskField">*</span> </label>
                                  <div class="controls col-md-8">
-                                     <input class="input-md CoMakerMobileNo input form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ old('CoMakerMobileNo') }}" placeholder="Enter Co-Maker's Mobile Number" style="margin-bottom: 10px" type="number" />
+                                     <input class="input-md CoMakerMobileNo input form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ old('CoMakerMobileNo') }}" placeholder="Enter Co-Maker's Mobile Number (+639)" style="margin-bottom: 10px" type="text" />
                                      @error('CoMakerMobileNo')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>

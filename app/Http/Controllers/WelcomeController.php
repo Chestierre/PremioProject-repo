@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Promo;
 use App\Models\CompanyDetail;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class WelcomeController extends Controller
 {
@@ -18,7 +19,7 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        $unit = Unit::orWhereNotNull('brand_id')->get();
+        $unit = Unit::orWhereNotNull('brand_id')->paginate(8);
         $brand = Brand::all();
         $promo = Promo::with('unit.unitimage', 'unit.brand')->where('PromoActive', 1)->get();
         
@@ -39,6 +40,31 @@ class WelcomeController extends Controller
     public function getpromo($id){
         $promo = Promo::with('unit.unitimage', 'unit.brand')->where('PromoActive', 1)->find($id);
         return response()->json($promo);
+
+    }
+    public function searchItem(request $request){
+        $searchterm = $request->search;
+
+        if(Brand::where('brandname', $searchterm)->count() > 0){
+            $units = Unit::with('brand')->whereHas('brand', function(Builder $query) use ($searchterm){
+                $query->where('brandname', $searchterm);
+            })->paginate(5);
+            $count = Unit::with('brand')->whereHas('brand', function(Builder $query) use ($searchterm){
+                $query->where('brandname', $searchterm);
+            })->get()->count();
+            
+            $brand = Brand::all();
+            return view('searchPage', compact('brand', 'units'), ['SearchTerm' => $searchterm." {Brand}", 'count' => $count]);
+            // dd($units);
+        }else{
+            // dd($request->all());
+            // dd($searchterm);
+            $units = Unit::with('brand')->where('modelname','LIKE', "%{$searchterm}%")->paginate(5);
+            $brand = Brand::all();
+            return view('searchPage', compact('brand', 'units'), ['SearchTerm' => $searchterm]);
+        }
+
+
 
     }
 

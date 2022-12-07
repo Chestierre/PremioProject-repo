@@ -12,7 +12,7 @@
             </div>
             {{-- <a href="#" class="btn btn-secondary col-3 " data-toggle="modal" data-target="#paymentModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Payment Test</span></a> --}}
             <div class="col-2 px-1">
-                <a href="#" class="btn btn-primary w-100" data-toggle="modal" data-target="#printpdfModal"> <span><i class="fa-solid fa-face-grin-hearts"></i>Print pdf form</span></a>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#printpdfModal"> <span><i class="fa-solid fa-face-grin-hearts"></i>Print pdf form</span></a>
                 {{-- <form method="GET"action="{{ route('admin.order.pdfOrderHistory', $order) }}">
                     <button type="submit" class="btn btn-primary w-100"><i class="fa-solid primary"></i>Print pdf form</button>    
                 </form> --}}
@@ -129,7 +129,13 @@
         </div>
         <div class="modal-body">
            
-                <form method="GET"action="{{ route('admin.order.pdfOrderHistory', $order) }}">
+                <select name="options" id="printpdfselect" class="form-select mb-3">
+                    <option value="1">Whole History</option>
+                    <option value="2">In Between Months</option>
+                    <option value="3">By Month</option>
+                </select>
+
+                <form method="GET"action="{{ route('admin.order.pdfOrderHistory', $order) }}" style="display:none" id="whole">
                     <div class="row mb-3">
                         <label for="customerLabel" class="col-md-10 col-form-label">{{ __('Print whole history:') }}</label>
                         <div class="col-md-2">
@@ -137,7 +143,8 @@
                         </div>
                     </div>
                 </form>
-                <form method="POST"action="{{ route('admin.order.pdfOrderHistoryByDate', $order) }}">
+
+                <form method="POST"action="{{ route('admin.order.pdfOrderHistoryByDate', $order) }}" style="display:none" id="inbetween">
                     @csrf
                     <div class="row mb-3">
                         <input type="hidden" name="methodtype" value="ByDate">
@@ -150,8 +157,8 @@
                         </div>
                     </div>
                 </form>
-
-                <form method="POST"action="{{ route('admin.order.pdfOrderHistoryByDate', $order) }}">
+ 
+                <form method="POST"action="{{ route('admin.order.pdfOrderHistoryByDate', $order) }}" style="display:none" id="months">
                     @csrf
                     <div class="row mb-3">
                         <input type="hidden" name="methodtype" value="ByMonth">
@@ -170,4 +177,44 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var mode = $('#printpdfselect').val();
+
+            if (mode == 1){
+                $('#whole').show();
+                $('#inbetween').hide();
+                $('#months').hide();
+            }else if (mode == 2){
+                $('#whole').hide();
+                $('#inbetween').show();
+                $('#months').hide();
+            }else if (mode == 3){
+                $('#whole').hide();
+                $('#inbetween').hide();
+                $('#months').show();
+            }
+
+            $('#printpdfselect').on('change', function(){
+                var mode = $('#printpdfselect').val();
+
+                if (mode == 1){
+                    $('#whole').show();
+                    $('#inbetween').hide();
+                    $('#months').hide();
+                }else if (mode == 2){
+                    $('#whole').hide();
+                    $('#inbetween').show();
+                    $('#months').hide();
+                }else if (mode == 3){
+                    $('#whole').hide();
+                    $('#inbetween').hide();
+                    $('#months').show();
+                }
+            });
+        });
+    </script>
 @endsection

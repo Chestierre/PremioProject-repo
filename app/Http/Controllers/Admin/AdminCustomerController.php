@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Unit;
+use App\Models\Order;
+use App\Models\Preorder;
+use App\Models\OrderTransactionDetails;
 use App\Models\CustomerSpouse;
 use App\Models\CustomerParent;
 use App\Models\CustomerAddress;
@@ -15,6 +18,9 @@ use App\Models\CustomerPersonalReference;
 use App\Models\CustomerCreditReference;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 
 class AdminCustomerController extends Controller
@@ -72,7 +78,7 @@ class AdminCustomerController extends Controller
             'ProvincialAddress' => 'required|string',	
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
-            'MobileNumber' => 'required|integer',
+            'MobileNumber' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'email' => 'nullable|email',
             'NumberDependents'	=> 'nullable|integer|max:4|min:0',
             'SourceIncome' => 'required|string',	
@@ -169,6 +175,7 @@ class AdminCustomerController extends Controller
     {   
         $admincustomer->load('customer.spouse','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference', 'customer.order.ordercustomerinformation');
         $sorted = $admincustomer->customer->order->sortBy('created_at')->last();
+        // dd($admincustomer);
         // dd($sorted->ordercustomerinformation);
         
 
@@ -189,7 +196,7 @@ class AdminCustomerController extends Controller
             'PlaceIssue' => 'nullable|string',		
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
-            'MobileNumber' => 'required|integer',
+            'MobileNumber' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'email' => 'nullable|email',
             'NumberOfDependencies'	=> 'nullable|integer|max:4|min:0',
             'NumberofCreditReference'	=> 'nullable|integer|max:4|min:0',
@@ -210,7 +217,7 @@ class AdminCustomerController extends Controller
             'SpouseName' => 'nullable|string',
             'SpouseAge' => 'nullable|integer',
             'SpouseProvincialAddress' => 'nullable|string',
-            'SpouseMobileNumber' => 'nullable|integer',
+            'SpouseMobileNumber' => 'nullable|regex:/(^(\+639)\d{9}$)/u',
             'SpouseEmail' => 'nullable|email',
             'SpouseEmployer' => 'nullable|string',
             'SpousePosition' => 'nullable|string',
@@ -224,7 +231,7 @@ class AdminCustomerController extends Controller
             'Father' => 'nullable|string',
             'Mother' => 'nullable|string',
             'ParentAddress' => 'nullable|string',
-            'ParentMobileNumber' => 'nullable|integer',
+            'ParentMobileNumber' => 'nullable|string',
 
             //address
             'PresentAddress' => 'required|string',	
@@ -256,7 +263,7 @@ class AdminCustomerController extends Controller
             'CoMakerRelationship' => 'nullable|string',
             'CoMakerBirthDate' => 'nullable|date',
             'CoMakerTin' => 'nullable|integer',
-            'CoMakerMobileNo' => 'required|integer',
+            'CoMakerMobileNo' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'CoMakerEmployer' => 'required|string',	
             'CoMakeDateEmployed' => 'nullable|date',
             'CoMakerPosition' => 'required|string',	
@@ -330,23 +337,29 @@ class AdminCustomerController extends Controller
         $imagePathApplicantSignature = ($admincustomer->customer->ApplicantSignature)?$admincustomer->customer->ApplicantSignature:"";
         // dd($request->ApplicantSketch);
         if ($request->ApplicantSketch != NULL){
-            if ($sorted->ordercustomerinformation->ApplicantSketch != $admincustomer->customer->ApplicantSketch && $admincustomer->customer->ApplicantSketch){
-                if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSketch )){
-                    Storage::disk('public')->delete($admincustomer->customer->ApplicantSketch);
-                }else{
-                    dd("storage not working");
+            if($sorted !=NULL){
+                if ($sorted->ordercustomerinformation->ApplicantSketch != $admincustomer->customer->ApplicantSketch && $admincustomer->customer->ApplicantSketch){
+                    if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSketch )){
+                        Storage::disk('public')->delete($admincustomer->customer->ApplicantSketch);
+                    }else{
+                        dd("storage not working");
+                    }
                 }
             }
+
             $imagePathApplicantSketch = request('ApplicantSketch')->store('uploads', 'public');
         }
         if ($request->ApplicantSignature != NULL) {
-            if($sorted->ordercustomerinformation->ApplicantSignature != $admincustomer->customer->ApplicantSignature && $admincustomer->customer->ApplicantSignature){
-                if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSignature )){
-                    Storage::disk('public')->delete($admincustomer->customer->ApplicantSignature);
-                }else{
-                    dd("storage not working");
+            if($sorted !=NULL){
+                if($sorted->ordercustomerinformation->ApplicantSignature != $admincustomer->customer->ApplicantSignature && $admincustomer->customer->ApplicantSignature){
+                    if(Storage::disk('public')->exists($admincustomer->customer->ApplicantSignature )){
+                        Storage::disk('public')->delete($admincustomer->customer->ApplicantSignature);
+                    }else{
+                        dd("storage not working");
+                    }
                 }
             }
+
             $imagePathApplicantSignature = request('ApplicantSignature')->store('uploads', 'public');
         }
         $admincustomer-> customer() -> update([
@@ -388,13 +401,16 @@ class AdminCustomerController extends Controller
         $imagePathSpouseSignature = ($admincustomer->customer->spouse->SpouseSignature)?$admincustomer->customer->spouse->SpouseSignature:"";
         
         if ($request->SpouseSignature != NULL) {
-            if($sorted->ordercustomerinformation->SpouseSignature != $admincustomer->customer->spouse->SpouseSignature && $admincustomer->customer->spouse->SpouseSignature){
-                if(Storage::disk('public')->exists($admincustomer->customer->spouse->SpouseSignature )){
-                    Storage::disk('public')->delete($admincustomer->customer->spouse->SpouseSignature);
-                }else{
-                    dd("storage not working");
+            if($sorted !=NULL){
+                if($sorted->ordercustomerinformation->SpouseSignature != $admincustomer->customer->spouse->SpouseSignature && $admincustomer->customer->spouse->SpouseSignature){
+                    if(Storage::disk('public')->exists($admincustomer->customer->spouse->SpouseSignature )){
+                        Storage::disk('public')->delete($admincustomer->customer->spouse->SpouseSignature);
+                    }else{
+                        dd("storage not working");
+                    }
                 }
             }
+
             $imagePathSpouseSignature = request('SpouseSignature')->store('uploads', 'public');
         }
             
@@ -418,25 +434,33 @@ class AdminCustomerController extends Controller
         $imagePathCoMakerSignature = ($admincustomer->customer->comaker->Signature)?$admincustomer->customer->comaker->Signature:"";
 
         if ($request->CoMakerSketch != NULL){ 
-            if($sorted->ordercustomerinformation->CoMakerSketch != $admincustomer->customer->comaker->Sketch && $admincustomer->customer->comaker->Sketch){
-                if(Storage::disk('public')->exists($admincustomer->customer->comaker->Sketch )){
-                    Storage::disk('public')->delete($admincustomer->customer->comaker->Sketch);
-                }else{
-                    dd("storage not working");
-                }
-            } 
+            if($sorted !=NULL){
+                if($sorted->ordercustomerinformation->CoMakerSketch != $admincustomer->customer->comaker->Sketch && $admincustomer->customer->comaker->Sketch){
+                    if(Storage::disk('public')->exists($admincustomer->customer->comaker->Sketch )){
+                        Storage::disk('public')->delete($admincustomer->customer->comaker->Sketch);
+                    }else{
+                        dd("storage not working");
+                    }
+                } 
+            }
+
 
             $imagePathCoMakerSketch = request('CoMakerSketch')->store('uploads', 'public');
 
         }
         if ($request->CoMakerSignature != NULL) {
-            if($sorted->ordercustomerinformation->CoMakerSignature != $admincustomer->customer->comaker->Signature && $admincustomer->customer->comaker->Signature){
-                if(Storage::disk('public')->exists($admincustomer->customer->comaker->Signature )){
-                    Storage::disk('public')->delete($admincustomer->customer->comaker->Signature);
-                }else{
-                    dd("storage not working");
+            if ($sorted !=NULL){
+                if($sorted->ordercustomerinformation->CoMakerSignature != $admincustomer->customer->comaker->Signature && $admincustomer->customer->comaker->Signature){
+                    if(Storage::disk('public')->exists($admincustomer->customer->comaker->Signature )){
+                        Storage::disk('public')->delete($admincustomer->customer->comaker->Signature);
+                    }else{
+                        dd("storage not working");
+                    }
                 }
+            
+
             }
+
 
             $imagePathCoMakerSignature = request('CoMakerSignature')->store('uploads', 'public');
         }
@@ -750,7 +774,7 @@ class AdminCustomerController extends Controller
             'PlaceIssue' => 'nullable|string',		
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
-            'MobileNumber' => 'required|numeric',
+            'MobileNumber' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'email' => 'nullable|email',
             'NumberDependents'	=> 'nullable|integer|max:4|min:0',
             'NumberCreditRef'	=> 'nullable|integer|max:4|min:0',
@@ -771,7 +795,7 @@ class AdminCustomerController extends Controller
             'Spouse' => 'nullable|string',
             'SpouseAge' => 'nullable|integer',
             'SpouseProvincialAddress' => 'nullable|string',
-            'SpouseMobileNumber' => 'nullable|numeric',
+            'SpouseMobileNumber' => 'nullable|regex:/(^(\+639)\d{9}$)/u',
             'SpouseEmail' => 'nullable|email',
             'SpouseEmployer' => 'nullable|string',
             'SpousePosition' => 'nullable|string',
@@ -785,7 +809,7 @@ class AdminCustomerController extends Controller
             'Father' => 'nullable|string',
             'Mother' => 'nullable|string',
             'ParentAddresss' => 'nullable|string',
-            'ParentNumber' => 'nullable|integer',
+            'ParentNumber' => 'nullable|string',
 
             //address
             'PresentAddress' => 'required|string',	
@@ -817,7 +841,7 @@ class AdminCustomerController extends Controller
             'CoMakerRelationship' => 'nullable|string',
             'CoMakerBirthDate' => 'nullable|date',
             'CoMakerTin' => 'nullable|integer',
-            'CoMakerMobileNo' => 'required|numeric',
+            'CoMakerMobileNo' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'CoMakerEmployer' => 'required|string',	
             'CoMakeDateEmployed' => 'nullable|date',
             'CoMakerPosition' => 'required|string',	
@@ -886,6 +910,9 @@ class AdminCustomerController extends Controller
             
         ]);
 
+        $imagePathApplicantSketch = request('ApplicantSketch')->store('uploads', 'public');
+        $imagePathApplicantSignature = request('ApplicantSignature')->store('uploads', 'public');
+
         $customer = Customer::create([
                 'NumberOfDependencies' => $request->input('NumberDependents'),
                 'NumberofCreditReference' => $request->input('NumberCreditRef'),
@@ -918,14 +945,14 @@ class AdminCustomerController extends Controller
                 'Salary' => $request->input('Salary'),
                 'UnitToBeUsedFor' => $request->input('UnitToBeUsedFor'),
                 'ModeOfPayment' => $request->input('ModeOfPayment'),
-                'ApplicantSignature' => $request->input('ApplicantSignature'),
-                'ApplicantSketch' => $request->input('ApplicantSketch'),	
+                'ApplicantSignature' => $imagePathApplicantSignature,
+                'ApplicantSketch' => $imagePathApplicantSketch,		
                 
 
                 'user_id' => $user->id
                 
             ]);
-
+            $imagePathSpouseSignature = request('SpouseSignature')->store('uploads', 'public');
             if($request->Spouse != ""){
                 CustomerSpouse::create([
                     'Name' => $request->input('Spouse'),
@@ -939,7 +966,7 @@ class AdminCustomerController extends Controller
                     'WorkTelNum' => $request->input('SpouseWorkTelNum'),
                     'DateEmployed' => $request->input('SpouseDateEmployed'),
                     'Salary' => $request->input('SpouseSalary'),
-                    'SpouseSignature' => $request->input('SpouseSignature'),
+                    'SpouseSignature' => $imagePathSpouseSignature,
     
                     'customer_id' => $customer->id
                 ]);
@@ -977,6 +1004,8 @@ class AdminCustomerController extends Controller
                 'customer_id' => $customer->id	
             ]);
 
+            $imagePathCoMakerSketch = request('CoMakerSketch')->store('uploads', 'public');
+            $imagePathCoMakerSignature = request('CoMakerSignature')->store('uploads', 'public');
             CustomerCoMaker::create([
                 'Name' => $request->input('CoMakerName'),	
                 'Age' => $request->input('CoMakerAge'),
@@ -999,8 +1028,8 @@ class AdminCustomerController extends Controller
                 'CreditReference1' => $request->input('CoMakerCreditReference1'),
                 'CreditReference2' => $request->input('CoMakerCreditReference2'),
                 'CreditReference3' => $request->input('CoMakerCreditReference3'),
-                'Sketch' => $request->input('CoMakerSketch'),
-                'Signature' => $request->input('CoMakerSignature'),
+                'Sketch' => $imagePathCoMakerSketch,
+                'Signature' => $imagePathCoMakerSignature,
 
                 'customer_id' => $customer->id
             ]);
@@ -1122,9 +1151,61 @@ class AdminCustomerController extends Controller
         $user->load('customer.spouse', 'customer.order','customer.comaker','customer.address','customer.parent', 'customer.dependent', 'customer.personalreference','customer.creditreference');
         return view('admin.admincustomer.orders', compact('user', 'unit')); 
     }
-
+    public function customerPreorder(User $user)
+    {
+        $customer = Customer::with('preorder.unit.unitimage', 'user')->find($user->customer->id);
+        return view('admin.admincustomer.preorder', compact('customer'));
+      
+    }
 
     public function printPdf($id){
         
+    }
+
+    public function pdfAdminCustomerOrders(User $user){
+        $user->load('customer.order.ordercustomerinformation');
+
+        $pdf = Pdf::loadView('admin.admincustomer.pdfAdminCustomerOrder', compact('user'));
+
+        return $pdf->download('All Orders for '. $user->customer->FirstName. $user->customer->LastName.'.pdf');
+    }
+
+    public function pdfAdminCustomerOrdersbyDate(User $user, Request $request)
+    {
+        // dd($user);
+        // $user->load('customer.order.ordertransactiondetails');
+        // $order = User::find($user->id)->with(['customer.order' => function($query){$query->where('created_at', '>=', '2022-11');}])->get();
+        
+        // dd($order);
+        
+
+
+        if($request->methodtype == "ByMonth"){
+            // $order = Order::with('orderhistory','ordertransactiondetails', 'customer.user')->where('created_at', '>=', $request->dateafter)->get();
+            $order = Order::where('created_at', '>=', $request->dateafter)->with(['customer.user' => function($query) use ($user){$query->where('id', $user->id);}, 'ordertransactiondetails'] )->get();
+            // $order = $user->customer->order()->where('created_at', '>=', $request->dateafter)->get();
+        }elseif($request->methodtype == "ByDate"){
+
+            // $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->whereBetween('date_created', [$datebefore, $dateafter])->get();
+            $order = Order::whereBetween('created_at', [$request->datebefore, $request->dateafter])->with(['customer.user' => function($query) use ($user){$query->where('id', $user->id);}, 'ordertransactiondetails'] )->get();
+            // $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->whereBetween('created_at', [$request->datebefore, $request->dateafter])->get();
+            // dd($order);
+        }
+        // dd($request->all()); 
+        $flag = array("dateafter" => $request->dateafter, "methodtype" => $request->methodtype, "datebefore" => $request->datebefore);
+        $pdf = Pdf::loadView('admin.admincustomer.pdfAdminCustomerOrder', compact('order', 'user','flag'));
+        
+        return $pdf->download('All orders for'.$user->customer->FirstName. $user->customer->LastName. $request->dateafter.'.pdf');
+    }
+    public function preorderindex(){
+        $preorders = Preorder::with('customer.user', 'unit.unitimage')->get();
+        return view('admin.admincustomer.preorderindex', compact('preorders'));
+    }
+
+    public function preorderDeleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        DB::table("preorders")->whereIn('id',explode(",",$ids))->delete();
+        return response()->json(['success'=>"Preorders Deleted successfully."]);
     }
 }

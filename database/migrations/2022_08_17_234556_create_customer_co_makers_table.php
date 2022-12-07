@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('Relationship')->nullable();
             $table->date('BirthDate')->nullable();
             $table->integer('Tin')->nullable();
-            $table->integer('MobileNo');
+            $table->string('MobileNo');
             $table->string('Employer');
             $table->date('CoMakeDateEmployed')->nullable();
             $table->string('Position');

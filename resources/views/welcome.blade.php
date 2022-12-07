@@ -9,7 +9,7 @@
   @endif
 
 
-
+  @if($unit->currentPage() == 1)
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
     @if($promo->count() <= 0)
       <div class="carousel-indicators">
@@ -94,28 +94,38 @@
 
 
   </div>
+  @endif
 
   <div class="container">
     <div class="row justify-content-center">
       <div class="row row-cols-1 row-cols-md-4 row-cols-md-2 g-2">
-        @foreach ($unit as $count => $unit)
+        @foreach ($unit as $count => $units)
           <div class="col">
             <div class="card h-100" style="">
-              <img src="/storage/{{ $unit->unitimage[0]->image }}" class="card-img-top" alt="..." height="160">
+              <img src="/storage/{{ $units->unitimage[0]->image }}" class="card-img-top" alt="..." height="160">
               <div class="card-body" style="max-height: 175px;overflow-y: auto;">
-                <h5 class="card-title">{{ $unit->brand->brandname}} :  {{ $unit->modelname }}</h5>
-                <p class="card-text">{{ $unit->modelcaption }} </p>
+                <h5 class="card-title">{{ $units->brand->brandname}} :  {{ $units->modelname }}</h5>
+                <p class="card-text">{{ $units->modelcaption }} </p>
               </div>
               <div class="card-footer d-flex">
-                  <button class="btn btn-secondary buyProductbtn" data-id="{{$unit->id}}" >Buy Product</button>
-                  <p class="h5 mx-2">&#8369 {{ number_format($unit->price) }} </p>
+                  <button class="btn btn-secondary buyProductbtn" data-id="{{$units->id}}" >Buy Product</button>
+                  <p class="h5 mx-2">&#8369 {{ number_format($units->price) }} </p>
               </div>   
             </div>
           </div>
         @endforeach
+
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12 d-flex justify-content-center">
+          {{$unit->links()}}
         </div>
       </div>
   </div>
+
+      
+
 
   <div class="modal fade" id="LearnPromoModal" tabindex="-1" role="dialog" aria-labelledby="LearnPromoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -152,10 +162,10 @@
               <br>
               <span class="h6">Unit Caption:</span> <span id="LearnModelCaption"></span>
               <br> 
-              <span class="h6">Unit Brand:</span> <span id="LearnModelCaption"></span> 
+              <span class="h6">Unit Brand:</span> <span id="LearnBrandName"></span> 
               <br>
               <span class="h6">Unit Price:</span> &#8369 <span id="LearnPrice"></span>
-
+              <br>
               <a class="mt-2 btn btn-secondary" id="LearnBuybtn" href="">Buy Now</a>
               
             </div>
@@ -200,12 +210,12 @@
             <div class="col-md-4">
               <span class="h6">Unit Model:</span> <span id="ProductModelName"></span>
               <br>
-              <span class="h6">Unit Caption:</span> <span id="ProductModelName"></span>
+              <span class="h6">Unit Caption:</span> <span id="ProductModelCaption"></span>
               <br> 
-              <span class="h6">Unit Brand:</span> <span id="ProductModelCaption"></span> 
+              <span class="h6">Unit Brand:</span> <span id="ProductBrandName"></span> 
               <br>
               <span class="h6">Unit Price:</span> &#8369 <span id="ProductPrice"></span>
-
+              <br>
               <a class="mt-2 btn btn-secondary" id="ProductBuybtn" href="">Buy Now</a>
             </div>
             

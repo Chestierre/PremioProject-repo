@@ -98,7 +98,6 @@
                     <table class="table">
                         <thead class="table-dark">
                             <tr>
-                                <th width="50px"><input type="checkbox" id="master"></th>
                                 <th>Model Image</th>
                                 <th>Model Name</th>
                                 <th>Model Price</th>
@@ -112,9 +111,7 @@
                         <tbody>
                             @foreach ($unit as $unit)
                             <tr>
-                              <td>
-                                  <input type="checkbox" class="sub_chk" data-id={{$unit->id  }}>
-                            </td>
+
                               <td><img src= "/storage/{{ $unit->unitimage[0]->image }}" style="width:120px;"></td>
                               <td>{{ $unit->modelname }}</td>
                               <td>&#8369 {{ number_format($unit->price) }}</td>
@@ -139,6 +136,77 @@
                             
                           
                         @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    <div class="row mb-1">
+        <div class="shadow-lg p-5 mb-4 bg-white rounded">
+            <div class="d-flex">
+                <div class="h4">Applicant List</div>
+                <span class="mx-2"><i class="fa-regular fa-circle-question" data-toggle="tooltip" data-placement="bottom" title="Function stated in the study"></i></span>
+   
+            </div>
+            <div class="table-responisve">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="h2">Applicants</div>
+                        </div>
+
+                    </div>
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>View</th>
+                                <th>Action</th>
+
+              
+                              </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($applicants as $applicant)
+                                <td class = "py-3">{{ $applicant->username }}</td>
+                                <td>{{ $applicant->userrole }}</td>
+                                <td>
+                                    
+                                    <div class="d-flex">
+                                        @if($applicant->customer()->exists())
+                                            <form method="GET" action="{{ route('admin.admincustomer.edit', $applicant) }}">
+                                                <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
+                                                <a href="#" class="btn btn-success" id="printpdf" onclick="printPdf({{ $applicant->id }})">Print Pdf</a>
+                                            </form>
+                                        @elseif ($applicant->userrole == "Applicant")
+                                            <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $applicant) }}" class="mx-1">
+                                                <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
+                                            </form>
+                                        @endif
+                                        @if($applicant->customer()->exists() && $applicant->customer->order()->exists())
+                                            <form method="GET" action="{{ route('admin.admincustomer.customerOrder', $applicant) }}" class ="mx-1-2">
+                                                <button type="submit" class="btn btn-secondary" style="width:6em"><i class="fa-solid fa-file-pen"></i>Orders</button>
+                                            </form>
+                                        @endif
+                                        @if($applicant->customer()->exists() && $applicant->customer->preorder()->exists())
+                                            <form method="GET" action="{{ route('admin.admincustomer.customerPreorder', $applicant) }}" class ="mx-1">
+                                                <button type="submit" class="btn btn-info" style="width:8em"><i class="fa-solid fa-file-pen"></i>Preorder</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" href="{{ route('admin.superfunc.changeCustomer', $applicant->id)}}"> Change to Customer</a>
+                                </td>
+                            
+                            @endforeach
+
+  
                         </tbody>
                     </table>
                 </div>

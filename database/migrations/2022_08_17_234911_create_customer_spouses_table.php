@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Name');
             $table->integer('Age')->nullable();	
             $table->string('ProvincialAddress')->nullable();
-            $table->integer('MobileNumber')->nullable();
+            $table->string('MobileNumber')->nullable();
             $table->string('Email')->nullable();
             $table->string('Employer')->nullable();
             $table->string('Position')->nullable();

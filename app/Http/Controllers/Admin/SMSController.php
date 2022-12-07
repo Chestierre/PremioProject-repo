@@ -58,14 +58,17 @@ class SMSController extends Controller
             'phone' => $request->phone,
             'message' => $request->message,
         ]);
-        // $response = Http::asform()->post('https://smsgateway.servicesforfree.com/api/send?key=35a6b5c9d8220cd2a1febe5376bb70c65df94bfe', [
-        //     'phone' => "+639056138839",
-        //     'message' => "Network Administrator liasdasd asdasdasd asdasdasd sadasdasd",
-        // ]);
-        // $response = Http::get('https://smsgateway.servicesforfree.com/api/send?key=35a6b5c9d8220cd2a1febe5376bb70c65df94bfe');
-        //return $response;
-        //dd($response->json());
-        //dd(json_decode($response->json()));
+        // dd($response->json());
+        $responses = $response->json();
+        // dd($responses['status']);
+        SMS::create([
+            'type' => "Unique SMS",
+            'recipient' => "N/A",
+            'recipientnumber' => $request->phone,
+            'message' => $request->message,
+            'status' => $responses['status'],
+            'apimessage' => $responses['message'],
+        ]);
         return back()->with($response->json());
     }
     
@@ -89,6 +92,18 @@ class SMSController extends Controller
 
         return redirect()->route('admin.SMS.index');
 
+    }
+    public function smssearch(Request $request){
+        $searchterm = $request->search_name;
+        $searchtype = $request->search_type;
+
+        if ($searchtype == "Recipient Name"){
+            $sms = SMS::where("recipient", 'LIKE', "%{$searchterm}%")->get();
+        }else if($searchtype == "Recipient Number"){
+            $sms = SMS::where("recipientnumber", 'LIKE', "%{$searchterm}%")->get();
+        }
+
+        return view('admin.SMS.index', compact('sms'));
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Order;
+use App\Models\Preorder;
 use App\Models\Unit;
 use App\Models\Customer;
 use App\Models\User;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderController extends Controller
 {
@@ -22,8 +24,19 @@ class OrderController extends Controller
         // $order = Order::all();
         $order = Order::orderBy('due_date', 'asc')->get();
 
-        $customer = Customer::all();
+        // $customer = Customer::with(['user' => function($query){$query->where('userrole', 'Customer');}])->get();
+        // $customer = Customer::all();
+
+        $customer = Customer::whereHas('user', function(Builder $query){
+            $query->where('userrole', 'Customer');
+        })->get();
+        // dd($customer);
+        
         $user = User::all();
+
+        
+        // $user = User::with('customer')->where('userrole', 'Customer')->get();
+        // dd($user->customer);
         return view('admin.order.index', compact('unit','order','customer', 'user'));
     }
     public function create()
@@ -32,6 +45,7 @@ class OrderController extends Controller
     
     public function store(Request $request)
     {
+        // dd($request->all());
          $dt = Carbon::now();
          $dt->hour = 9;
          $dt->minute = 0;
@@ -83,9 +97,21 @@ class OrderController extends Controller
              'downpayment' => "required|integer|min:$unit_downpayment->modeldownpayment|max:$unit_downpayment->price",
              'monthsinstallment' => 'required|integer',
              'monthly' => 'required|integer',
-             'balance' => 'required|integer'
-
+             'balance' => 'required|integer',
+             'flag' => 'nullable|in:1,2'
           ]);
+
+          if($request->flag == 1 || $request->flag == 2){
+            $preorder = Preorder::with('customer')->find($request->preorder_id);
+            if ($request->applicantcheck == 1){
+                $user = User::find($preorder->customer->user_id);
+                $user->update([
+                    'userrole' => "Customer",
+                ]);
+            }
+            $preorder->delete();
+          }
+
           $unit = Unit::with('brand')->find($request->unit_id);
 
           switch($request->monthsinstallment){
@@ -706,12 +732,18 @@ class OrderController extends Controller
 
       
         ]);
+          if($request->flag == 1){
+            return redirect()->route('admin.preorder.index')->with('bought', 'Preorder successfully added to order!');
+          }else if($request->flag == 2){
+            return back()->with('bought', 'Preorder successfully added to order!');
+          }else{
+            return redirect()->route('admin.order.index');
+          }
           
-          return redirect()->route('admin.order.index');
     }
     public function show(order $order)
     {
-        $order->load('orderhistory','ordertransactiondetails', 'ordercustomerinformation');
+        $order->load('orderhistory','ordertransactiondetails', 'ordercustomerinformation', 'customer');
         return view('admin.order.view', compact('order'));
     }
     public function edit(order $order)
@@ -752,11 +784,26 @@ class OrderController extends Controller
 
     public function search(Request $request)
     {
-        
-        $order = order::query()
-                ->where('orderTitle', 'LIKE', "%{$request->search_name}%")
-                ->get();
-        return view('admin.order.index', compact('order'));
+        // dd($request->all());
+        $searchterm = $request->search_name;
+        $category = $request->categories;
+        $unit = Unit::all();
+        $customer = Customer::whereHas('user', function(Builder $query){
+            $query->where('userrole', 'Customer');
+        })->get();
+
+        if ($category == "Customer"){
+            $order = Order::with('customer')->whereHas('customer', function(Builder $query) use ($searchterm){$query->where('FirstName','LIKE', "%{$searchterm}%")->orWhere('LastName','LIKE', "%{$searchterm}%");})->get();
+        }else if($category == "Unit"){
+            $order = Order::with('unit')->whereHas('unit', function(Builder $query) use ($searchterm){$query->where("modelname", 'LIKE', "%{$searchterm}%");})->get();
+
+        }else if($category == "Ongoing"){
+            $order = Order::with('customer')->where('orderstatus', '0')->whereHas('customer', function(Builder $query) use ($searchterm){$query->where('FirstName','LIKE', "%{$searchterm}%")->orWhere('LastName','LIKE', "%{$searchterm}%");})->get();
+        }else if($category == "Delinquent"){
+            $order = Order::with('customer')->where('customerstatus', 'Delinquent')->whereHas('customer', function(Builder $query) use ($searchterm){$query->where('FirstName','LIKE', "%{$searchterm}%")->orWhere('LastName','LIKE', "%{$searchterm}%");})->get();
+        }
+
+        return view('admin.order.index', compact('order', 'customer','unit'));
     }
     public function deleteAll(Request $request)
     {
@@ -767,34 +814,34 @@ class OrderController extends Controller
 
     public function pdfOrderHistory(Order $order)
     {
-        $order->load('orderhistory','ordertransactiondetails');
-        //$pdf = Pdf::loadView('admin.order.view', compact('order'));
+        $order->load('orderhistory','ordertransactiondetails', 'customer');
         $pdf = Pdf::loadView('admin.order.pdfOrder', compact('order'));
-        
-        // $pdf = Pdf::loadView('admin.order.view');
-        // $pdf = Pdf::loadView('FillOutform');
-        return $pdf->download('orders.pdf');
+
+        return $pdf->download('orders'. $order->ordertransactiondetails->unitmodelname . $order->id .'.pdf');
     }
     
     public function pdfOrderHistoryByDate(Order $order, Request $request)
     {
-        // dd($request->all());
-        // $order->load('orderhistory','ordertransactiondetails');
-        $order->load('orderhistory','ordertransactiondetails');
+        // dd($order);
+        $order->load('orderhistory','ordertransactiondetails', 'customer');
+        // dd($request->dateafter);
         if($request->methodtype == "ByMonth"){
-            //dd('byMonth');
-            $orders = $order->orderhistory()
-                    ->where('date_updated', '>=', $request->dateafter)
-                    ->get();
+            // dd($order->ordertransactiondetails->unitmodelname);
+            // $orders = Order::with('orderhistory','ordertransactiondetails', 'customer')->where('date_updated', '>=', $request->dateafter)->find($order->id);
+            // $orders = Order::whereHas('orderhistory',function(Builder $query){$query->where('date_updated', '>=', '2022-11')->get();});
+            // dd($orders);
+            $orders = $order->orderhistory()->where('date_updated', '>=', $request->dateafter)->get();
+                // dd( $order->orderhistory()->where('date_updated', '>=', $request->dateafter)->get());
         }elseif($request->methodtype == "ByDate"){
             $orders = $order->orderhistory()
                             ->whereBetween('date_updated', [$request->datebefore, $request->dateafter])
                             ->get();
         }
         $flag = array("dateafter" => $request->dateafter, "methodtype" => $request->methodtype, "datebefore" => $request->datebefore);
-        $pdf = Pdf::loadView('admin.order.pdfOrder', compact('orders', 'flag'));
+        $pdf = Pdf::loadView('admin.order.pdfOrder', compact('orders', 'order','flag'));
         
-        return $pdf->download('orders.pdf');
+        
+        return $pdf->download('orders'. $order->id . $request->dateafter. '.pdf');
     }
 
     public function queryPrice($id)
@@ -1433,4 +1480,32 @@ class OrderController extends Controller
         $order = Order::whereBetween('created_at', [$request->timebefore, $request->timeafter])->get();
         return response()->json($order->count());
     }
+    public function pdfOrders(){
+
+        $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->get();
+        // dd($order);
+        $pdf = Pdf::loadView('admin.order.pdfAllOrder', compact('order'));
+
+        return $pdf->download('All Orders' .'.pdf');
+    }
+
+    public function pdfOrderByDate( Request $request)
+    {
+        // $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->get();
+        
+
+        if($request->methodtype == "ByMonth"){
+            $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->where('created_at', '>=', $request->dateafter)->get();
+        }elseif($request->methodtype == "ByDate"){
+
+            // $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->whereBetween('date_created', [$datebefore, $dateafter])->get();
+            $order = Order::with('orderhistory','ordertransactiondetails', 'customer')->whereBetween('created_at', [$request->datebefore, $request->dateafter])->get();
+        }
+        // dd($request->all()); 
+        $flag = array("dateafter" => $request->dateafter, "methodtype" => $request->methodtype, "datebefore" => $request->datebefore);
+        $pdf = Pdf::loadView('admin.order.pdfAllOrder', compact('order', 'flag'));
+        
+        return $pdf->download('All orders '. $request->dateafter.'.pdf');
+    }
+
 }

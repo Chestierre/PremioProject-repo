@@ -35,7 +35,7 @@ return new class extends Migration
             $table->integer('NumberofCreditReference');
             $table->integer('HomePhoneNumber')->nullable();
             $table->integer('OfficePhoneNumber')->nullable();
-            $table->integer('MobileNumber');
+            $table->string('MobileNumber');
             $table->string('email')->nullable();            
             $table->string('SourceIncome')->nullable();
             $table->string('ProvidedBy')->nullable();

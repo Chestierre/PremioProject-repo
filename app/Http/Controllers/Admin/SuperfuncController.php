@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\CompanyDetail;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,8 +15,9 @@ class SuperfuncController extends Controller
     {
         $brand = Brand::all();
         $unit = Unit::with('order')->WhereNull('brand_id')->get();
+        $applicants = User::with('customer.order','customer.preorder')->where('userrole', 'Applicant')->get();
         $companydetail = CompanyDetail::find(1);
-        return view('admin.superfunc.index', compact('companydetail', 'unit', 'brand'));
+        return view('admin.superfunc.index', compact('companydetail', 'unit', 'brand', 'applicants'));
     }
 
     public function aboutusedit(request $request){
@@ -44,5 +46,14 @@ class SuperfuncController extends Controller
         $unit-> update([
             'brand_id' => $request->brand_id,
         ]);
+    }
+
+    public function changeCustomer($id){
+        // dd("ge");
+        $user = User::find($id);
+        $user->update([
+            'userrole' => "Customer",
+        ]);
+        return back();
     }
 }

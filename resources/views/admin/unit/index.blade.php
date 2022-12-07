@@ -19,16 +19,16 @@
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#unitReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                         </div>
                         <div class="">
-                            <form method="POST" action={{route("admin.unit.search")}}>
+                            <form method="GET" action={{route("admin.unit.search")}}>
                                 @csrf 
                                 <div class="d-flex">
                                 
                                 <input type="text" type="search" name="search_name" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">                            
                                   <select name="brand_type" class="btn btn-secondary dropdown-toggle" type="button">
                                         <option>All</option>
-                                        @foreach ($brand as $count => $brands)
-                                            {{-- <option>{{$brands->brandname}}</option> --}}
-                                            <option>{{$count}}</option>
+                                        @foreach ($brand as $brands)
+                                            <option value="{{$brands->id}}">{{$brands->brandname}}</option>
+                                            {{-- <option>{{$count}}</option> --}}
                                         @endforeach
                                    </select>
                                    
@@ -609,7 +609,8 @@
             {  
                 var check = confirm("Are you sure you want to delete this row?");  
                 if(check == true){  
-                    var join_selected_values = allVals.join(","); 
+                    var join_selected_values = allVals.join(",");
+                    // console.log(join_selected_values); 
 
                     $.ajax(
                     {

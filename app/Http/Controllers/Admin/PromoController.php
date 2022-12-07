@@ -7,6 +7,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PromoController extends Controller
 {
@@ -94,6 +95,17 @@ class PromoController extends Controller
     public function deleteAll(Request $request)
     {
         $ids = $request->ids;
+        $promo_ids = explode(",",$ids);
+        foreach ($promo_ids as $promo_id){
+            $promo = Promo::find($promo_id);
+            if($promo->PromoImage){
+                if(Storage::disk('public')->exists($promo->PromoImage )){
+                    Storage::disk('public')->delete($promo->PromoImage);
+                }else{
+                    dd("storage not working");
+                }
+            }
+        }
         DB::table("promos")->whereIn('id',explode(",",$ids))->delete();
         return response()->json(['success'=>"Promo Deleted successfully."]);
     }

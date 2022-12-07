@@ -93,7 +93,7 @@
         </div>
         <div class="modal-body">
             <p class="">Total Number of Orders this unit got: {{$unit->order->count()}}</p>
-            <p class="">Total Number of Orders this unit got this month: {{$unit->order->where('created_at', '>', now()->subDays(30))->count()}}</p>
+            <p class="">Total Number of Orders this unit got within 30 days from now: {{$unit->order->where('created_at', '>', now()->subDays(30))->count()}}</p>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

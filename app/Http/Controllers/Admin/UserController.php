@@ -12,12 +12,13 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportUser;
 use App\Exports\ExportUser;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $user = User::with('customer.order')->get();
+        $user = User::with('customer.order','customer.preorder')->whereNot('userrole', 'Applicant')->get();
         return view('admin.user.index', compact('user'));
     }
    public function create()
@@ -114,12 +115,50 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // dd("hello");
+        $user->load('customer.spouse', 'customer.comaker');
         $this->authorize('edit', $user);
-
+        if($user->customer()->exists()){
+            if($user->customer->ApplicantSketch){
+                if(Storage::disk('public')->exists($user->customer->ApplicantSketch )){
+                    Storage::disk('public')->delete($user->customer->ApplicantSketch);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            if($user->customer->ApplicantSignature){
+                if(Storage::disk('public')->exists($user->customer->ApplicantSignature )){
+                    Storage::disk('public')->delete($user->customer->ApplicantSignature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            if($user->customer->spouse->SpouseSignature){
+                if(Storage::disk('public')->exists($user->customer->spouse->SpouseSignature )){
+                    Storage::disk('public')->delete($user->customer->spouse->SpouseSignature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            if($user->customer->comaker->Sketch){
+                if(Storage::disk('public')->exists($user->customer->comaker->Sketch )){
+                    Storage::disk('public')->delete($user->customer->comaker->Sketch);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            if($user->customer->comaker->Signature){
+                if(Storage::disk('public')->exists($user->customer->comaker->Signature )){
+                    Storage::disk('public')->delete($user->customer->comaker->Signature);
+                }else{
+                    dd("storage not working");
+                }
+            }
+            
+        };
         
-        if ($user->userrole == 'Customer' && !$user->customer == null){
-            $user->customer->delete();
-        }        
+        $user->load('customer');
+        // dd($user->customer);
+
         $user->delete();
         return redirect()->route('admin.user.index');        
     }
@@ -127,6 +166,51 @@ class UserController extends Controller
     public function deleteAll(Request $request)
     {
         $ids = $request->ids;
+        $user_ids = explode(",",$ids);
+        foreach ($user_ids as $user_id){
+            $user = User::with('customer.spouse', 'customer.comaker')->find($user_id);
+            if($user->customer()->exists()){
+                if($user->customer->ApplicantSketch){
+                    if(Storage::disk('public')->exists($user->customer->ApplicantSketch )){
+                        Storage::disk('public')->delete($user->customer->ApplicantSketch);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                if($user->customer->ApplicantSignature){
+                    if(Storage::disk('public')->exists($user->customer->ApplicantSignature )){
+                        Storage::disk('public')->delete($user->customer->ApplicantSignature);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                if($user->customer->spouse->SpouseSignature){
+                    if(Storage::disk('public')->exists($user->customer->spouse->SpouseSignature )){
+                        Storage::disk('public')->delete($user->customer->spouse->SpouseSignature);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                if($user->customer->comaker->Sketch){
+                    if(Storage::disk('public')->exists($user->customer->comaker->Sketch )){
+                        Storage::disk('public')->delete($user->customer->comaker->Sketch);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                if($user->customer->comaker->Signature){
+                    if(Storage::disk('public')->exists($user->customer->comaker->Signature )){
+                        Storage::disk('public')->delete($user->customer->comaker->Signature);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                
+            };
+
+        }
+
+
         DB::table("users")->whereIn('id',explode(",",$ids))->delete();
         return response()->json(['success'=>"Users Deleted successfully."]);
     }

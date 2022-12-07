@@ -14,13 +14,16 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
     <link rel="icon" href="{{ url('img/Desmark logo.jpg') }}">
+
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
 </head>
 
 <body class = "bg-primary d-flex flex-column min-vh-100">
@@ -42,18 +45,21 @@
                             <a class="nav-link active" href="{{ url('/') }}">Home</a>
                         </li>
 
+                        <form action="{{route('searchItem')}}" method="GET" id="brand_form">
+                            <input type="hidden" name="search" id="brandnameinput">
+                            <li class = "nav-item">
+                                <a class="nav-link active" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Categories
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    
+                                    @foreach ($brand as $brand)
+                                    <a class="dropdown-item brandcategory" href="#">{{ $brand->brandname }}</a>                                
+                                    @endforeach
+                                </div>
+                            </li>
+                        </form>
 
-                        <li class = "nav-item">
-                            <a class="nav-link active" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Categories
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                
-                                @foreach ($brand as $brand)
-                                <a class="dropdown-item" href="#">{{ $brand->brandname }}</a>                                
-                                @endforeach
-                            </div>
-                        </li>
                         <li class = "nav-item">
                             <a class="nav-link active" href="/contact-us">Contact us</a>
                         </li>
@@ -61,55 +67,53 @@
                             <a class="nav-link active" href="/about-us">About us</a>
                         </li>
                     </ul>
-
-                    <form action="" class="form-inline d-flex col-4">
-                        {{-- <select class="form-select form-control w-25" name="search_brand">
-                            <option selected>{{ "..."}}</option>
-                        </select> --}}
-
-                        <input type="text" type="search" name="search_name" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
-                        <button type="button" class="btn btn-outline-primary my-sm-0">search</button>
-                    </form>
-                    <ul class="navbar-nav ms-auto ">
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    <div class="d-flex justify-content-end col-6">
+                        <form action="{{route('searchItem')}}" method="GET" class="form-inline d-flex mx-2">    
+                            <input type="text" type="search" name="search" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
+                            <button type="submit" class="btn btn-outline-primary my-sm-0">search</button>
+                        </form>
+                        <ul class="navbar-nav">
+                            @guest
+                                @if (Route::has('login'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->username }} ||
+                                        {{Auth::user()->userrole}}
+                                    </a>
+    
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href={{route("customer.AccountSetting")}}>
+                                            {{ "Account Settings"}} 
+                                        </a>
+                                        <a class="dropdown-item" href={{route("customer.CustomerViewDetails")}}>
+                                            {{ "Customer Details"}} 
+                                        </a>
+                                        <a class="dropdown-item" href={{route("customer.Orderdetails")}}>
+                                            {{ "Order Information"}} 
+                                        </a>
+                                        <a class="dropdown-item" href={{route("customer.Preorder")}}>
+                                            {{ "Pre-Orders"}} 
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+    
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
                                 </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->username }} ||
-                                    {{Auth::user()->userrole}}
-                                </a>
+                            @endguest
+                        </ul>
+                    </div>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href={{route("customer.AccountSetting")}}>
-                                        {{ "Account Settings"}} 
-                                    </a>
-                                    <a class="dropdown-item" href={{route("customer.CustomerViewDetails")}}>
-                                        {{ "Customer Details"}} 
-                                    </a>
-                                    <a class="dropdown-item" href={{route("customer.Orderdetails")}}>
-                                        {{ "Order Information"}} 
-                                    </a>
-                                    <a class="dropdown-item" href={{route("customer.Preorder")}}>
-                                        {{ "Pre-Orders"}} 
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
                 </div>
                 
             </div>
@@ -128,6 +132,21 @@
 </body>
 
 @yield('scripts')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.brandcategory').on('click', function(e){
+            var brandname = $(this).html();
+            console.log(brandname);
+            $('#brandnameinput').val(brandname);
+            $('#brand_form').submit();
+
+        });
+    });
+   
+
+</script>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 {{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

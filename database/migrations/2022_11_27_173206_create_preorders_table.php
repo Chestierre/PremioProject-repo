@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('preorders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('unit_id');
+            $table->foreignId('customer_id')->constrained()
+                            ->onUpdate('cascade')
+                            ->onDelete('cascade');;
+            $table->foreignId('unit_id')->constrained()
+                            ->onUpdate('cascade')
+                            ->onDelete('cascade');;
             $table->timestamps();
         });
     }

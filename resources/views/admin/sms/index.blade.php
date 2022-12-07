@@ -28,12 +28,11 @@
                             </button>
                         </div>
                         <div class="">
-                            <form method="POST" action={{route("admin.user.search")}}>
-                                @csrf 
+                            <form method="GET" action={{route("admin.SMS.smssearch")}}>
                                 <div class="d-flex">
                                     <input type="text" type="search" name="search_name" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
-                                    <select name="brand_type" class="btn btn-secondary dropdown-toggle" type="button">
-                                        <option>All</option>
+                                    <select name="search_type" class="btn btn-secondary dropdown-toggle" type="button">
+                                        {{-- <option>All</option> --}}
                                         <option>Recipient Name</option>
                                         <option>Recipient Number</option>
                                     </select>
@@ -47,7 +46,7 @@
             <table class="table">
                 <thead class="table-dark">
                     <tr>
-                        <th width="50px"><input type="checkbox" id="master"></th>
+                        
                         <th>SMS Type</th>
                         <th>Recipient Name</th>
                         <th>Recipient Number</th>
@@ -59,9 +58,7 @@
                 <tbody>
                     @foreach ($sms as $sms)
                         <tr>
-                            <td>
-                                <input type="checkbox" class="sub_chk" data-id={{$sms->id}}> 
-                            </td>
+
                             <td>{{ $sms->type }}</td>
                             <td>{{ $sms->recipient }}</td>
                             <td>{{ $sms->recipientnumber }}</td>
@@ -90,7 +87,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="SMS/sendapisms">
+            <form method="POST" action="{{route('admin.SMS.sendapisms')}}">
                 @csrf
                 <div class="modal-body">
                     Phone:
@@ -104,7 +101,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary">Send</button>
                 </div>
             </form>
         </div>

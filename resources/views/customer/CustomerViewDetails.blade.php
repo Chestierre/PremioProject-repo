@@ -720,7 +720,7 @@
                         <div class="row mb-3">
                             <label for="SpouseMobileNumber" class="col-md-3 col-form-label text-md-end">{{ __('Spouse Mobile Number') }}</label>
                             <div class="col-md-7">
-                              <input id="SpouseMobileNumber" type="number" class="form-control" name="SpouseMobileNumber" value= "{{ $customer->spouse->MobileNumber }}" autocomplete="SpouseMobileNumber" >
+                              <input id="SpouseMobileNumber" type="text" class="form-control" name="SpouseMobileNumber" value= "{{ $customer->spouse->MobileNumber }}" autocomplete="SpouseMobileNumber" >
                                 
                               @error('SpouseMobileNumber')
                                 <span class="invalid-feedback" role="alert" >
@@ -1366,7 +1366,7 @@
                         <div class="row mb-3">
                             <label for="CoMakerMobileNo" class="col-md-3 col-form-label text-md-end">{{ __('Co-Maker Mobile Number') }}</label>
                             <div class="col-md-7">
-                                <input id="CoMakerMobileNo" type="number" class="form-control" name="CoMakerMobileNo" value="{{ $customer->comaker->MobileNo }}" >
+                                <input id="CoMakerMobileNo" type="text" class="form-control" name="CoMakerMobileNo" value="{{ $customer->comaker->MobileNo }}" >
                                 
                                 @error('CoMakerMobileNo')
                                 <span class="invalid-feedback" role="alert" >

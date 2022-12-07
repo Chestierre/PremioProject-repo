@@ -19,6 +19,10 @@
         <i class="fa-solid fa-pen-to-square"></i>
         <span>Manage Orders</span>
       </a>
+      <a href="/admin/preorder" :class="classActivePreorder">
+        <i class="fa-brands fa-wpexplorer"></i>
+        <span>Manage Preorder</span>
+      </a>
       <a href="/admin/collector" :class="classActiveCollector">
          <i class="fa-solid fa-hand-holding-dollar"></i>
         <span>Manage Collectors</span>
@@ -199,6 +203,12 @@ label #cancel{
            classActiveOrder(){
              return{
               active: (this.routename == 'admin.order.index')
+
+             }
+           },           
+           classActivePreorder(){
+             return{
+              active: (this.routename == 'admin.preorder.index')
 
              }
            },

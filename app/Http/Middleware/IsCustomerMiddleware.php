@@ -17,7 +17,7 @@ class IsCustomerMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        if (!auth()->check() || !(auth()->user()->userrole == "Customer")){
+        if (!auth()->check() || !(auth()->user()->userrole == "Customer" || auth()->user()->userrole == "Applicant")){
             abort (403);
         }
         

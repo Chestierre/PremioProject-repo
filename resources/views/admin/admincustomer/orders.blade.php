@@ -12,6 +12,7 @@
                                 <a href="#" class="btn btn-primary col-sm" data-toggle="modal" data-target="#createOrderModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Add New Order</span></a>
                                 <a href = {{ url()->previous() }} type="button" class="btn btn-success"> Go Back </a>
                                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#orderCustomerReportModal"><i class="fa-regular fa-lightbulb"></i></button>
+                                <a href="#" class="btn btn-primary mx-1" data-toggle="modal" data-target="#printpdfModal"> <span><i class="fa-solid fa-face-grin-hearts"></i> Print pdf form</span></a>
                             </div>
                             <div class="">
                                 <form method="POST" action={{route("admin.order.search")}}>
@@ -66,13 +67,13 @@
                                 <td>{{$order->customerstatus}}</td>    
                                 <td>
                                     <div class="d-flex">
-                                        <form method="GET" action="{{ route('admin.order.show', $order) }}">
+                                        <form method="GET" action="{{ route('admin.order.show', $order) }}" class="mx-1">
                                             <button type="submit" class="btn btn-warning" ><i class="fa-solid fa-eye"></i> View</button>
                                         </form>
-                                        <form method="GET" action="{{ route('admin.order.edit', $order) }}">
+                                        {{-- <form method="GET" action="{{ route('admin.order.edit', $order) }}">
                                             <button type="submit" class="btn btn-primary" ><i class="fa-solid fa-pen"></i> Edit</button>
-                                        </form>
-                                        <button type="button" class="btn btn-danger" onclick="loadDeleteModal({{ $order->id }}, `{{ $order->unit->modelname }}`)">
+                                        </form> --}}
+                                        <button type="button" class="btn btn-danger mx-1" onclick="loadDeleteModal({{ $order->id }}, `{{ $order->unit->modelname }}`)">
                                             <i class="fa-solid fa-trash-can"></i> Delete</button>
                                         </button>
                                     </div>
@@ -88,6 +89,66 @@
         <div class="d-flex justify-content-end">  
             <button  style="display:none;" class="btn btn-danger delete_all p-2" data-url="{{ url('admin/userDeleteAll') }}">Delete All Selected</button>
         </div> 
+    </div>
+
+    {{-- printpdf modal --}}
+    <div class="modal fade" id="printpdfModal" tabindex="-1" role="dialog" aria-labelledby="printpdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="printpdfModalLabel">Print PDF options</h5>
+            <button type="button" class="close createmodal-dismiss" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                
+                    <select name="options" id="printpdfselect" class="form-select mb-3">
+                        <option value="1">Whole History</option>
+                        <option value="2">In Between Months</option>
+                        <option value="3">By Month</option>
+                    </select>
+
+                    <form method="GET"action="{{ route('admin.admincustomer.pdfAdminCustomerOrders', $user) }}" style="display:none" id="whole">
+                        <div class="row mb-3">
+                            <label for="customerLabel" class="col-md-10 col-form-label">{{ __('Print whole history:') }}</label>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid primary"></i>Print pdf</button>  
+                            </div>
+                        </div>
+                    </form>
+
+                    <form method="POST"action="{{ route('admin.admincustomer.pdfAdminCustomerOrdersbyDate', $user) }}" style="display:none" id="inbetween">
+                        @csrf
+                        <div class="row mb-3">
+                            <input type="hidden" name="methodtype" value="ByDate">
+                            <label for="customerLabel" class="col-md-3 col-form-label">{{ __('Print by date:') }}</label>
+                            <input type="date" name="datebefore" class="col-md-3" required>
+                            <label for="customerLabel" class="col-md-1 col-form-label">{{ __('to:') }}</label>
+                            <input type="date" name="dateafter" class="col-md-3" required>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid primary"></i>Print pdf</button>  
+                            </div>
+                        </div>
+                    </form>
+    
+                    <form method="POST"action="{{ route('admin.admincustomer.pdfAdminCustomerOrdersbyDate', $user) }}" style="display:none" id="months">
+                        @csrf
+                        <div class="row mb-3">
+                            <input type="hidden" name="methodtype" value="ByMonth">
+                            <label for="customerLabel" class="col-md-3 col-form-label">{{ __('After date until present:') }}</label>
+                            <input type="month" name="dateafter" class="col-md-3" required>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid primary"></i>Print pdf</button>  
+                            </div>
+                        </div>
+                    </form>
+            </div>
+
+        </div>
+        </div>
     </div>
 
     {{-- OrderCustomer Reporting Modal --}}
@@ -252,6 +313,40 @@
             $('#modal_unit_select').on('click', function(e) {
                 id = $('#modal_unit_select').val();
                 queryPrice(id);
+            });
+
+            var mode = $('#printpdfselect').val();
+
+            if (mode == 1){
+                $('#whole').show();
+                $('#inbetween').hide();
+                $('#months').hide();
+            }else if (mode == 2){
+                $('#whole').hide();
+                $('#inbetween').show();
+                $('#months').hide();
+            }else if (mode == 3){
+                $('#whole').hide();
+                $('#inbetween').hide();
+                $('#months').show();
+            }
+
+            $('#printpdfselect').on('change', function(){
+            var mode = $('#printpdfselect').val();
+
+            if (mode == 1){
+                $('#whole').show();
+                $('#inbetween').hide();
+                $('#months').hide();
+            }else if (mode == 2){
+                $('#whole').hide();
+                $('#inbetween').show();
+                $('#months').hide();
+            }else if (mode == 3){
+                $('#whole').hide();
+                $('#inbetween').hide();
+                $('#months').show();
+            }
             });
 
             $('select#monthsinstallment').on('click', function(e) {

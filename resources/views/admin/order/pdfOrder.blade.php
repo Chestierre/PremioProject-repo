@@ -51,21 +51,25 @@
 </head>
 <body>
     <div class="title">
-        <h1>Order History</h1>
+
+            <h1>Order History: {{$order->ordertransactiondetails->unitmodelname}}</h1>
+            <p>{{$order->customer->FirstName}} {{$order->customer->LastName}}</p>
+
+
     </div>
     <div class="sortCategory">
         {{-- {{$flag['dateafter']}} --}}
         @isset ($flag)
             @if($flag['methodtype'] == "ByDate")
-                <p>{{$flag['datebefore']}} - {{$flag['dateafter']}}</p>
+                <p>{{\Carbon\Carbon::parse($flag['datebefore'])->format('F d, Y')}} - {{\Carbon\Carbon::parse($flag['dateafter'])->format('F d, Y')}}</p>
             @else
-                <p>All dates after {{$flag['dateafter']}}</p>
+                <p>All dates after {{\Carbon\Carbon::parse($flag['dateafter'])->format('F d, Y')}}</p>
             @endif
             
         @endisset
 
         @empty($flag)
-            <p>{{$order->orderhistory->first()->date_updated}} - {{$order->orderhistory->last()->date_updated}}</p>
+            <p>{{\Carbon\Carbon::parse($order->orderhistory->first()->date_updated)->format('F d, Y')}} - {{\Carbon\Carbon::parse($order->orderhistory->last()->date_created)->format('F d, Y')}}</p>
         @endempty
 
         
@@ -73,7 +77,7 @@
     <table class="styled-table"> 
         <thead>
             <tr>
-                <th>Data and Time</th>
+                <th>Date and Time</th>
                 <th>Current Month</th>
                 <th>Balance</th>
                 <th>Payment</th>
@@ -84,7 +88,7 @@
             @isset ($flag)
                 @foreach ($orders as $orderhistory)
                 <tr>
-                    <td>{{$orderhistory->date_updated}}</td>
+                    <td>{{\Carbon\Carbon::parse($orderhistory->date_updated)->format('F d, Y')}}</td>
                     <td>{{$orderhistory->currentmonth}}</td>
                     <td><span style="font-family: DejaVu Sans;">&#x20B1;</span>{{number_format($orderhistory->balance)}}</td>
                     <td><span style="font-family: DejaVu Sans;">&#x20B1;</span>{{number_format($orderhistory->payment)}}</td>
@@ -132,7 +136,7 @@
             @empty($flag)
             @foreach ($order->orderhistory as $orderhistory)
             <tr>    
-                <td>{{$orderhistory->date_updated}}</td>
+                <td>{{\Carbon\Carbon::parse($orderhistory->date_created)->format('F d, Y')}}</td>
                 <td>{{$orderhistory->currentmonth}}</td>
                 <td><span style="font-family: DejaVu Sans;">&#x20B1;</span>{{number_format($orderhistory->balance)}}</td>
                 <td><span style="font-family: DejaVu Sans;">&#x20B1;</span>{{number_format($orderhistory->payment)}}</td>

@@ -13,8 +13,8 @@
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#userReportModal"><i class="fa-regular fa-lightbulb"></i></button>
                         </div>
                         <div class="">
-                            <form method="POST" action={{route("admin.user.search")}}>
-                                @csrf 
+                            <form method="GET" action={{route("admin.user.search")}}>
+                                {{-- @csrf  --}}
                                 <div class="d-flex">
                                 <input type="text" type="search" name="search_name" class="form-control rounded mr-sm-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon">                            
 
@@ -66,19 +66,24 @@
                                 @if ($user->userrole == 'Customer')
                                     <div class="d-flex">
                                         @if($user->customer()->exists())
-                                        <form method="GET" action="{{ route('admin.admincustomer.edit', $user) }}">
+                                        <form method="GET" action="{{ route('admin.admincustomer.edit', $user) }}"  class ="mx-1">
                                             <button type="submit" class="btn btn-warning" style="width:6em"><i class="fa-solid fa-eye"></i> View</button>
                                             <a href="#" class="btn btn-success" id="printpdf" onclick="printPdf({{ $user->id }})">Print Pdf</a>
                                         </form>
                                         @elseif ($user->userrole == "Customer")
-                                        <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $user) }}">
+                                        <form method="GET" action="{{ route('admin.admincustomer.createCustomer', $user) }}" class ="mx-1">
                                             <button type="submit" class="btn btn-success" style="width:6em"><i class="fa-solid fa-user-secret"></i> Add</button>
                                         </form>
                                         @endif
                                         @if($user->customer()->exists() && $user->customer->order()->exists())
-                                        <form method="GET" action="{{ route('admin.admincustomer.customerOrder', $user) }}" class ="mx-2">
-                                            <button type="submit" class="btn btn-secondary" style="width:6em"><i class="fa-solid fa-file-pen"></i>Orders</button>
-                                        </form>
+                                            <form method="GET" action="{{ route('admin.admincustomer.customerOrder', $user) }}" class ="mx-1">
+                                                <button type="submit" class="btn btn-secondary" style="width:6em"><i class="fa-solid fa-file-pen"></i>Orders</button>
+                                            </form>
+                                        @endif
+                                        @if($user->customer()->exists() && $user->customer->preorder()->exists())
+                                            <form method="GET" action="{{ route('admin.admincustomer.customerPreorder', $user) }}" class ="mx-1">
+                                                <button type="submit" class="btn btn-info" style="width:8em"><i class="fa-solid fa-file-pen"></i>Preorder</button>
+                                            </form>
                                         @endif
                                     </div>
 
@@ -91,9 +96,18 @@
                                     <a href="#" class="btn btn-primary col-sm mx-2 editButton" data-id={{$user->id}}> <span><i class="fa-solid fa-pen"></i> Edit</span></a>
                                     {{-- <button type="submit" class="btn btn-primary mx-2" ><i class="fa-solid fa-pen"></i> Edit</button> --}}
                                 </form>
+{{--                                 
+                                <form  action="{{route('admin.user.destroy', $user)}}" method="post">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">asd</button>
+                                </form> --}}
+
                                 
+
                                 <button type="button" class="btn btn-danger" onclick="loadDeleteModal({{ $user->id }}, `{{ $user->username }}`)">
-                                    <i class="fa-solid fa-trash-can"></i> Delete</button>
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
                                 
                             </div>
                             @endcan

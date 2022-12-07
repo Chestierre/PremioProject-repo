@@ -431,7 +431,7 @@ class CustomerController extends Controller
             'CivilStatus' => 'required|string',	
             'HomePhoneNumber' => 'nullable|integer',
             'OfficePhoneNumber' => 'nullable|integer',
-            'MobileNumber' => 'required|integer',
+            'MobileNumber' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'email' => 'nullable|email',
             'NumberOfDependencies'	=> 'nullable|integer|max:4|min:0',
             'NumberofCreditReference'	=> 'nullable|integer|max:4|min:0',
@@ -452,7 +452,7 @@ class CustomerController extends Controller
             'SpouseName' => 'nullable|string',
             'SpouseAge' => 'nullable|integer',
             'SpouseProvincialAddress' => 'nullable|string',
-            'SpouseMobileNumber' => 'nullable|integer',
+            'SpouseMobileNumber' => 'nullable|regex:/(^(\+639)\d{9}$)/u',
             'SpouseEmail' => 'nullable|email',
             'SpouseEmployer' => 'nullable|string',
             'SpousePosition' => 'nullable|string',
@@ -464,7 +464,7 @@ class CustomerController extends Controller
 
             //parents
             'ParentAddress' => 'nullable|string',
-            'ParentMobileNumber' => 'nullable|integer',
+            'ParentMobileNumber' => 'nullable|regex:/(^(\+639)\d{9}$)/u',
 
             //address
             'PresentAddress' => 'required|string',	
@@ -496,7 +496,7 @@ class CustomerController extends Controller
             'CoMakerRelationship' => 'nullable|string',
             'CoMakerBirthDate' => 'nullable|date',
             'CoMakerTin' => 'nullable|integer',
-            'CoMakerMobileNo' => 'required|integer',
+            'CoMakerMobileNo' => 'required|regex:/(^(\+639)\d{9}$)/u',
             'CoMakerEmployer' => 'required|string',	
             'CoMakeDateEmployed' => 'nullable|date',
             'CoMakerPosition' => 'required|string',	

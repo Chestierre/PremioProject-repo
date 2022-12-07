@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('Father')->nullable();
             $table->string('Mother')->nullable();
             $table->string('Addresss')->nullable();
-            $table->integer('MobileNumber')->nullable();
+            $table->string('MobileNumber')->nullable();
 
             $table->timestamps();
             $table->foreignId('customer_id')

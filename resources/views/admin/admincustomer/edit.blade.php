@@ -5,7 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             {{-- <div class="d-flex justify-content-between"> --}}
-                <h1>Customer Information</h1>
+                <div class="d-flex">
+                    <h1 class="">Customer Information</h1>
+                    <div>
+                        <a href = {{ url()->previous() }} type="button" class="btn btn-success mx-3"> Go Back </a>
+                    </div>
+                    
+                </div>
+
             {{-- </div> --}}
             
             
@@ -215,7 +222,7 @@
                             <div id="div_id_MobileNumber" class="form-group my-2">
                                 <label for="id_MobileNumber" class="control-label">Mobile Number</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('MobileNumber') is-invalid @enderror" id="id_MobileNumber" name="MobileNumber" value="{{ $admincustomer->customer->MobileNumber }}"  type="number" required disabled/>
+                                    <input class="form-control @error('MobileNumber') is-invalid @enderror" id="id_MobileNumber" name="MobileNumber" value="{{ $admincustomer->customer->MobileNumber }}"  type="text" required disabled/>
                                     <button class="btn btn-secondary"id="button_id_MobileNumber" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('MobileNumber')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -360,7 +367,7 @@
                             <div id="div_id_ApplicantSketch" class="form-group my-2">
                                 <label for="id_ApplicantSketch" class="control-label">Applicant Sketch:</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('ApplicantSketch') is-invalid @enderror" id="id_ApplicantSketch" name="ApplicantSketch"   type="file" disabled/>
+                                    <input class="form-control image_field @error('ApplicantSketch') is-invalid @enderror" id="id_ApplicantSketch" name="ApplicantSketch" accept="image/*" data-id="ApplicantSketchimg" type="file" disabled/>
                                     <button class="btn btn-secondary button_click"id="button_id_ApplicantSketch" data-id="id_ApplicantSketch" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('ApplicantSketch')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -369,12 +376,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSketch }}">
+                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSketch }}" id="ApplicantSketchimg" width="300" height="200">
 
                             <div id="div_id_ApplicantSignature" class="form-group my-2">
                                 <label for="id_ApplicantSignature" class="control-label">Applicant Signature:</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('ApplicantSignature') is-invalid @enderror" id="id_ApplicantSignature" name="ApplicantSignature"   type="file" disabled/>
+                                    <input class="form-control image_field @error('ApplicantSignature') is-invalid @enderror" id="id_ApplicantSignature" name="ApplicantSignature" accept="image/*" data-id="ApplicantSignatureimg" type="file" disabled/>
                                     <button class="btn btn-secondary button_click"id="button_id_ApplicantSignature" data-id="id_ApplicantSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('ApplicantSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -383,7 +390,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSignature }}">
+                            <img src= "/storage/{{ $admincustomer->customer->ApplicantSignature }}" id="ApplicantSignatureimg" width="300" height="200">
 
 
 
@@ -433,7 +440,7 @@
                             <div id="div_id_SpouseMobileNumber" class="form-group my-2">
                                 <label for="id_SpouseMobileNumber" class="control-label">Spouse Mobile Number</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" @if($admincustomer->customer->spouse)value="{{ $admincustomer->customer->spouse->MobileNumber }}"@endif type="number" disabled/>
+                                    <input class="form-control @error('SpouseMobileNumber') is-invalid @enderror" id="id_SpouseMobileNumber" name="SpouseMobileNumber" @if($admincustomer->customer->spouse)value="{{ $admincustomer->customer->spouse->MobileNumber }}"@endif type="text" disabled/>
                                     <button class="btn btn-secondary button_click" data-id="id_SpouseMobileNumber" id="button_id_SpouseMobileNumber" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('SpouseMobileNumber')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -536,7 +543,7 @@
                             <div id="div_id_SpouseSignature" class="form-group my-2">
                                 <label for="id_SpouseSignature" class="control-label">Spouse Signature:</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('SpouseSignature') is-invalid @enderror" id="id_SpouseSignature" name="SpouseSignature"   type="file" disabled/>
+                                    <input class="form-control image_field @error('SpouseSignature') is-invalid @enderror" id="id_SpouseSignature" name="SpouseSignature"  data-id="SpouseSignatureimg" type="file" disabled/>
                                     <button class="btn btn-secondary button_click"id="button_id_SpouseSignature" data-id="id_SpouseSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('SpouseSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -545,7 +552,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <img src= "/storage/{{ $admincustomer->customer->spouse->SpouseSignature }}">
+                            <img src= "/storage/{{ $admincustomer->customer->spouse->SpouseSignature }}" id="SpouseSignatureimg" width="300" height="200">
 
 
                         </div>
@@ -695,7 +702,7 @@
                             <div id="div_id_CoMakerMobileNo" class="form-group my-2">
                                 <label for="id_CoMakerMobileNo" class="control-label">Co-Maker MobileNo</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ $admincustomer->customer->comaker->MobileNo }}" type="number" required disabled/>
+                                    <input class="form-control @error('CoMakerMobileNo') is-invalid @enderror" id="id_CoMakerMobileNo" name="CoMakerMobileNo" value="{{ $admincustomer->customer->comaker->MobileNo }}" type="text" required disabled/>
                                     <button class="btn btn-secondary button_click" data-id="id_CoMakerMobileNo" id="button_id_CoMakerMobileNo" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('CoMakerMobileNo')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -822,9 +829,9 @@
                                 </div>
                             </div>
                             <div id="div_id_CoMakerSketch" class="form-group my-2">
-                                <label for="id_CoMakerSketch" class="control-label">Applicant Sketch:</label>
+                                <label for="id_CoMakerSketch" class="control-label">Co-Maker Sketch:</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('CoMakerSketch') is-invalid @enderror" id="id_CoMakerSketch" name="CoMakerSketch"   type="file" disabled/>
+                                    <input class="form-control image_field @error('CoMakerSketch') is-invalid @enderror" data-id="CoMakerSketchimg" id="id_CoMakerSketch" name="CoMakerSketch"   type="file" disabled/>
                                     <button class="btn btn-secondary button_click"id="button_id_CoMakerSketch" data-id="id_CoMakerSketch" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('CoMakerSketch')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -833,11 +840,11 @@
                                     @enderror
                                 </div>
                             </div>
-                            <img src= "/storage/{{ $admincustomer->customer->comaker->Sketch }}">
+                            <img src= "/storage/{{ $admincustomer->customer->comaker->Sketch }}" id="CoMakerSketchimg" width="300" height="200">
                             <div id="div_id_CoMakerSignature" class="form-group my-2">
-                                <label for="id_CoMakerSignature" class="control-label">Applicant Sketch:</label>
+                                <label for="id_CoMakerSignature" class="control-label">Comaker Signature:</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('CoMakerSignature') is-invalid @enderror" id="id_CoMakerSignature" name="CoMakerSignature"   type="file" disabled/>
+                                    <input class="form-control image_field @error('CoMakerSignature') is-invalid @enderror" id="id_CoMakerSignature" data-id="CoMakerSignatureimg" name="CoMakerSignature"   type="file" disabled/>
                                     <button class="btn btn-secondary button_click"id="button_id_CoMakerSignature" data-id="id_CoMakerSignature" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('CoMakerSignature')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -846,7 +853,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <img src= "/storage/{{ $admincustomer->customer->comaker->Signature }}">
+                            <img src= "/storage/{{ $admincustomer->customer->comaker->Signature }}" id="CoMakerSignatureimg" width="300" height="200">
 
 
 
@@ -895,7 +902,7 @@
                             <div id="div_id_ParentMobileNumber" class="form-group my-2">
                                 <label for="id_ParentMobileNumber" class="control-label">Parent's Mobile Number</label>
                                 <div class="controls d-flex">
-                                    <input class="form-control @error('ParentMobileNumber') is-invalid @enderror" id="id_ParentMobileNumber" name="ParentMobileNumber" @if($admincustomer->customer->parent)value="{{ $admincustomer->customer->parent->MobileNumber }}"@endif type="number" disabled/>
+                                    <input class="form-control @error('ParentMobileNumber') is-invalid @enderror" id="id_ParentMobileNumber" name="ParentMobileNumber" @if($admincustomer->customer->parent)value="{{ $admincustomer->customer->parent->MobileNumber }}"@endif type="text" disabled/>
                                     <button class="btn btn-secondary button_click" data-id="id_ParentMobileNumber" id="button_id_ParentMobileNumber" type="button" style="height:2.4em"><i class="fa-regular fa-pen-to-square"></i></button>
                                     @error('ParentMobileNumber')
                                         <span class="invalid-feedback text-danger" role="alert">
@@ -1795,6 +1802,21 @@
                 $(this).prop("disabled", false);
             }); 
         });
+        $('input.image_field').on('change',function(){
+            const file = this.files[0];
+            var item = $(this).attr('data-id'); 
+            // console.log(file);
+            if (file){
+                
+                let reader = new FileReader();
+                reader.onload = function(event){
+                    // console.log(event.target.result);
+                    $('#'+ item ).attr('src', event.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+
+        }); 
 
 
 

@@ -33,7 +33,6 @@ class SendSmsOrderReminderCommand extends Command
     public function handle()
     {   
         $dt = Carbon::now();
-        //$dt->day = 14;
         $dt->hour = 9;
         $dt->minute = 0;
         $dt->second = 0;
@@ -60,7 +59,7 @@ class SendSmsOrderReminderCommand extends Command
             $responsejson = $response->json();
             if ($responsejson['status']){
                 SMS::create([
-                    'type' => "Order Reminder",
+                    'type' => "Scheduled SMS Reminder",
                     'recipient' => $order->ordercustomerinformation->FirstName . ' ' . $order->ordercustomerinformation->LastName,
                     'recipientnumber' => ($order->customer) ? $order->customer->MobileNumber : $order->ordercustomerinformation->MobileNumber,
                     'message' => $message,

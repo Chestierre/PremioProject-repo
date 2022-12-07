@@ -125,43 +125,38 @@ class UnitController extends Controller
     public function deleteAll(Request $request)
     {
         $ids = $request->ids;
+        $unit_ids = explode(",",$ids);
+        foreach ($unit_ids as $unit_id){
+            $unit = Unit::with('unitimage')->find($unit_id);
+            foreach ($unit->unitimage as $unit->unitimage) {
+                if($unit->unitimage->image){
+                    if(Storage::disk('public')->exists($unit->unitimage->image )){
+                        Storage::disk('public')->delete($unit->unitimage->image);
+                    }else{
+                        dd("storage not working");
+                    }
+                }
+                // Storage::delete('$unit->unitimage->image');
+                $unit->unitimage->delete();
+            }
+        }
         DB::table("units")->whereIn('id',explode(",",$ids))->delete();
-        return response()->json(['success'=>"Users Deleted successfully."]);
+        return response()->json(['success'=>"Units Deleted successfully."]);
     }
 
     public function search(Request $request){
-        $brand = Brand::all();        
-        if ($request->brand_type == 'All'){
-            $unit = Unit::query()
-                ->where('modelname', 'LIKE', "%{$request->search_name}%")
-                ->get();
-            return view('admin.unit.index', compact('unit','brand'));
-        }
-        else{
-            // $unit = Unit::query()
-            //     ->where('modelname', 'LIKE', "%{$request->search_name}%")
-            //     ->where('brand_type', 'LIKE', "%{$request->unit_type}%")
-            // //     ->get();
-            // $unit = Unit::whereHas('brand', function (Builder $query) {
-            //     $query->where('brandname', 'like', '%{$request->brand_type}%')
-            //     ->where('modelname', 'LIKE', "%{$request->search_name}%");
-            //     })->get();
+            $brand = Brand::all();
+            $brand_id = $request->brand_type;
+            $searchterm = $request->search_name;
+            // dd($request->all());
+            if ($brand_id != 'All'){
+                $unit = Unit::where('brand_id', $brand_id)->where('modelname','LIKE', "%{$searchterm}%")->get();
+            }else{
+                $unit = Unit::where('modelname','LIKE', "%{$searchterm}%")->get();
+            }
 
-            // $unitall = Unit::query()
-            //     ->where('modelname', 'LIKE', "%{$request->search_name}%")
-            //     ->get();
-            // $unit = $unitall->brand()->where('brandname', 'like', '%{$request->brand_type}%')->get();
-            $brandtemp = Brand::query()
-                    ->where('brandname', 'LIKE', "%{$request->brand_type}%")
-                    ->get();
-            $brandid = ($brandtemp[0]->id);
-            //dd($brandtemp[0]->id);
-            $unit = Unit::query()
-                ->where('modelname', 'LIKE', "%{$request->search_name}%")
-                ->where('brand_id', 'LIKE', "$brandid")
-                ->get();
             return view('admin.unit.index', compact('unit','brand'));
-        }
+        
         
     }
     public function variationStore(Request $request, Unit $unit){
