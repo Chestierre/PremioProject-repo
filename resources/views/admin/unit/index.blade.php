@@ -210,7 +210,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                {{-- <div class="row mb-3">
                     <label for="modelDiscount" class="col-md-4 col-form-label text-md-end">{{ __('Model Discount') }}</label>
                     <div class="col-md-6">
                       <input id="modelDiscount" type="number" class="form-control @error('modelDiscount') is-invalid @enderror" name="modelDiscount" value="{{ old('modelDiscount') }}">
@@ -221,7 +221,7 @@
                             </span>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
                 <div class="row mb-3">
                     <label for="image" class="col-md-4 col-form-label text-md-end">{{ __('Model Image') }}</label>
                     <div class="col-md-6">

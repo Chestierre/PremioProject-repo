@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'],function(){
         Route::get('user/getuser/{id}', [UserController::class, 'getuser'])->name('user.getuser');
 
         Route::get('/subscriber', [SubscriberController::class, 'index'])->name('subscriber.index');
+        Route::patch('/subscribe', [SubscriberController::class, 'subscribe'])->name('subscriber.subscribe');
 
         Route::get('user/checkcollector/{id}', [UserController::class, 'checkcollector'])->name('user.checkcollector');
         Route::get('user/getcustomeruserrelation/{id}', [UserController::class, 'getcustomeruserrelation'])->name('user.getcustomeruserrelation');

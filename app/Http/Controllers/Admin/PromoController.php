@@ -8,13 +8,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class PromoController extends Controller
 {
     public function index()
     {
         $unit = Unit::all();
-        $promo = Promo::all();
+        $promo = Promo::all()->sortByDesc('PromoActive');
         return view('admin.promo.index', compact('unit','promo'));
     }
     public function create()
@@ -40,6 +41,7 @@ class PromoController extends Controller
         'PromoDescription' => $request->PromoDescription,
         'PromoCaption' => $request->PromoCaption,
         'PromoActive' => TRUE,
+        'PromoScheduleActive' => FALSE,
 
         'unit_id' => $request->unit_id
 
@@ -59,13 +61,28 @@ class PromoController extends Controller
 
     public function update(Request $request, promo $promo)
     {
+        //  dd($request->PromoScheduleDate);
         $promo -> update([
             'PromoTitle' => $request->PromoTitle,
             'PromoCaption' => $request->PromoCaption,
             'PromoDescription' => $request->PromoDescription,
             'unit_id' => $request->unit_id,
             'PromoActive' => $request->PromoActive,
+            'PromoScheduleActive' => $request->PromoScheduleActive,
+            'PromoScheduleDate' => $request->PromoScheduleDate,
+            'PromoMessage' => $request->PromoMessage,
         ]);
+
+        if($request->PromoScheduleActive == '1' && $request->PromoScheduleDate == NULL){
+            $dt = Carbon::now()->addMonth()->format('Y-m-d');
+            // $dt->hour = 9;
+            // $dt->minute = 0;
+            // $dt->second = 0;
+            // dd($dt);
+            $promo -> update([
+                'PromoScheduleDate' => $dt
+            ]);
+        }
         
         return redirect()->route('admin.promo.index');
 

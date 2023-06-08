@@ -188,6 +188,7 @@ class CustomerController extends Controller
         // dd($request);
 
         Customer::create([
+                'IsSubscriber' => '0',
                 'NumberOfDependencies' => $request->input('NumberDependents'),
                 'NumberofCreditReference' => $request->input('NumberDependents'),
                 'first_time_login' => TRUE,

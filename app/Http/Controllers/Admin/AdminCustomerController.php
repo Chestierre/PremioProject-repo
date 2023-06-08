@@ -94,6 +94,7 @@ class AdminCustomerController extends Controller
         ]);
 
         Customer::create([
+                'IsSubscriber' => '0',
                 'NumberOfDependencies' => $request->input('NumberDependents'),
                 'NumberofCreditReference' => $request->input('NumberDependents'),
                 'first_time_login' => TRUE,
@@ -914,6 +915,7 @@ class AdminCustomerController extends Controller
         $imagePathApplicantSignature = request('ApplicantSignature')->store('uploads', 'public');
 
         $customer = Customer::create([
+                'IsSubscriber' => '0',
                 'NumberOfDependencies' => $request->input('NumberDependents'),
                 'NumberofCreditReference' => $request->input('NumberCreditRef'),
                 'first_time_login' => TRUE,

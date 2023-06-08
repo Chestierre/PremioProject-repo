@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('PromoCaption')->nullable();
             $table->string('PromoDescription')->nullable();
             $table->boolean('PromoActive');
+            $table->boolean('PromoScheduleActive')->nullable();
+            $table->string('PromoMessage')->nullable();
+            $table->date('PromoScheduleDate')->nullable();
             $table->timestamps();
 
             $table->index('unit_id');

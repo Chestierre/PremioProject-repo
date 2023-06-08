@@ -3,9 +3,8 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+        <div class="col-md-10">
+            
 
                 
                 <div class="card-body">
@@ -72,16 +71,38 @@
                        </select>
                         
                         <br />
+                       <br>
+                       Schedule Promo Status:
+                       <br>
+                        <select name="PromoScheduleActive" class="btn btn-secondary dropdown-toggle" type="button">
+                            @if ($promo->PromoScheduleActive)
+                                <option value= '1' selected>Active</option>
+                                <option value= '0' >Disabled</option>
+                            @else
+                                <option value= '1' >Active</option>
+                                <option value= '0' selected>Disabled</option>
+                            @endif
+                       </select>
 
+                       <br>
+                       <br>
+                       Schedule Date:
+                       <input type="date" name="PromoScheduleDate" class="form-control" value="{{$promo->PromoScheduleDate}}">
+                       <br>
+
+                       Promo Schedule Date Message
+                       <input type="text" name="" id="" class="form-control" name="PromoMessage" value="{{$promo->PromoMessage}}">
                             
                         <br /><br />
-
+                       <div class="float-end">
                         <button type="submit" class="btn btn-primary"> Save </button>
                         <a href = {{ route('admin.promo.index') }} type="button" class="btn btn-success"> Go Back </a>
+                       </div>
+                        
 
                     </form>
                 </div>
-            </div>
+            
         </div>
     </div>
 </div>

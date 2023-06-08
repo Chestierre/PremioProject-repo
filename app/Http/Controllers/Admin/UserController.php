@@ -275,6 +275,10 @@ class UserController extends Controller
     }
 
     public function import(Request $request){
+        // dd($request->all());
+        $request->validate([
+            'file' => 'required|mimes:csv,txt',
+        ]);
         Excel::import(new ImportUser, $request->file('file')->store('files'));
         return redirect()->back();
     }

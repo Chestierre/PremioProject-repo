@@ -6,7 +6,7 @@
         <div class="d-flex mb-2 col">
             <h2 class="col-9"><b>Order History</b></h2>
             <div class="col-1 px-1">
-                <form method="GET"action="{{ url()->previous()}}">
+                <form method="GET"action="{{ route('admin.order.index')}}">
                     <button type="submit" class="btn btn-success w-100"><i class="fa-solid primary"></i>Go Back</button>    
                 </form>
             </div>

@@ -48,14 +48,14 @@ class SendSmsOrderReminderCommand extends Command
         foreach ($order as $order){
             $message = $smstemplate->beforename . $order->ordercustomerinformation->FirstName . ' ' . $order->ordercustomerinformation->LastName .  $smstemplate->inbetweennamebalance . number_format($order->balancetobepaid) . $smstemplate->inbetweenbalanceunitname . $order->ordertransactiondetails->unitmodelname . $smstemplate->afterunitname ;
             $phone = ($order->customer) ? $order->customer->MobileNumber : $order->ordercustomerinformation->MobileNumber;
-            //dd($message);
+            
 
 
             $response = Http::asform()->post('https://smsgateway.servicesforfree.com/api/send?key=35a6b5c9d8220cd2a1febe5376bb70c65df94bfe', [
                  'phone' =>$phone,
                  'message' => $message,
              ]);
-            //  dd($response->json());
+            
             $responsejson = $response->json();
             if ($responsejson['status']){
                 SMS::create([

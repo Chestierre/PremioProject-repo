@@ -12,6 +12,7 @@
                     <div class="col-xs-6 d-flex mb-2 justify-content-between">
                         <div class="">
                             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#createPromoModal">  <span>Add New Promo</span></a>
+                            <a href="{{route('admin.subscriber.index')}}" class="btn btn-success">  <span>Subscribers Setting</span></a>
                         </div>   
                         <div class="">
                             <form method="POST" action={{route("admin.promo.search")}}>
@@ -38,6 +39,7 @@
                         <th>Image</th>
                         <th>Model Name</th>
                         <th>Status</th>
+                        <th>Scheduled</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -51,6 +53,7 @@
                             <td><img src= "/storage/{{ $promo->PromoImage }}" style="width:120px;"></td>
                             <td>{{$promo->unit->modelname}}</td>
                             <td>{{$promo->PromoActive }}</td>
+                            <td>{{$promo->PromoScheduleActive }}</td>
                             <td>
                                 <div class="d-flex">
                                     <form method="GET" action="{{ route('admin.promo.edit', $promo) }}">

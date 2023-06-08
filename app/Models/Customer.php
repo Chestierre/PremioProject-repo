@@ -10,6 +10,8 @@ class Customer extends Model
     //use HasFactory;
     protected $fillable = [ 
         'FillOutDate',
+        'IsSubscriber',
+
         'FirstName',
         'MiddleName',	
         'LastName',	

@@ -15,7 +15,10 @@ class Promo extends Model
         'PromoTitle',
         'PromoCaption',
         'PromoDescription',
-        'PromoActive'
+        'PromoActive',
+        'PromoScheduleActive',
+        'PromoMessage',
+        'PromoScheduleDate'
     ];
 
     public function unit(){

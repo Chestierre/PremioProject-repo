@@ -11,6 +11,15 @@
     <div class="d-flex justify-content-center mb-3">
         <h1>Super Adminstrator Functions</h1>
     </div>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="row mb-1">
         <div class="shadow-lg p-5 mb-4 bg-white rounded">
             <div class="d-flex">
@@ -21,6 +30,7 @@
                 @csrf
                 <input type="file" name="file" class="form-control">
                 <br>
+
                 <button class="btn btn-success">
                         Import User Data
                 </button>
