@@ -16,7 +16,7 @@ class ContactController extends Controller
     }
 
     public function sendEmail(Request $request){
-        if (Auth()->user()->userrole == "Customer"){
+        if (auth()->check() && Auth()->user()->userrole == "Customer"){
             $details = [
                 'name' => Auth()->user()->customer->FirstName ." ". Auth()->user()->customer->LastName,
                 'email' => Auth()->user()->customer->email,
