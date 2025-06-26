@@ -21,4 +21,8 @@ Installation Instruction
 
 Super Admin Credentials found in seed in database folder.
 
+Laravel 8 
+PHP 8.0.26
+Node 10.13.0
+
 
